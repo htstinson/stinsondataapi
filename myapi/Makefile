@@ -1,22 +1,29 @@
 .PHONY: setup run clean test
 
 setup:
-	@mkdir -p certs
-	@echo "Generating self-signed certificate..."
-	@openssl req -x509 \
-		-newkey rsa:4096 \
-		-keyout certs/local.key \
-		-out certs/local.crt \
-		-days 365 \
-		-nodes \
-		-subj "/CN=api.local.dev" 2>/dev/null
+	@echo "Generating certificates..."
+	@chmod +x ../scripts/generate-certs.sh
+	@../scripts/generate-certs.sh
 	@echo "Starting database..."
 	@docker-compose up -d db
 	@echo "Installing dependencies..."
 	@go mod tidy
+	@echo "Trust the local CA certificate..."
+	@if [ "$(shell uname)" = "Darwin" ]; then \
+		sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain certs/rootCA.crt; \
+	elif [ "$(shell uname)" = "Linux" ]; then \
+		sudo cp certs/rootCA.crt /usr/local/share/ca-certificates/ && \
+		sudo update-ca-certificates; \
+	else \
+		echo "Please manually trust certs/rootCA.crt"; \
+	fi
 
 run:
-	@go run cmd/api/main.go
+	@if [ "$(shell uname)" = "Darwin" ] || [ "$(shell uname)" = "Linux" ]; then \
+		sudo go run cmd/api/main.go; \
+	else \
+		go run cmd/api/main.go; \
+	fi
 
 clean:
 	@docker-compose down -v

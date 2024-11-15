@@ -2,19 +2,18 @@ package main
 
 import (
 	"context"
+	"crypto/tls"
 	"log"
+	"myapi/internal/handler"
+	"myapi/internal/middleware"
+	"myapi/pkg/database"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"myapi/internal/handler"
-	"myapi/internal/middleware"
-	"myapi/pkg/database"
-
 	"github.com/gorilla/mux"
-	"golang.org/x/crypto/acme/autocert"
 )
 
 func main() {
@@ -35,10 +34,8 @@ func main() {
 	}
 	defer db.Close()
 
-	// Create router
+	// Create router and handler
 	router := mux.NewRouter()
-
-	// Create handler
 	h := handler.NewHandler(db)
 
 	// Setup routes
@@ -54,30 +51,19 @@ func main() {
 	router.Use(middleware.SecurityHeaders)
 	router.Use(middleware.CORS)
 
-	// Create server
+	// Create server with local certificates
 	srv := &http.Server{
-		Addr:         ":443",
-		Handler:      router,
-		ReadTimeout:  15 * time.Second,
-		WriteTimeout: 15 * time.Second,
-		IdleTimeout:  60 * time.Second,
+		Addr:    ":443",
+		Handler: router,
+		TLSConfig: &tls.Config{
+			MinVersion: tls.VersionTLS12,
+		},
 	}
-
-	// Configure TLS
-	m := &autocert.Manager{
-		Cache:      autocert.DirCache("certs"),
-		Prompt:     autocert.AcceptTOS,
-		HostPolicy: autocert.HostWhitelist("api.local.dev"),
-	}
-	srv.TLSConfig = m.TLSConfig()
-
-	// Start HTTP server (redirect to HTTPS)
-	go http.ListenAndServe(":80", m.HTTPHandler(nil))
 
 	// Start server
 	go func() {
 		logger.Printf("Server starting on https://api.local.dev")
-		if err := srv.ListenAndServeTLS("", ""); err != http.ErrServerClosed {
+		if err := srv.ListenAndServeTLS("certs/local.crt", "certs/local.key"); err != http.ErrServerClosed {
 			logger.Fatalf("Failed to start server: %v", err)
 		}
 	}()
