@@ -51,14 +51,25 @@ func main() {
 	//h := handler.NewHandler(db)
 
 	// Create handler with auth
-	h := handler.NewHandler(db, jwtAuth)
+	h := handler.NewHandler(
+		db,
+		*jwtAuth,
+	)
 
 	// Setup routes
 	api := router.PathPrefix("/api/v1").Subrouter()
+
+	// Public routes
 	api.HandleFunc("/health", h.HealthCheck).Methods("GET")
-	api.HandleFunc("/items", h.CreateItem).Methods("POST")
-	api.HandleFunc("/items/{id}", h.GetItem).Methods("GET")
-	api.HandleFunc("/items", h.ListItems).Methods("GET")
+	api.HandleFunc("/register", h.Register).Methods("POST")
+	api.HandleFunc("/login", h.Login).Methods("POST")
+
+	// Protected rounts
+	protected := api.PathPrefix("/").Subrouter()
+	protected.Use(jwtAuth.Middleware)
+	protected.HandleFunc("/items", h.CreateItem).Methods("POST")
+	protected.HandleFunc("/items/{id}", h.GetItem).Methods("GET")
+	protected.HandleFunc("/items", h.ListItems).Methods("GET")
 
 	// Add middleware
 	router.Use(middleware.Logger(logger))
