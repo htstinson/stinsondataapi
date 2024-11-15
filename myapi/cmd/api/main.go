@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/tls"
 	"log"
+	"myapi/internal/auth"
 	"myapi/internal/handler"
 	"myapi/internal/middleware"
 	"myapi/pkg/database"
@@ -34,9 +35,23 @@ func main() {
 	}
 	defer db.Close()
 
+	// Initialize auth
+	authConfig := auth.Config{
+		SecretKey:     os.Getenv("JWT_SECRET_KEY"), // Use environment variable
+		TokenDuration: 24 * time.Hour,              // Token valid for 24 hours
+	}
+	if authConfig.SecretKey == "" {
+		authConfig.SecretKey = "your-secret-key-for-development" // Default for development
+	}
+
+	jwtAuth := auth.New(authConfig)
+
 	// Create router and handler
 	router := mux.NewRouter()
-	h := handler.NewHandler(db)
+	//h := handler.NewHandler(db)
+
+	// Create handler with auth
+	h := handler.NewHandler(db, jwtAuth)
 
 	// Setup routes
 	api := router.PathPrefix("/api/v1").Subrouter()

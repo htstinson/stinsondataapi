@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	_ "github.com/lib/pq"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type Repository interface {
@@ -17,6 +18,8 @@ type Repository interface {
 	CreateItem(ctx context.Context, item *model.Item) error
 	ListItems(ctx context.Context, limit, offset int) ([]model.Item, error)
 	Close() error
+	GetUserByUsername(ctx context.Context, username string) (*model.User, error)
+	CreateUser(ctx context.Context, username, password string) (*model.User, error)
 }
 
 type Database struct {
@@ -62,6 +65,8 @@ func New(cfg Config) (Repository, error) {
 }
 
 func initializeSchema(db *sql.DB) error {
+
+	// Create Items table
 	_, err := db.Exec(`
         CREATE TABLE IF NOT EXISTS items (
             id VARCHAR(36) PRIMARY KEY,
@@ -70,7 +75,28 @@ func initializeSchema(db *sql.DB) error {
         );
         CREATE INDEX IF NOT EXISTS items_created_at_idx ON items(created_at DESC);
     `)
-	return err
+	if err != nil {
+		return err
+	}
+
+	// Create Users table
+	queries := []string{
+		`CREATE TABLE IF NOT EXISTS users (
+            id VARCHAR(36) PRIMARY KEY,
+            username VARCHAR(255) UNIQUE NOT NULL,
+            password_hash VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE NOT NULL
+        )`,
+		`CREATE INDEX IF NOT EXISTS users_username_idx ON users(username)`,
+		// ... existing items table creation ...
+	}
+
+	for _, query := range queries {
+		if _, err := db.Exec(query); err != nil {
+			return fmt.Errorf("error creating schema: %w", err)
+		}
+	}
+	return nil
 }
 
 func (d *Database) GetItem(ctx context.Context, id string) (*model.Item, error) {
@@ -126,4 +152,59 @@ func (d *Database) ListItems(ctx context.Context, limit, offset int) ([]model.It
 
 func (d *Database) Close() error {
 	return d.db.Close()
+}
+
+func (d *Database) CreateUser(ctx context.Context, username, password string) (*model.User, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, fmt.Errorf("error hashing password: %w", err)
+	}
+
+	user := &model.User{
+		ID:           uuid.New().String(),
+		Username:     username,
+		PasswordHash: string(hash),
+		CreatedAt:    time.Now(),
+	}
+
+	query := `
+        INSERT INTO users (id, username, password_hash, created_at)
+        VALUES ($1, $2, $3, $4)
+    `
+
+	_, err = d.db.ExecContext(ctx, query,
+		user.ID,
+		user.Username,
+		user.PasswordHash,
+		user.CreatedAt,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("error creating user: %w", err)
+	}
+
+	return user, nil
+}
+
+func (d *Database) GetUserByUsername(ctx context.Context, username string) (*model.User, error) {
+	user := &model.User{}
+	query := `
+        SELECT id, username, password_hash, created_at
+        FROM users
+        WHERE username = $1
+    `
+
+	err := d.db.QueryRowContext(ctx, query, username).Scan(
+		&user.ID,
+		&user.Username,
+		&user.PasswordHash,
+		&user.CreatedAt,
+	)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting user: %w", err)
+	}
+
+	return user, nil
 }
