@@ -62,20 +62,20 @@ func main() {
 	// Public routes
 	api.HandleFunc("/health", h.HealthCheck).Methods("GET")
 	api.HandleFunc("/register", h.Register).Methods("POST")
-	api.HandleFunc("/login", h.Login).Methods("POST")
+	api.HandleFunc("/login", h.Login).Methods("POST", "OPTIONS")
 
 	// Protected rounts
 	protected := api.PathPrefix("/").Subrouter()
 	protected.Use(jwtAuth.Middleware)
-	protected.HandleFunc("/items", h.CreateItem).Methods("POST")
+	protected.HandleFunc("/items", h.CreateItem).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.GetItem).Methods("GET")
-	protected.HandleFunc("/items", h.ListItems).Methods("GET")
+	protected.HandleFunc("/items", h.ListItems).Methods("GET", "OPTIONS")
 
 	// Add middleware
-	router.Use(middleware.Logger(logger))
-	router.Use(middleware.RequestID)
-	router.Use(middleware.SecurityHeaders)
-	router.Use(middleware.CORS)
+	api.Use(middleware.Logger(logger))
+	api.Use(middleware.RequestID)
+	api.Use(middleware.SecurityHeaders)
+	api.Use(middleware.CORS)
 
 	// Create server with local certificates
 	srv := &http.Server{

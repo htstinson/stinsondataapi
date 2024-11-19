@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -161,8 +162,16 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	respondJSON(w, http.StatusOK, model.LoginResponse{
-		Token:     token,
-		ExpiresIn: int64(h.auth.Config.TokenDuration.Seconds()),
+	w.Header().Set("Authorization", fmt.Sprintf("Bearer %s", token))
+
+	// respondJSON(w, http.StatusOK, model.LoginResponse{
+	// 	Token:     token,
+	// 	ExpiresIn: int64(h.auth.Config.TokenDuration.Seconds()),
+	// })
+
+	respondJSON(w, http.StatusOK, map[string]string{
+		"status": "healthy",
+		"time":   time.Now().Format(time.RFC3339),
 	})
+
 }
