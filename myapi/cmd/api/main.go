@@ -54,6 +54,7 @@ func main() {
 	h := handler.NewHandler(
 		db,
 		*jwtAuth,
+		logger,
 	)
 
 	// Setup routes
@@ -70,6 +71,7 @@ func main() {
 	protected.HandleFunc("/items", h.CreateItem).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.GetItem).Methods("GET")
 	protected.HandleFunc("/items", h.ListItems).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/test", h.Test).Methods("POST", "OPTIONS")
 
 	// Add middleware
 	api.Use(middleware.Logger(logger))

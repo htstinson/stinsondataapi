@@ -1,3 +1,5 @@
+SHELL := /bin/zsh
+
 .PHONY: setup run clean test
 
 setup:
@@ -20,7 +22,7 @@ setup:
 
 run:
 	@if [ "$(shell uname)" = "Darwin" ] || [ "$(shell uname)" = "Linux" ]; then \
-		sudo go run cmd/api/main.go; \
+		sudo -E go run cmd/api/main.go; \
 	else \
 		go run cmd/api/main.go; \
 	fi

@@ -3,11 +3,14 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"myapi/internal/auth"
 	"myapi/internal/model"
+	"myapi/internal/salesforce"
 	"myapi/pkg/database"
 
 	"github.com/gorilla/mux"
@@ -15,12 +18,13 @@ import (
 )
 
 type Handler struct {
-	db   database.Repository
-	auth auth.JWTAuth
+	db     database.Repository
+	auth   auth.JWTAuth
+	logger *log.Logger
 }
 
-func NewHandler(db database.Repository, auth auth.JWTAuth) *Handler {
-	return &Handler{db: db, auth: auth}
+func NewHandler(db database.Repository, auth auth.JWTAuth, logger *log.Logger) *Handler {
+	return &Handler{db: db, auth: auth, logger: logger}
 }
 
 func (h *Handler) HealthCheck(w http.ResponseWriter, r *http.Request) {
@@ -76,6 +80,60 @@ func (h *Handler) ListItems(w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, items)
 }
 
+func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
+
+	authResponse, err := SalesForceLogin()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	auth := salesforce.SalesforceAuth{
+		AccessToken: authResponse.AccessToken,
+		InstanceURL: "https://stinsondata.my.salesforce.com",
+	}
+
+	// Example: Creating a new Account
+	payload := map[string]interface{}{
+		"Name":        "A Test Account",
+		"Description": "Created via API",
+		"Phone":       "1234567890",
+	}
+
+	// TODO: This should be async
+	// Question: Does each user have a unique session?
+
+	response, err := salesforce.SalesforcePost(auth, "/services/data/v62.0/sobjects/Account", payload)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		return
+	}
+
+	h.logger.Println(string(response))
+
+	respondJSON(w, http.StatusOK, "test complete")
+}
+
+func SalesForceLogin() (*salesforce.SalesforceAuthResponse, error) {
+	// Your Salesforce credentials
+	var (
+		clientID     = os.Getenv("SF_STINSONDATA_CLIENT_ID")
+		clientSecret = os.Getenv("SF_STINSONDATA_CLIENT_SECRET")
+		username     = os.Getenv("SF_STINSONDATA_USERNAME")
+		password     = os.Getenv("SF_STINSONDATA_PASSWORD")
+		loginURL     = "https://login.salesforce.com"
+	)
+
+	auth, err := salesforce.GetSalesforceToken(clientID, clientSecret, username, password, loginURL)
+	if err != nil {
+		fmt.Printf("Error getting token: %v\n", err)
+		return nil, err
+	}
+
+	return auth, err
+
+}
+
 func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 	response, err := json.Marshal(payload)
 	if err != nil {
@@ -129,6 +187,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	var req model.LoginRequest
+
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		respondError(w, http.StatusBadRequest, "Invalid request payload")
 		return
@@ -164,14 +223,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Authorization", fmt.Sprintf("Bearer %s", token))
 
-	// respondJSON(w, http.StatusOK, model.LoginResponse{
-	// 	Token:     token,
-	// 	ExpiresIn: int64(h.auth.Config.TokenDuration.Seconds()),
-	// })
-
-	respondJSON(w, http.StatusOK, map[string]string{
-		"status": "healthy",
-		"time":   time.Now().Format(time.RFC3339),
+	respondJSON(w, http.StatusOK, model.LoginResponse{
+		Token:     token,
+		ExpiresIn: int64(h.auth.Config.TokenDuration.Seconds()),
 	})
-
 }

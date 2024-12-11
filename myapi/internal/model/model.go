@@ -2,6 +2,12 @@ package model
 
 import "time"
 
+type Test struct {
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
 type Item struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
