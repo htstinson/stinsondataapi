@@ -8,6 +8,12 @@ type Test struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+type Account struct {
+	Name        string `jason:"name"`
+	Description string `json:"description"`
+	Phone       string `json:"phone"`
+}
+
 type Item struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
@@ -29,10 +35,4 @@ type LoginRequest struct {
 type LoginResponse struct {
 	Token     string `json:"token"`
 	ExpiresIn int64  `json:"expires_in"`
-}
-
-type Account struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Phone       string `json:"phone"`
 }

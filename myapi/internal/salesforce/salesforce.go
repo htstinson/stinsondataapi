@@ -2,11 +2,11 @@ package salesforce
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
-
 	"net/url"
 	"strings"
 )
@@ -86,8 +86,22 @@ func GetSalesforceToken(clientID, clientSecret, username, password, loginURL str
 	// Set headers
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
+	// Create the TLS config
+	config := &tls.Config{
+		RootCAs: nil, // This will use system root certificates
+	}
+
+	// Create a custom transport with the TLS config
+	transport := &http.Transport{
+		TLSClientConfig: config,
+	}
+
+	// Create a client with the custom transport
+	client := &http.Client{
+		Transport: transport,
+	}
+
 	// Send request
-	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		return nil, fmt.Errorf("error sending request: %v", err)

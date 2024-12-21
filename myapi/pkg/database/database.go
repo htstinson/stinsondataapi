@@ -81,6 +81,21 @@ func initializeSchema(db *sql.DB) error {
 		return err
 	}
 
+	// Create Accounts table
+	_, err = db.Exec(`
+        CREATE TABLE IF NOT EXISTS accounts (
+            id VARCHAR(36) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+			description VARCHAR(255) NOT NULL,
+			phone VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS accounts_created_at_idx ON items(created_at DESC);
+    `)
+	if err != nil {
+		return err
+	}
+
 	// Create Users table
 	queries := []string{
 		`CREATE TABLE IF NOT EXISTS users (
