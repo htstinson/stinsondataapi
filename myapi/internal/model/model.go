@@ -9,7 +9,7 @@ type Test struct {
 }
 
 type Account struct {
-	Name        string `jason:"name"`
+	Name        string `json:"name"`
 	Description string `json:"description"`
 	Phone       string `json:"phone"`
 }
