@@ -51,9 +51,72 @@ func (h *Handler) CreateItem(w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusCreated, item)
 }
 
+func (h *Handler) UpdateItem(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+
+	var item model.Item
+	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
+		respondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	currentitem, err := h.db.GetItem(ctx, id)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, "Failed to get item")
+		return
+	}
+	if currentitem == nil {
+		respondError(w, http.StatusNotFound, "Item not found")
+		return
+	}
+
+	currentitem.Name = item.Name
+	err = h.db.UpdateItem(ctx, currentitem)
+	if err != nil {
+		respondError(w, http.StatusNotFound, "Error updating item")
+		return
+	}
+
+	respondJSON(w, http.StatusOK, item)
+}
+
+func (h *Handler) DeleteItem(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+
+	item, err := h.db.GetItem(ctx, id)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, "Failed to get item")
+		return
+	}
+	if item == nil {
+		respondError(w, http.StatusNotFound, "Item not found")
+		return
+	}
+
+	fmt.Println(item)
+
+	err = h.db.DeleteItem(ctx, id)
+	if err != nil {
+		respondError(w, http.StatusNotFound, "Error deleting item")
+		return
+	}
+
+	respondJSON(w, http.StatusOK, item)
+
+}
+
 func (h *Handler) GetItem(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
+
+	log.Println(id)
 
 	ctx := r.Context()
 	item, err := h.db.GetItem(ctx, id)
@@ -80,7 +143,7 @@ func (h *Handler) ListItems(w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, items)
 }
 
-func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Account(w http.ResponseWriter, r *http.Request) {
 
 	authResponse, err := SalesForceLogin()
 	if err != nil {
@@ -94,16 +157,24 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Example: Creating a new Account
-	payload := map[string]interface{}{
-		"Name":        "A Test Account",
-		"Description": "Created via API",
-		"Phone":       "1234567890",
+	/*
+		payload := map[string]interface{}{
+			"Name":        "A Test Account",
+			"Description": "Created via API",
+			"Phone":       "1234567890",
+		}
+	*/
+
+	account := model.Account{
+		Name:        "A Test Account",
+		Description: "Created via API",
+		Phone:       "1234567890",
 	}
 
 	// TODO: This should be async
 	// Question: Does each user have a unique session?
 
-	response, err := salesforce.SalesforcePost(auth, "/services/data/v62.0/sobjects/Account", payload)
+	response, err := salesforce.SalesforcePost(auth, "/services/data/v62.0/sobjects/Account", account)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return

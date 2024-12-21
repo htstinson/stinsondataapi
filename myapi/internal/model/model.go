@@ -30,3 +30,9 @@ type LoginResponse struct {
 	Token     string `json:"token"`
 	ExpiresIn int64  `json:"expires_in"`
 }
+
+type Account struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Phone       string `json:"phone"`
+}

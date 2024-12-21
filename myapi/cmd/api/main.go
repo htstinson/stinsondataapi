@@ -40,6 +40,7 @@ func main() {
 		SecretKey:     os.Getenv("JWT_SECRET_KEY"), // Use environment variable
 		TokenDuration: 24 * time.Hour,              // Token valid for 24 hours
 	}
+
 	if authConfig.SecretKey == "" {
 		authConfig.SecretKey = "your-secret-key-for-development" // Default for development
 	}
@@ -69,9 +70,11 @@ func main() {
 	protected := api.PathPrefix("/").Subrouter()
 	protected.Use(jwtAuth.Middleware)
 	protected.HandleFunc("/items", h.CreateItem).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/items/{id}", h.UpdateItem).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.GetItem).Methods("GET")
 	protected.HandleFunc("/items", h.ListItems).Methods("GET", "OPTIONS")
-	protected.HandleFunc("/test", h.Test).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/items/{id}", h.DeleteItem).Methods("DELETE")
+	protected.HandleFunc("/account", h.Account).Methods("POST", "OPTIONS")
 
 	// Add middleware
 	api.Use(middleware.Logger(logger))

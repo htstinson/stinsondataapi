@@ -20,6 +20,8 @@ type Repository interface {
 	Close() error
 	GetUserByUsername(ctx context.Context, username string) (*model.User, error)
 	CreateUser(ctx context.Context, username, password string) (*model.User, error)
+	UpdateItem(cts context.Context, item *model.Item) error
+	DeleteItem(ctx context.Context, id string) error
 }
 
 type Database struct {
@@ -113,6 +115,33 @@ func (d *Database) GetItem(ctx context.Context, id string) (*model.Item, error) 
 		return nil, fmt.Errorf("error getting item: %w", err)
 	}
 	return &item, nil
+}
+
+func (d *Database) UpdateItem(ctx context.Context, item *model.Item) error {
+
+	query := `UPDATE items SET name = $1 WHERE id = $2`
+
+	_, err := d.db.ExecContext(ctx, query, item.Name, item.ID)
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	return err
+
+}
+
+func (d *Database) DeleteItem(ctx context.Context, id string) error {
+
+	query := `DELETE FROM items WHERE id = $1`
+
+	_, err := d.db.ExecContext(ctx, query, id)
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	return err
 }
 
 func (d *Database) CreateItem(ctx context.Context, item *model.Item) error {
