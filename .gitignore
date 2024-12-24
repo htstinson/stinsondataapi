@@ -11,3 +11,6 @@
 go.work
 scratch
 myapi/certs/
+../.DS_Store
+API.code-workspace
+../.gitignore
