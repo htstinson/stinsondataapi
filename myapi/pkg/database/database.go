@@ -14,14 +14,22 @@ import (
 )
 
 type Repository interface {
+	// Item
 	GetItem(ctx context.Context, id string) (*model.Item, error)
 	CreateItem(ctx context.Context, item *model.Item) error
 	ListItems(ctx context.Context, limit, offset int) ([]model.Item, error)
-	Close() error
-	GetUserByUsername(ctx context.Context, username string) (*model.User, error)
-	CreateUser(ctx context.Context, username, password string) (*model.User, error)
 	UpdateItem(cts context.Context, item *model.Item) error
 	DeleteItem(ctx context.Context, id string) error
+
+	// User
+	CreateUser(ctx context.Context, username string, password string) (*model.User, error)
+	ListUsers(ctx context.Context, limit, offset int) ([]model.User, error)
+	GetUser(ctx context.Context, id string) (*model.User, error)
+	GetUserByUsername(ctx context.Context, username string) (*model.User, error)
+	UpdateUser(cts context.Context, item *model.User) error
+	DeleteUser(ctx context.Context, id string) error
+
+	Close() error
 }
 
 type Database struct {
@@ -116,6 +124,12 @@ func initializeSchema(db *sql.DB) error {
 	return nil
 }
 
+func (d *Database) Close() error {
+	return d.db.Close()
+}
+
+// Item
+
 func (d *Database) GetItem(ctx context.Context, id string) (*model.Item, error) {
 	var item model.Item
 	err := d.db.QueryRowContext(ctx,
@@ -138,10 +152,6 @@ func (d *Database) UpdateItem(ctx context.Context, item *model.Item) error {
 
 	_, err := d.db.ExecContext(ctx, query, item.Name, item.ID)
 
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
 	return err
 
 }
@@ -151,10 +161,6 @@ func (d *Database) DeleteItem(ctx context.Context, id string) error {
 	query := `DELETE FROM items WHERE id = $1`
 
 	_, err := d.db.ExecContext(ctx, query, id)
-
-	if err != nil {
-		fmt.Println(err.Error())
-	}
 
 	return err
 }
@@ -194,8 +200,45 @@ func (d *Database) ListItems(ctx context.Context, limit, offset int) ([]model.It
 	return items, nil
 }
 
-func (d *Database) Close() error {
-	return d.db.Close()
+//User
+
+func (d *Database) ListUsers(ctx context.Context, limit, offset int) ([]model.User, error) {
+	rows, err := d.db.QueryContext(ctx,
+		"SELECT id, username FROM users ORDER BY username ASC LIMIT $1 OFFSET $2",
+		limit, offset,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("error listing items: %w", err)
+	}
+	defer rows.Close()
+
+	var users []model.User
+	for rows.Next() {
+		var user model.User
+		if err := rows.Scan(&user.ID, &user.Username); err != nil {
+			return nil, fmt.Errorf("error scanning user: %w", err)
+		}
+		users = append(users, user)
+	}
+	return users, nil
+}
+
+func (d *Database) GetUser(ctx context.Context, id string) (*model.User, error) {
+	var user model.User
+
+	err := d.db.QueryRowContext(ctx,
+		"SELECT id, username, created_at FROM users WHERE id = $1",
+		id,
+	).Scan(&user.ID, &user.Username, &user.CreatedAt)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting user: %w", err)
+	}
+
+	return &user, nil
 }
 
 func (d *Database) CreateUser(ctx context.Context, username, password string) (*model.User, error) {
@@ -251,4 +294,23 @@ func (d *Database) GetUserByUsername(ctx context.Context, username string) (*mod
 	}
 
 	return user, nil
+}
+
+func (d *Database) DeleteUser(ctx context.Context, id string) error {
+
+	query := `DELETE FROM users WHERE id = $1`
+
+	_, err := d.db.ExecContext(ctx, query, id)
+
+	return err
+}
+
+func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
+
+	query := `UPDATE users SET username = $1 WHERE id = $2`
+
+	_, err := d.db.ExecContext(ctx, query, user.Username, user.ID)
+
+	return err
+
 }

@@ -69,13 +69,23 @@ func main() {
 	// Protected rounts
 	protected := api.PathPrefix("/").Subrouter()
 	protected.Use(jwtAuth.Middleware)
+
 	protected.HandleFunc("/items", h.CreateItem).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.UpdateItem).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.GetItem).Methods("GET")
 	protected.HandleFunc("/items", h.ListItems).Methods("GET", "OPTIONS")
+
 	protected.HandleFunc("/items/{id}", h.DeleteItem).Methods("DELETE")
+
 	protected.HandleFunc("/account", h.Account).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/accounts", h.ListAccounts).Methods("GET", "OPTIONS")
+
+	protected.HandleFunc("/users", h.CreateUser).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT", "OPTIONS")
+
+	protected.HandleFunc("/users/{id}", h.DeleteUser).Methods("DELETE")
+	protected.HandleFunc("/users/{id}", h.GetUser).Methods("GET")
+	protected.HandleFunc("/users", h.ListUsers).Methods("GET", "OPTIONS")
 
 	// Add middleware
 	api.Use(middleware.Logger(logger))
