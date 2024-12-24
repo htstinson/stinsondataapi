@@ -310,7 +310,7 @@ func (h *Handler) ListAccounts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for k, v := range response.Records {
-		fmt.Println(k, v.Name, v.Phone, v.Id)
+		h.logger.Println(k, v.Name, v.Phone, v.Id)
 	}
 
 	respondJSON(w, http.StatusOK, "get complete")
