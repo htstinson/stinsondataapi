@@ -8,12 +8,6 @@ type Test struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
-type Account struct {
-	Name        string `json:"name"`
-	Description string `json:"description"`
-	Phone       string `json:"phone"`
-}
-
 type Item struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
@@ -35,4 +29,24 @@ type LoginRequest struct {
 type LoginResponse struct {
 	Token     string `json:"token"`
 	ExpiresIn int64  `json:"expires_in"`
+}
+
+type AccountQueryResponse struct {
+	TotalSize int       `json:"totalSize"`
+	Done      bool      `json:"done"`
+	Records   []Account `json:"records"`
+}
+
+type Account struct {
+	Attributes  AccountAttributes `json:"attributes"`
+	Id          string            `json:"Id"`
+	Name        string            `json:"Name"`
+	Industry    *string           `json:"Industry"` // Using pointer since it can be null
+	Description string            `json:"description"`
+	Phone       string            `json:"phone"`
+}
+
+type AccountAttributes struct {
+	Type string `json:"type"`
+	URL  string `json:"url"`
 }

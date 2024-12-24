@@ -75,6 +75,7 @@ func main() {
 	protected.HandleFunc("/items", h.ListItems).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.DeleteItem).Methods("DELETE")
 	protected.HandleFunc("/account", h.Account).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/accounts", h.ListAccounts).Methods("GET", "OPTIONS")
 
 	// Add middleware
 	api.Use(middleware.Logger(logger))

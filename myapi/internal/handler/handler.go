@@ -156,15 +156,6 @@ func (h *Handler) Account(w http.ResponseWriter, r *http.Request) {
 		InstanceURL: "https://stinsondata.my.salesforce.com",
 	}
 
-	// Example: Creating a new Account
-	/*
-		payload := map[string]interface{}{
-			"Name":        "A Test Account",
-			"Description": "Created via API",
-			"Phone":       "1234567890",
-		}
-	*/
-
 	account := model.Account{
 		Name:        "A Test Account",
 		Description: "Created via API",
@@ -183,6 +174,41 @@ func (h *Handler) Account(w http.ResponseWriter, r *http.Request) {
 	h.logger.Println(string(response))
 
 	respondJSON(w, http.StatusOK, "test complete")
+}
+
+func (h *Handler) ListAccounts(w http.ResponseWriter, r *http.Request) {
+
+	authResponse, err := SalesForceLogin()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	auth := salesforce.SalesforceAuth{
+		AccessToken: authResponse.AccessToken,
+		InstanceURL: "https://stinsondata.my.salesforce.com",
+	}
+
+	query := "SELECT Id, Name, Industry FROM Account LIMIT 1000"
+
+	data, err := salesforce.SalesforceGet(auth, "/services/data/v59.0/query?q=", query, nil)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		return
+	}
+
+	response := model.AccountQueryResponse{}
+
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		// Handle error
+	}
+
+	for k, v := range response.Records {
+		fmt.Println(k, v.Name, v.Phone, v.Id)
+	}
+
+	respondJSON(w, http.StatusOK, "get complete")
 }
 
 func SalesForceLogin() (*salesforce.SalesforceAuthResponse, error) {
