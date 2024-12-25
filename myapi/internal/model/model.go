@@ -1,19 +1,18 @@
 package model
 
-import "time"
+import (
+	"myapi/internal/salesforce"
+	"time"
+)
 
-type Test struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	CreatedAt time.Time `json:"created_at"`
-}
-
+// Item
 type Item struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
+// User
 type User struct {
 	ID           string    `json:"id"`
 	Username     string    `json:"username"`
@@ -21,6 +20,7 @@ type User struct {
 	CreatedAt    time.Time `json:"created_at"`
 }
 
+// All
 type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -31,6 +31,7 @@ type LoginResponse struct {
 	ExpiresIn int64  `json:"expires_in"`
 }
 
+// Salesforce
 type AccountQueryResponse struct {
 	TotalSize int       `json:"totalSize"`
 	Done      bool      `json:"done"`
@@ -38,12 +39,13 @@ type AccountQueryResponse struct {
 }
 
 type Account struct {
-	Attributes  AccountAttributes `json:"attributes"`
-	Id          string            `json:"Id"`
-	Name        string            `json:"Name"`
-	Industry    *string           `json:"Industry"` // Using pointer since it can be null
-	Description string            `json:"description"`
-	Phone       string            `json:"phone"`
+	Attributes       AccountAttributes         `json:"attributes"`
+	Id               string                    `json:"Id"`
+	Name             string                    `json:"Name"`
+	Industry         *string                   `json:"Industry"` // Using pointer since it can be null
+	Description      string                    `json:"Description"`
+	Phone            string                    `json:"Phone"`
+	LastModifiedDate salesforce.SalesforceTime `json:"LastModifiedDate"`
 }
 
 type AccountAttributes struct {

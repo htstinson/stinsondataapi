@@ -34,6 +34,8 @@ func (h *Handler) HealthCheck(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
+// Item - Create, Update, Delete, Get, List
+
 func (h *Handler) CreateItem(w http.ResponseWriter, r *http.Request) {
 	var item model.Item
 	if err := json.NewDecoder(r.Body).Decode(&item); err != nil {
@@ -127,6 +129,19 @@ func (h *Handler) GetItem(w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, item)
 }
 
+func (h *Handler) ListItems(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	items, err := h.db.ListItems(ctx, 100, 0)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, "Failed to list items")
+		return
+	}
+
+	respondJSON(w, http.StatusOK, items)
+}
+
+// User - Create, Update, Delete, Get, List
+
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user *model.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
@@ -180,24 +195,6 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, user)
 }
 
-func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
-
-	ctx := r.Context()
-	user, err := h.db.GetUser(ctx, id)
-	if err != nil {
-		respondError(w, http.StatusInternalServerError, "Failed to get user")
-		return
-	}
-	if user == nil {
-		respondError(w, http.StatusNotFound, "Item not found")
-		return
-	}
-
-	respondJSON(w, http.StatusOK, user)
-}
-
 func (h *Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -224,6 +221,24 @@ func (h *Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+	user, err := h.db.GetUser(ctx, id)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, "Failed to get user")
+		return
+	}
+	if user == nil {
+		respondError(w, http.StatusNotFound, "Item not found")
+		return
+	}
+
+	respondJSON(w, http.StatusOK, user)
+}
+
 func (h *Handler) ListUsers(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
@@ -237,16 +252,7 @@ func (h *Handler) ListUsers(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (h *Handler) ListItems(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-	items, err := h.db.ListItems(ctx, 100, 0)
-	if err != nil {
-		respondError(w, http.StatusInternalServerError, "Failed to list items")
-		return
-	}
-
-	respondJSON(w, http.StatusOK, items)
-}
+// Salesforce
 
 func (h *Handler) Account(w http.ResponseWriter, r *http.Request) {
 
@@ -294,13 +300,15 @@ func (h *Handler) ListAccounts(w http.ResponseWriter, r *http.Request) {
 		InstanceURL: "https://stinsondata.my.salesforce.com",
 	}
 
-	query := "SELECT Id, Name, Industry FROM Account LIMIT 1000"
+	query := "SELECT Id, Name, Industry, Phone, LastModifiedDate FROM Account LIMIT 10"
 
 	data, err := salesforce.SalesforceGet(auth, "/services/data/v59.0/query?q=", query, nil)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return
 	}
+
+	fmt.Println(string(data))
 
 	response := model.AccountQueryResponse{}
 
@@ -309,11 +317,13 @@ func (h *Handler) ListAccounts(w http.ResponseWriter, r *http.Request) {
 		// Handle error
 	}
 
+	fmt.Println(response.TotalSize)
+
 	for k, v := range response.Records {
-		h.logger.Println(k, v.Name, v.Phone, v.Id)
+		h.logger.Println(k, v.Id, v.LastModifiedDate.Format(time.RFC3339), v.Name, v.Phone)
 	}
 
-	respondJSON(w, http.StatusOK, "get complete")
+	respondJSON(w, http.StatusOK, response.Records)
 }
 
 func SalesForceLogin() (*salesforce.SalesforceAuthResponse, error) {
@@ -336,6 +346,7 @@ func SalesForceLogin() (*salesforce.SalesforceAuthResponse, error) {
 
 }
 
+// All - Internal
 func respondJSON(w http.ResponseWriter, status int, payload interface{}) {
 	response, err := json.Marshal(payload)
 	if err != nil {
@@ -352,6 +363,7 @@ func respondError(w http.ResponseWriter, code int, message string) {
 	respondJSON(w, code, map[string]string{"error": message})
 }
 
+// All - UI
 func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	var req model.LoginRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {

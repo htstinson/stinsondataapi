@@ -14,18 +14,18 @@ import (
 )
 
 type Repository interface {
-	// Item
+	// Item Get, Create, List, Update, Delete
 	GetItem(ctx context.Context, id string) (*model.Item, error)
 	CreateItem(ctx context.Context, item *model.Item) error
 	ListItems(ctx context.Context, limit, offset int) ([]model.Item, error)
 	UpdateItem(cts context.Context, item *model.Item) error
 	DeleteItem(ctx context.Context, id string) error
 
-	// User
-	CreateUser(ctx context.Context, username string, password string) (*model.User, error)
-	ListUsers(ctx context.Context, limit, offset int) ([]model.User, error)
+	// User Get(2), Create, List, Update, Delete
 	GetUser(ctx context.Context, id string) (*model.User, error)
 	GetUserByUsername(ctx context.Context, username string) (*model.User, error)
+	CreateUser(ctx context.Context, username string, password string) (*model.User, error)
+	ListUsers(ctx context.Context, limit, offset int) ([]model.User, error)
 	UpdateUser(cts context.Context, item *model.User) error
 	DeleteUser(ctx context.Context, id string) error
 
@@ -76,34 +76,6 @@ func New(cfg Config) (Repository, error) {
 
 func initializeSchema(db *sql.DB) error {
 
-	// Create Items table
-	_, err := db.Exec(`
-        CREATE TABLE IF NOT EXISTS items (
-            id VARCHAR(36) PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP WITH TIME ZONE NOT NULL
-        );
-        CREATE INDEX IF NOT EXISTS items_created_at_idx ON items(created_at DESC);
-    `)
-	if err != nil {
-		return err
-	}
-
-	// Create Accounts table
-	_, err = db.Exec(`
-        CREATE TABLE IF NOT EXISTS accounts (
-            id VARCHAR(36) PRIMARY KEY,
-            name VARCHAR(255) NOT NULL,
-			description VARCHAR(255) NOT NULL,
-			phone VARCHAR(255) NOT NULL,
-            created_at TIMESTAMP WITH TIME ZONE NOT NULL
-        );
-        CREATE INDEX IF NOT EXISTS accounts_created_at_idx ON items(created_at DESC);
-    `)
-	if err != nil {
-		return err
-	}
-
 	// Create Users table
 	queries := []string{
 		`CREATE TABLE IF NOT EXISTS users (
@@ -113,7 +85,27 @@ func initializeSchema(db *sql.DB) error {
             created_at TIMESTAMP WITH TIME ZONE NOT NULL
         )`,
 		`CREATE INDEX IF NOT EXISTS users_username_idx ON users(username)`,
-		// ... existing items table creation ...
+		`CREATE TABLE IF NOT EXISTS people (
+            id VARCHAR(36) PRIMARY KEY,
+            firstname VARCHAR(255) UNIQUE NOT NULL,
+            lastname VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE NOT NULL
+        )`,
+		`CREATE INDEX IF NOT EXISTS users_username_idx ON users(username)`,
+		`CREATE TABLE IF NOT EXISTS items (
+            id VARCHAR(36) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS items_created_at_idx ON items(created_at DESC);`,
+		`CREATE TABLE IF NOT EXISTS accounts (
+            id VARCHAR(36) PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+			description VARCHAR(255) NOT NULL,
+			phone VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS accounts_created_at_idx ON items(created_at DESC);`,
 	}
 
 	for _, query := range queries {
