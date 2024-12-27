@@ -17,6 +17,10 @@ import (
 	"github.com/gorilla/mux"
 )
 
+var (
+	domainname = "stinsondata.tools"
+)
+
 func main() {
 	// Create logger
 	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
@@ -106,9 +110,9 @@ func main() {
 
 	// Start server
 	go func() {
-		logger.Printf("Server starting on https://api.local.dev")
+		logger.Printf("Server starting.")
 
-		err := srv.ListenAndServeTLS("certs/local.crt", "certs/local.key")
+		err := srv.ListenAndServeTLS("certs/combined_certificate.crt", "certs/private.key")
 		if err == http.ErrServerClosed {
 			logger.Printf("Failed to start server (tls): %v", err)
 		} else {
