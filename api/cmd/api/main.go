@@ -22,13 +22,14 @@ func main() {
 	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
 
 	// Initialize database
+	logger.Println("initializing database")
 	db, err := database.New(database.Config{
-		Host:     "localhost",
+		Host:     "database-1.cxbia8uq3f3n.us-west-2.rds.amazonaws.com",
 		Port:     5432,
 		User:     "postgres",
-		Password: "postgres",
+		Password: "Shoe3horn*",
 		DBName:   "apidb",
-		SSLMode:  "disable",
+		SSLMode:  "require",
 	})
 	if err != nil {
 		logger.Fatalf("Failed to connect to database: %v", err)
