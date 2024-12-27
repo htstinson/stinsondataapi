@@ -1,12 +1,12 @@
 package salesforce
 
 import (
+	"api/internal/model"
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
-	"myapi/internal/model"
 	"net/http"
 	"net/url"
 	"strings"

@@ -10,10 +10,10 @@ import (
 	"os"
 	"time"
 
-	"myapi/internal/auth"
-	"myapi/internal/model"
-	"myapi/internal/salesforce"
-	"myapi/pkg/database"
+	"api/internal/auth"
+	"api/internal/model"
+	"api/internal/salesforce"
+	"api/pkg/database"
 
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"

@@ -1,13 +1,13 @@
 package main
 
 import (
+	"api/internal/auth"
+	"api/internal/handler"
+	"api/internal/middleware"
+	"api/pkg/database"
 	"context"
 	"crypto/tls"
 	"log"
-	"myapi/internal/auth"
-	"myapi/internal/handler"
-	"myapi/internal/middleware"
-	"myapi/pkg/database"
 	"net/http"
 	"os"
 	"os/signal"

@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"myapi/internal/model"
+	"api/internal/model"
 
 	"github.com/google/uuid"
 	_ "github.com/lib/pq"
