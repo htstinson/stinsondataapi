@@ -77,7 +77,8 @@ func main() {
 
 	protected.HandleFunc("/items/{id}", h.DeleteItem).Methods("DELETE")
 
-	protected.HandleFunc("/account", h.Account).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/accounts", h.CreateAccount).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/accounts/{id}", h.UpdateAccount).Methods("PATCH", "OPTIONS")
 	protected.HandleFunc("/accounts", h.ListAccounts).Methods("GET", "OPTIONS")
 
 	protected.HandleFunc("/users", h.CreateUser).Methods("POST", "OPTIONS")
@@ -95,7 +96,7 @@ func main() {
 
 	// Create server with local certificates
 	srv := &http.Server{
-		Addr:    ":443",
+		Addr:    ":80",
 		Handler: router,
 		TLSConfig: &tls.Config{
 			MinVersion: tls.VersionTLS12,
@@ -105,8 +106,15 @@ func main() {
 	// Start server
 	go func() {
 		logger.Printf("Server starting on https://api.local.dev")
-		if err := srv.ListenAndServeTLS("certs/local.crt", "certs/local.key"); err != http.ErrServerClosed {
-			logger.Fatalf("Failed to start server: %v", err)
+
+		err := srv.ListenAndServeTLS("certs/local.crt", "certs/local.key")
+		if err == http.ErrServerClosed {
+			logger.Printf("Failed to start server (tls): %v", err)
+		} else {
+			err = srv.ListenAndServe()
+			if err != nil {
+				logger.Printf("Failed to start server: %v", err)
+			}
 		}
 	}()
 
