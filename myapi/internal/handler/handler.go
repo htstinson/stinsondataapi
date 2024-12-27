@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -254,7 +256,9 @@ func (h *Handler) ListUsers(w http.ResponseWriter, r *http.Request) {
 
 // Salesforce
 
-func (h *Handler) Account(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
 
 	authResponse, err := SalesForceLogin()
 	if err != nil {
@@ -267,10 +271,101 @@ func (h *Handler) Account(w http.ResponseWriter, r *http.Request) {
 		InstanceURL: "https://stinsondata.my.salesforce.com",
 	}
 
-	account := model.Account{
-		Name:        "A Test Account",
-		Description: "Created via API",
-		Phone:       "1234567890",
+	account, err := salesforce.GetAccount(auth, id)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, "account lookup error")
+		return
+	}
+
+	if account.Id == "" {
+		respondError(w, http.StatusNotFound, "account not found")
+		return
+	}
+
+	respondJSON(w, http.StatusOK, account)
+}
+
+func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	//ctx := r.Context()
+
+	var newAccount model.NewAccount // this is for new or updated accounts
+
+	if err := json.NewDecoder(r.Body).Decode(&newAccount); err != nil {
+		respondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	authResponse, err := SalesForceLogin()
+	if err != nil {
+		h.logger.Println(err.Error())
+		return
+	}
+
+	auth := salesforce.SalesforceAuth{
+		AccessToken: authResponse.AccessToken,
+		InstanceURL: "https://stinsondata.my.salesforce.com",
+	}
+
+	currentAccount, err := salesforce.GetAccount(auth, id)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	if currentAccount.Id == "" {
+		respondError(w, http.StatusNotFound, "Account not found")
+		return
+	}
+
+	err = salesforce.UpdateAccount(auth, newAccount)
+	if err != nil {
+		respondError(w, http.StatusNotFound, "Error updating user")
+		return
+	}
+
+	respondJSON(w, http.StatusOK, newAccount)
+}
+
+func (h *Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
+
+	h.logger.Println("Account Handler")
+
+	var bodyBytes bytes.Buffer
+	_, err := bodyBytes.ReadFrom(r.Body)
+	if err != nil {
+		log.Printf("Error reading body: %v", err)
+		http.Error(w, "can't read body", http.StatusBadRequest)
+		return
+	}
+
+	// Display the body
+	log.Printf("Body: %s", bodyBytes.String())
+
+	// Restore the body for further processing
+	r.Body = io.NopCloser(bytes.NewReader(bodyBytes.Bytes()))
+
+	var account *model.NewAccount
+	if err := json.NewDecoder(r.Body).Decode(&account); err != nil {
+		respondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	fmt.Println(account)
+
+	authResponse, err := SalesForceLogin()
+	if err != nil {
+		h.logger.Println(err.Error())
+		return
+	}
+
+	auth := salesforce.SalesforceAuth{
+		AccessToken: authResponse.AccessToken,
+		InstanceURL: "https://stinsondata.my.salesforce.com",
 	}
 
 	// TODO: This should be async
@@ -300,7 +395,34 @@ func (h *Handler) ListAccounts(w http.ResponseWriter, r *http.Request) {
 		InstanceURL: "https://stinsondata.my.salesforce.com",
 	}
 
-	query := "SELECT Id, Name, Industry, Phone, LastModifiedDate FROM Account LIMIT 10"
+	query := `SELECT 
+	Id,
+	Name,
+	Industry,
+	Description,
+	Phone,
+	Fax,
+	Website,
+	LastModifiedDate, 
+	CreatedDate,
+	LastActivityDate,	
+	LastViewedDate,
+	IsDeleted,
+	MasterRecordId,
+	Type,
+	ParentId,
+	BillingStreet,
+	BillingCity,
+	BillingState,
+	BillingPostalCode,
+	BillingCountry,
+	AnnualRevenue,
+	NumberOfEmployees,
+	OwnerId,
+	CreatedById,
+	LastModifiedById,
+	AccountSource
+	FROM Account LIMIT 200`
 
 	data, err := salesforce.SalesforceGet(auth, "/services/data/v59.0/query?q=", query, nil)
 	if err != nil {
@@ -308,19 +430,11 @@ func (h *Handler) ListAccounts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(string(data))
-
 	response := model.AccountQueryResponse{}
 
 	err = json.Unmarshal(data, &response)
 	if err != nil {
 		// Handle error
-	}
-
-	fmt.Println(response.TotalSize)
-
-	for k, v := range response.Records {
-		h.logger.Println(k, v.Id, v.LastModifiedDate.Format(time.RFC3339), v.Name, v.Phone)
 	}
 
 	respondJSON(w, http.StatusOK, response.Records)
@@ -333,8 +447,11 @@ func SalesForceLogin() (*salesforce.SalesforceAuthResponse, error) {
 		clientSecret = os.Getenv("SF_STINSONDATA_CLIENT_SECRET")
 		username     = os.Getenv("SF_STINSONDATA_USERNAME")
 		password     = os.Getenv("SF_STINSONDATA_PASSWORD")
+		accessToken  = os.Getenv("SF_STINSONDATA_ACCESS_TOKEN")
 		loginURL     = "https://login.salesforce.com"
 	)
+
+	password += accessToken
 
 	auth, err := salesforce.GetSalesforceToken(clientID, clientSecret, username, password, loginURL)
 	if err != nil {
