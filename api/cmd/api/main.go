@@ -7,6 +7,7 @@ import (
 	"api/pkg/database"
 	"context"
 	"crypto/tls"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,10 +18,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-var (
-	domainname = "stinsondata.tools"
-)
-
 func main() {
 	// Create logger
 	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
@@ -29,6 +26,11 @@ func main() {
 	un := os.Getenv("RDS_USER")
 	dbn := os.Getenv("RDS_DB")
 	host := os.Getenv("RDS_HOST")
+
+	fmt.Println(pw)
+	fmt.Println(un)
+	fmt.Println(dbn)
+	fmt.Println(host)
 
 	// Initialize database
 	logger.Println("initializing database")
