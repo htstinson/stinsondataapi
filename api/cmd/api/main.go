@@ -70,6 +70,7 @@ func main() {
 	api.HandleFunc("/health", h.HealthCheck).Methods("GET")
 	api.HandleFunc("/register", h.Register).Methods("POST")
 	api.HandleFunc("/login", h.Login).Methods("POST", "OPTIONS")
+	api.HandleFunc("/", h.HealthCheck).Methods("GET")
 
 	// Protected rounts
 	protected := api.PathPrefix("/").Subrouter()
