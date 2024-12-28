@@ -16,11 +16,43 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
 func main() {
 	// Create logger
 	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
+
+	secretName := "RDS/apidb"
+	region := "us-west-2"
+
+	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Create Secrets Manager client
+	svc := secretsmanager.NewFromConfig(config)
+
+	input := &secretsmanager.GetSecretValueInput{
+		SecretId:     aws.String(secretName),
+		VersionStage: aws.String("AWSCURRENT"), // VersionStage defaults to AWSCURRENT if unspecified
+	}
+
+	result, err := svc.GetSecretValue(context.TODO(), input)
+	if err != nil {
+		// For a list of exceptions thrown, see
+		// https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+		log.Fatal(err.Error())
+	}
+
+	// Decrypts secret using the associated KMS key.
+	var secretString string = *result.SecretString
+
+	fmt.Println("secret", secretString)
 
 	pw := os.Getenv("RDS_PW")
 	un := os.Getenv("RDS_USER")
