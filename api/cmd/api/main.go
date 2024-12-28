@@ -22,16 +22,13 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
-func main() {
-	// Create logger
-	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
+func GetSecretString(secretName string, region string) (string, error) {
 
-	secretName := "RDS/apidb"
-	region := "us-west-2"
+	var SecretValue string
 
 	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
 	if err != nil {
-		log.Fatal(err)
+		return SecretValue, err
 	}
 
 	// Create Secrets Manager client
@@ -44,34 +41,47 @@ func main() {
 
 	result, err := svc.GetSecretValue(context.TODO(), input)
 	if err != nil {
-		// For a list of exceptions thrown, see
-		// https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
-		log.Fatal(err.Error())
+		return SecretValue, err
 	}
 
-	// Decrypts secret using the associated KMS key.
-	var secretString string = *result.SecretString
+	var secretValue string = *result.SecretString
 
-	fmt.Println("secret", secretString)
+	return secretValue, err
 
-	pw := os.Getenv("RDS_PW")
-	un := os.Getenv("RDS_USER")
-	dbn := os.Getenv("RDS_DB")
-	host := os.Getenv("RDS_HOST")
+}
 
-	fmt.Println(pw)
-	fmt.Println(un)
-	fmt.Println(dbn)
-	fmt.Println(host)
+func main() {
+	// Create logger
+	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
+
+	rdsSecrets, err := GetSecretString("API", "us-west-2")
+	if err != nil {
+		logger.Println("RDS password", err.Error())
+		return
+	}
+
+	fmt.Println(rdsSecrets)
+
+	rdsPassword, err := GetSecretString("API", "us-west-2")
+	if err != nil {
+		logger.Println("RDS password", err.Error())
+		return
+	}
+
+	fmt.Println(rdsPassword)
+
+	if true {
+		return
+	}
 
 	// Initialize database
 	logger.Println("initializing database")
 	db, err := database.New(database.Config{
-		Host:     host,
+		Host:     "", //rdsHost,
 		Port:     5432,
-		User:     un,
-		Password: pw,
-		DBName:   dbn,
+		User:     "", //rdsUser,
+		Password: "", //rdsPassword,
+		DBName:   "", //rdsDbName,
 		SSLMode:  "require",
 	})
 	if err != nil {
