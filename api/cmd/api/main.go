@@ -37,7 +37,9 @@ const indexHTML = `
     <script src="/static/js/bundle.js" defer></script>
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root">
+	Hi
+	</div>
 </body>
 </html>
 `
