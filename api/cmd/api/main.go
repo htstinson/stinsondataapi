@@ -4,10 +4,11 @@ import (
 	"api/internal/auth"
 	"api/internal/handler"
 	"api/internal/middleware"
+	"api/internal/model"
 	"api/pkg/database"
 	"context"
 	"crypto/tls"
-	"fmt"
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -22,9 +23,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
-func GetSecretString(secretName string, region string) (string, error) {
+func GetSecretString(secretName string, region string) ([]byte, error) {
 
-	var SecretValue string
+	var SecretValue []byte
 
 	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
 	if err != nil {
@@ -44,9 +45,9 @@ func GetSecretString(secretName string, region string) (string, error) {
 		return SecretValue, err
 	}
 
-	var secretValue string = *result.SecretString
+	SecretValue = []byte(*result.SecretString)
 
-	return secretValue, err
+	return SecretValue, err
 
 }
 
@@ -54,34 +55,23 @@ func main() {
 	// Create logger
 	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
 
-	rdsSecrets, err := GetSecretString("API", "us-west-2")
+	rdsLogin, err := GetSecretString("rds/apidb", "us-west-2")
 	if err != nil {
-		logger.Println("RDS secrets", err.Error())
+		logger.Println("RDS Login", err.Error())
 		return
 	}
 
-	fmt.Println(rdsSecrets)
-
-	rdsPassword, err := GetSecretString("RDS/apidb", "us-west-2")
-	if err != nil {
-		logger.Println("RDS password", err.Error())
-		return
-	}
-
-	fmt.Println(rdsPassword)
-
-	if true {
-		return
-	}
+	var RDSLogin = &model.RDSLogin{}
+	json.Unmarshal(rdsLogin, RDSLogin)
 
 	// Initialize database
 	logger.Println("initializing database")
 	db, err := database.New(database.Config{
-		Host:     "", //rdsHost,
-		Port:     5432,
-		User:     "", //rdsUser,
-		Password: "", //rdsPassword,
-		DBName:   "", //rdsDbName,
+		Host:     RDSLogin.Host,
+		Port:     RDSLogin.Port,
+		User:     RDSLogin.Username,
+		Password: RDSLogin.Password,
+		DBName:   "apidb",
 		SSLMode:  "require",
 	})
 	if err != nil {
