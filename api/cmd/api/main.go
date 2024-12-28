@@ -152,7 +152,7 @@ func main() {
 	go func() {
 		logger.Printf("Server starting.")
 
-		err := srv.ListenAndServeTLS("api/certs/certificate.crt", "api/certs/private.key")
+		err := srv.ListenAndServeTLS("../../certs/certificate.crt", "../../certs/private.key")
 		if err == http.ErrServerClosed {
 			logger.Printf("Failed to start server (tls): %v", err)
 		} else {
