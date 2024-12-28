@@ -9,13 +9,13 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
-	"fmt"
 	"log"
 	"mime"
 	"net/http"
 	"os"
 	"os/signal"
 	"path"
+	"path/filepath"
 	"syscall"
 	"time"
 
@@ -98,12 +98,18 @@ func main() {
 
 	// Create router and handler
 	router := mux.NewRouter()
+	// debug region start
 
-	fs := http.FileServer(http.Dir("../../../../stinsondata-tools-reactapp/dist"))
+	distPath := "../../../../stinsondata-tools-reactapp/dist"
+	absPath, err := filepath.Abs(distPath)
+	if err != nil {
+		log.Printf("Error getting absolute path: %v", err)
+	}
+	log.Printf("Serving files from: %s", absPath)
 
-	// Wrap the file server with MIME type headers
+	fs := http.FileServer(http.Dir(distPath))
 	fsWithMime := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("Requested path: %s\n", r.URL.Path)
+		log.Printf("Received request for: %s", r.URL.Path)
 
 		w.Header().Set("Cache-Control", "no-cache")
 
@@ -117,15 +123,17 @@ func main() {
 		fs.ServeHTTP(w, r)
 	})
 
-	router.PathPrefix("/assets/").Handler( // Change from /static/ to /assets/
-		http.StripPrefix("/assets/", fsWithMime),
-	)
+	// Handle assets directory
+	router.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", fsWithMime))
 
-	// Index.html handler remains structurally the same
+	// Handle root and all other routes
 	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("Serving index.html for path: %s", r.URL.Path)
 		w.Header().Set("Content-Type", "text/html")
-		http.ServeFile(w, r, "../../../../stinsondata-tools-reactapp/dist/index.html") // Update path
+		http.ServeFile(w, r, filepath.Join(distPath, "index.html"))
 	})
+
+	// debug region end
 
 	// Setup routes
 	api := router.PathPrefix("/api/v1").Subrouter()
