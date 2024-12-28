@@ -16,6 +16,8 @@ import (
 	"syscall"
 	"time"
 
+	"html/template"
+
 	"github.com/gorilla/mux"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -23,49 +25,36 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
-func GetSecretString(secretName string, region string) ([]byte, error) {
-
-	var SecretValue []byte
-
-	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
-	if err != nil {
-		return SecretValue, err
-	}
-
-	// Create Secrets Manager client
-	svc := secretsmanager.NewFromConfig(config)
-
-	input := &secretsmanager.GetSecretValueInput{
-		SecretId:     aws.String(secretName),
-		VersionStage: aws.String("AWSCURRENT"), // VersionStage defaults to AWSCURRENT if unspecified
-	}
-
-	result, err := svc.GetSecretValue(context.TODO(), input)
-	if err != nil {
-		return SecretValue, err
-	}
-
-	SecretValue = []byte(*result.SecretString)
-
-	return SecretValue, err
-
-}
+// Basic HTML template that loads your React app
+const indexHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kendo React App</title>
+    <!-- KendoReact styles -->
+    <link href="https://kendo.cdn.telerik.com/themes/6.4.0/default/default-main.css" rel="stylesheet" />
+    <!-- Your bundled React app -->
+    <script src="/static/js/bundle.js" defer></script>
+</head>
+<body>
+    <div id="root"></div>
+</body>
+</html>
+`
 
 func main() {
 	// Create logger
 	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
 
+	logger.Println("initializing database")
+	var RDSLogin = &model.RDSLogin{}
 	rdsLogin, err := GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
 		logger.Println("RDS Login", err.Error())
 		return
 	}
-
-	var RDSLogin = &model.RDSLogin{}
 	json.Unmarshal(rdsLogin, RDSLogin)
-
 	// Initialize database
-	logger.Println("initializing database")
 	db, err := database.New(database.Config{
 		Host:     RDSLogin.Host,
 		Port:     RDSLogin.Port,
@@ -90,17 +79,20 @@ func main() {
 	}
 
 	jwtAuth := auth.New(authConfig)
-
-	// Create router and handler
-	router := mux.NewRouter()
-	//h := handler.NewHandler(db)
-
 	// Create handler with auth
 	h := handler.NewHandler(
 		db,
 		*jwtAuth,
 		logger,
 	)
+
+	// Create router and handler
+	router := mux.NewRouter()
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tmpl := template.Must(template.New("index").Parse(indexHTML))
+		tmpl.Execute(w, nil)
+	})
 
 	// Setup routes
 	api := router.PathPrefix("/api/v1").Subrouter()
@@ -175,4 +167,32 @@ func main() {
 	}
 
 	logger.Println("Server stopped")
+}
+
+func GetSecretString(secretName string, region string) ([]byte, error) {
+
+	var SecretValue []byte
+
+	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	if err != nil {
+		return SecretValue, err
+	}
+
+	// Create Secrets Manager client
+	svc := secretsmanager.NewFromConfig(config)
+
+	input := &secretsmanager.GetSecretValueInput{
+		SecretId:     aws.String(secretName),
+		VersionStage: aws.String("AWSCURRENT"), // VersionStage defaults to AWSCURRENT if unspecified
+	}
+
+	result, err := svc.GetSecretValue(context.TODO(), input)
+	if err != nil {
+		return SecretValue, err
+	}
+
+	SecretValue = []byte(*result.SecretString)
+
+	return SecretValue, err
+
 }
