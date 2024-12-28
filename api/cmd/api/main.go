@@ -25,14 +25,19 @@ func main() {
 	// Create logger
 	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
 
+	pw := os.Getenv("RDS_PW")
+	un := os.Getenv("RDS_USER")
+	dbn := os.Getenv("RDS_DB")
+	host := os.Getenv("RDS_HOST")
+
 	// Initialize database
 	logger.Println("initializing database")
 	db, err := database.New(database.Config{
-		Host:     "database-1.cxbia8uq3f3n.us-west-2.rds.amazonaws.com",
+		Host:     host,
 		Port:     5432,
-		User:     "postgres",
-		Password: "Shoe3horn*",
-		DBName:   "apidb",
+		User:     un,
+		Password: pw,
+		DBName:   dbn,
 		SSLMode:  "require",
 	})
 	if err != nil {
