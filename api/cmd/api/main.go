@@ -16,8 +16,6 @@ import (
 	"syscall"
 	"time"
 
-	"html/template"
-
 	"github.com/gorilla/mux"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -90,10 +88,11 @@ func main() {
 
 	// Create router and handler
 	router := mux.NewRouter()
-	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/",
+		http.FileServer(http.Dir("../../../../stinsondata-tools-reactapp"))))
+
 	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.New("index").Parse(indexHTML))
-		tmpl.Execute(w, nil)
+		http.ServeFile(w, r, "../../../../stinsondata-tools-reactapp/index.html")
 	})
 
 	// Setup routes
