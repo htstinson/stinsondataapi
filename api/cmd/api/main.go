@@ -155,11 +155,6 @@ func main() {
 		err := srv.ListenAndServeTLS("certs/combined_certificate.crt", "certs/private.key")
 		if err == http.ErrServerClosed {
 			logger.Printf("Failed to start server (tls): %v", err)
-		} else {
-			err = srv.ListenAndServe()
-			if err != nil {
-				logger.Printf("Failed to start server: %v", err)
-			}
 		}
 	}()
 
