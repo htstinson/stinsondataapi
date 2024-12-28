@@ -100,22 +100,18 @@ func main() {
 	router := mux.NewRouter()
 	// debug region start
 
-	//distPath := "../../../../stinsondata-tools-reactapp/dist"
-
 	distPath := "/home/ec2-user/go/src/stinsondata-tools-reactapp/dist"
+	log.Printf("Serving files from: %s", distPath)
 
-	absPath, err := filepath.Abs(distPath)
-	if err != nil {
-		log.Printf("Error getting absolute path: %v", err)
-	}
-	log.Printf("Serving files from: %s", absPath)
+	// Handle all static assets including the index.js file
+	router.PathPrefix("/assets/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("Asset request for: %s", r.URL.Path)
 
-	fs := http.FileServer(http.Dir(distPath))
-	fsWithMime := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("Received request for: %s", r.URL.Path)
+		// Remove the leading /assets/ to get the file path
+		filePath := filepath.Join(distPath, r.URL.Path)
+		log.Printf("Looking for file at: %s", filePath)
 
-		w.Header().Set("Cache-Control", "no-cache")
-
+		// Set appropriate headers based on file extension
 		switch ext := path.Ext(r.URL.Path); ext {
 		case ".js", ".mjs", ".jsx":
 			w.Header().Set("Content-Type", "application/javascript")
@@ -123,13 +119,11 @@ func main() {
 			w.Header().Set("Content-Type", "text/css")
 		}
 
-		fs.ServeHTTP(w, r)
+		// Serve the file
+		http.ServeFile(w, r, filePath)
 	})
 
-	// Handle assets directory
-	router.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", fsWithMime))
-
-	// Handle root and all other routes
+	// Handle root and all other routes with index.html
 	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Serving index.html for path: %s", r.URL.Path)
 		w.Header().Set("Content-Type", "text/html")
