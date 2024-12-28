@@ -55,7 +55,7 @@ func main() {
 	// Create logger
 	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
 
-	rdsLogin, err := GetSecretString("rds/apidb", "us-west-2")
+	rdsLogin, err := GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
 		logger.Println("RDS Login", err.Error())
 		return
