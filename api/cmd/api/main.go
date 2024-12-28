@@ -10,9 +10,11 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"log"
+	"mime"
 	"net/http"
 	"os"
 	"os/signal"
+	"path"
 	"syscall"
 	"time"
 
@@ -41,6 +43,13 @@ const indexHTML = `
 </body>
 </html>
 `
+
+func init() {
+	// Register the correct MIME types for JavaScript modules
+	mime.AddExtensionType(".js", "application/javascript")
+	mime.AddExtensionType(".mjs", "application/javascript")
+	mime.AddExtensionType(".css", "text/css")
+}
 
 func main() {
 	// Create logger
@@ -88,10 +97,26 @@ func main() {
 
 	// Create router and handler
 	router := mux.NewRouter()
-	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/",
-		http.FileServer(http.Dir("../../../../stinsondata-tools-reactapp"))))
 
+	fs := http.FileServer(http.Dir("../../../../stinsondata-tools-reactapp"))
+
+	// Wrap the file server with MIME type headers
+	fsWithMime := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Set proper MIME types for JavaScript modules
+		if ext := path.Ext(r.URL.Path); ext == ".js" || ext == ".mjs" {
+			w.Header().Set("Content-Type", "application/javascript")
+		}
+		fs.ServeHTTP(w, r)
+	})
+
+	// Use the wrapped handler with StripPrefix
+	router.PathPrefix("/static/").Handler(
+		http.StripPrefix("/static/", fsWithMime),
+	)
+
+	// Index.html handler remains structurally the same
 	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
 		http.ServeFile(w, r, "../../../../stinsondata-tools-reactapp/index.html")
 	})
 
