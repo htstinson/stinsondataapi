@@ -62,7 +62,7 @@ func main() {
 
 	fmt.Println(rdsSecrets)
 
-	rdsPassword, err := GetSecretString("API", "us-west-2")
+	rdsPassword, err := GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
 		logger.Println("RDS password", err.Error())
 		return
