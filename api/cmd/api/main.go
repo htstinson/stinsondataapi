@@ -100,7 +100,10 @@ func main() {
 	router := mux.NewRouter()
 	// debug region start
 
-	distPath := "../../../../stinsondata-tools-reactapp/dist"
+	//distPath := "../../../../stinsondata-tools-reactapp/dist"
+
+	distPath := "/home/ec2-user/go/src/stinsondata-tools-reactapp/dist"
+
 	absPath, err := filepath.Abs(distPath)
 	if err != nil {
 		log.Printf("Error getting absolute path: %v", err)
