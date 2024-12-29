@@ -9,6 +9,7 @@ import (
 	"context"
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"log"
 	"mime"
 	"net/http"
@@ -56,6 +57,19 @@ func main() {
 	// Create logger
 	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
 
+	logger.Println("initialize salesforce")
+	var SalesforceCreds = &model.SalesforceCreds{}
+	salesforceCreds, err := GetSecretString("Salesforce", "us-west-2")
+	if err != nil {
+		logger.Println("Salesforce Creds", err.Error())
+		return
+	}
+	json.Unmarshal(salesforceCreds, SalesforceCreds)
+	fmt.Println(SalesforceCreds.ClientId)
+	fmt.Println(SalesforceCreds.ClientSecret)
+	fmt.Println(SalesforceCreds.Username)
+	fmt.Println(SalesforceCreds.Password)
+
 	logger.Println("initializing database")
 	var RDSLogin = &model.RDSLogin{}
 	rdsLogin, err := GetSecretString("RDS/apidb", "us-west-2")
@@ -64,6 +78,7 @@ func main() {
 		return
 	}
 	json.Unmarshal(rdsLogin, RDSLogin)
+
 	// Initialize database
 	db, err := database.New(database.Config{
 		Host:     RDSLogin.Host,
