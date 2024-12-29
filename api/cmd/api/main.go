@@ -5,6 +5,7 @@ import (
 	"api/internal/handler"
 	"api/internal/middleware"
 	"api/internal/model"
+	"api/internal/salesforce"
 	"api/pkg/database"
 	"context"
 	"crypto/tls"
@@ -27,25 +28,6 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
-// Basic HTML template that loads your React app
-const indexHTML = `
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Kendo React App</title>
-    <!-- KendoReact styles -->
-    <link href="https://kendo.cdn.telerik.com/themes/6.4.0/default/default-main.css" rel="stylesheet" />
-    <!-- Your bundled React app -->
-    <script src="/static/js/bundle.js" defer></script>
-</head>
-<body>
-    <div id="root">
-	Hi
-	</div>
-</body>
-</html>
-`
-
 func init() {
 	// Register the correct MIME types for JavaScript modules
 	mime.AddExtensionType(".js", "application/javascript")
@@ -58,17 +40,25 @@ func main() {
 	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
 
 	logger.Println("initialize salesforce")
-	var SalesforceCreds = &model.SalesforceCreds{}
+	var SalesforceCreds = model.SalesforceCreds{}
+
 	salesforceCreds, err := GetSecretString("Salesforce", "us-west-2")
 	if err != nil {
 		logger.Println("Salesforce Creds", err.Error())
 		return
 	}
-	json.Unmarshal(salesforceCreds, SalesforceCreds)
-	fmt.Println(SalesforceCreds.ClientId)
-	fmt.Println(SalesforceCreds.ClientSecret)
-	fmt.Println(SalesforceCreds.Username)
-	fmt.Println(SalesforceCreds.Password)
+	json.Unmarshal(salesforceCreds, &SalesforceCreds)
+
+	authResponse, err := salesforce.SalesForceLogin(SalesforceCreds)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	SFauth := salesforce.SalesforceAuth{
+		AccessToken: authResponse.AccessToken,
+		InstanceURL: "https://stinsondata.my.salesforce.com",
+	}
 
 	logger.Println("initializing database")
 	var RDSLogin = &model.RDSLogin{}
@@ -104,12 +94,8 @@ func main() {
 	}
 
 	jwtAuth := auth.New(authConfig)
-	// Create handler with auth
-	h := handler.NewHandler(
-		db,
-		*jwtAuth,
-		logger,
-	)
+	// Create handler with auth and SFauth
+	h := handler.NewHandler(db, *jwtAuth, SFauth, logger)
 
 	// Create router and handler
 	router := mux.NewRouter()

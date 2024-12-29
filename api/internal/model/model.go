@@ -14,10 +14,11 @@ type RDSLogin struct {
 }
 
 type SalesforceCreds struct {
-	ClientId     string `json:"ClientId"`
-	ClientSecret string `json:"ClientSecret"`
+	ClientId     string `json:"clientId"`
+	ClientSecret string `json:"clientSecret"`
 	Username     string `json:"username"`
 	Password     string `json:"password"`
+	AccessToken  string `json:"accessToken"`
 }
 
 // Item

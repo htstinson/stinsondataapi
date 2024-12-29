@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"time"
 
 	"api/internal/auth"
@@ -22,11 +21,12 @@ import (
 type Handler struct {
 	db     database.Repository
 	auth   auth.JWTAuth
+	sfauth salesforce.SalesforceAuth
 	logger *log.Logger
 }
 
-func NewHandler(db database.Repository, auth auth.JWTAuth, logger *log.Logger) *Handler {
-	return &Handler{db: db, auth: auth, logger: logger}
+func NewHandler(db database.Repository, auth auth.JWTAuth, sfauth salesforce.SalesforceAuth, logger *log.Logger) *Handler {
+	return &Handler{db: db, auth: auth, sfauth: sfauth, logger: logger}
 }
 
 func (h *Handler) HealthCheck(w http.ResponseWriter, r *http.Request) {
@@ -260,18 +260,7 @@ func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	authResponse, err := SalesForceLogin()
-	if err != nil {
-		h.logger.Println(err.Error())
-		return
-	}
-
-	auth := salesforce.SalesforceAuth{
-		AccessToken: authResponse.AccessToken,
-		InstanceURL: "https://stinsondata.my.salesforce.com",
-	}
-
-	account, err := salesforce.GetAccount(auth, id)
+	account, err := salesforce.GetAccount(h.sfauth, id)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, "account lookup error")
 		return
@@ -299,18 +288,7 @@ func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	authResponse, err := SalesForceLogin()
-	if err != nil {
-		h.logger.Println(err.Error())
-		return
-	}
-
-	auth := salesforce.SalesforceAuth{
-		AccessToken: authResponse.AccessToken,
-		InstanceURL: "https://stinsondata.my.salesforce.com",
-	}
-
-	currentAccount, err := salesforce.GetAccount(auth, id)
+	currentAccount, err := salesforce.GetAccount(h.sfauth, id)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -321,7 +299,7 @@ func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = salesforce.UpdateAccount(auth, newAccount)
+	err = salesforce.UpdateAccount(h.sfauth, newAccount)
 	if err != nil {
 		respondError(w, http.StatusNotFound, "Error updating user")
 		return
@@ -357,21 +335,7 @@ func (h *Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(account)
 
-	authResponse, err := SalesForceLogin()
-	if err != nil {
-		h.logger.Println(err.Error())
-		return
-	}
-
-	auth := salesforce.SalesforceAuth{
-		AccessToken: authResponse.AccessToken,
-		InstanceURL: "https://stinsondata.my.salesforce.com",
-	}
-
-	// TODO: This should be async
-	// Question: Does each user have a unique session?
-
-	response, err := salesforce.SalesforcePost(auth, "/services/data/v62.0/sobjects/Account", account)
+	response, err := salesforce.SalesforcePost(h.sfauth, "/services/data/v62.0/sobjects/Account", account)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return
@@ -383,17 +347,6 @@ func (h *Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) ListAccounts(w http.ResponseWriter, r *http.Request) {
-
-	authResponse, err := SalesForceLogin()
-	if err != nil {
-		h.logger.Println(err.Error())
-		return
-	}
-
-	auth := salesforce.SalesforceAuth{
-		AccessToken: authResponse.AccessToken,
-		InstanceURL: "https://stinsondata.my.salesforce.com",
-	}
 
 	query := `SELECT 
 	Id,
@@ -424,7 +377,7 @@ func (h *Handler) ListAccounts(w http.ResponseWriter, r *http.Request) {
 	AccountSource
 	FROM Account LIMIT 200`
 
-	data, err := salesforce.SalesforceGet(auth, "/services/data/v59.0/query?q=", query, nil)
+	data, err := salesforce.SalesforceGet(h.sfauth, "/services/data/v59.0/query?q=", query, nil)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return
@@ -434,33 +387,10 @@ func (h *Handler) ListAccounts(w http.ResponseWriter, r *http.Request) {
 
 	err = json.Unmarshal(data, &response)
 	if err != nil {
-		// Handle error
+		h.logger.Println(err.Error())
 	}
 
 	respondJSON(w, http.StatusOK, response.Records)
-}
-
-func SalesForceLogin() (*salesforce.SalesforceAuthResponse, error) {
-	// Your Salesforce credentials
-	var (
-		clientID     = os.Getenv("SF_STINSONDATA_CLIENT_ID")
-		clientSecret = os.Getenv("SF_STINSONDATA_CLIENT_SECRET")
-		username     = os.Getenv("SF_STINSONDATA_USERNAME")
-		password     = os.Getenv("SF_STINSONDATA_PASSWORD")
-		accessToken  = os.Getenv("SF_STINSONDATA_ACCESS_TOKEN")
-		loginURL     = "https://login.salesforce.com"
-	)
-
-	password += accessToken
-
-	auth, err := salesforce.GetSalesforceToken(clientID, clientSecret, username, password, loginURL)
-	if err != nil {
-		fmt.Printf("Error getting token: %v\n", err)
-		return nil, err
-	}
-
-	return auth, err
-
 }
 
 // All - Internal

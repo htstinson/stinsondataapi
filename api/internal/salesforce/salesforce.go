@@ -287,3 +287,26 @@ func UpdateAccount(auth SalesforceAuth, newAccount model.NewAccount) error {
 
 	return nil
 }
+
+func SalesForceLogin(SalesforceCreds model.SalesforceCreds) (*SalesforceAuthResponse, error) {
+	// Your Salesforce credentials
+	var (
+		clientID     = SalesforceCreds.ClientId
+		clientSecret = SalesforceCreds.ClientSecret
+		username     = SalesforceCreds.Username
+		password     = SalesforceCreds.Password
+		accessToken  = SalesforceCreds.AccessToken
+		loginURL     = "https://login.salesforce.com"
+	)
+
+	password += accessToken
+
+	var auth *SalesforceAuthResponse
+	auth, err := GetSalesforceToken(clientID, clientSecret, username, password, loginURL)
+	if err != nil {
+		fmt.Printf("Error getting token: %v\n", err)
+	}
+
+	return auth, err
+
+}
