@@ -275,8 +275,10 @@ func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
+	h.logger.Println("UpdateAccount")
 	vars := mux.Vars(r)
 	id := vars["id"]
+	h.logger.Println("id: ", id)
 
 	//ctx := r.Context()
 
