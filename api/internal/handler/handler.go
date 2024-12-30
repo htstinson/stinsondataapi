@@ -271,6 +271,8 @@ func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	h.logger.Println(account)
+
 	respondJSON(w, http.StatusOK, account)
 }
 
