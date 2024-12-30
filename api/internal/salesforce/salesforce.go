@@ -211,7 +211,7 @@ func GetAccount(auth SalesforceAuth, id string) (model.Account, error) {
 		OwnerId,
 		CreatedById,
 		LastModifiedById,
-		AccountSource
+		AccountSource,
 		FROM Account
 		Where Id = %s  LIMIT 200`, id)
 
