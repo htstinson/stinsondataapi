@@ -187,9 +187,6 @@ func GetAccount(auth SalesforceAuth, id string) (model.Account, error) {
 
 	query := fmt.Sprintf(`SELECT Id, Name, Industry, Description, Phone, Fax, Website, LastModifiedDate, CreatedDate, LastActivityDate,	LastViewedDate, IsDeleted, MasterRecordId, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, AnnualRevenue, NumberOfEmployees, OwnerId, CreatedById, LastModifiedById, AccountSource FROM Account Where Id = '%s' LIMIT 200`, id)
 
-	fmt.Println(query)
-	fmt.Println()
-
 	data, err := SalesforceGet(auth, "/services/data/v59.0/query?q=", query, nil)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
@@ -207,8 +204,6 @@ func GetAccount(auth SalesforceAuth, id string) (model.Account, error) {
 
 }
 
-// {{_endpoint}}/services/data/v{{version}}/sobjects/:SOBJECT_API_NAME/:RECORD_ID
-
 func SalesforcePatch(auth SalesforceAuth, endpoint string, payload interface{}) ([]byte, error) {
 	fmt.Println("SalesforcePatch")
 
@@ -217,12 +212,8 @@ func SalesforcePatch(auth SalesforceAuth, endpoint string, payload interface{}) 
 		return nil, fmt.Errorf("error marshaling JSON: %v", err)
 	}
 
-	fmt.Println(string(jsonData))
-
 	// Construct full URL
 	url := auth.InstanceURL + endpoint
-
-	fmt.Println("url", url)
 
 	// Create request
 	req, err := http.NewRequest("PATCH", url, bytes.NewBuffer(jsonData))
@@ -254,13 +245,6 @@ func SalesforcePatch(auth SalesforceAuth, endpoint string, payload interface{}) 
 	}
 
 	return body, nil
-}
-
-func UpdateAccount(auth SalesforceAuth, newAccount model.NewAccount) error {
-
-	fmt.Println("salesforce UpdateAccount")
-
-	return nil
 }
 
 func SalesForceLogin(SalesforceCreds model.SalesforceCreds) (*SalesforceAuthResponse, error) {
