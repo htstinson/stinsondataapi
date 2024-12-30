@@ -188,6 +188,7 @@ func GetAccount(auth SalesforceAuth, id string) (model.Account, error) {
 	query := fmt.Sprintf(`SELECT Id, Name, Industry, Description, Phone, Fax, Website, LastModifiedDate, CreatedDate, LastActivityDate,	LastViewedDate, IsDeleted, MasterRecordId, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, AnnualRevenue, NumberOfEmployees, OwnerId, CreatedById, LastModifiedById, AccountSource FROM Account Where Id = '%s' LIMIT 200`, id)
 
 	fmt.Println(query)
+	fmt.Println()
 
 	data, err := SalesforceGet(auth, "/services/data/v59.0/query?q=", query, nil)
 	if err != nil {
@@ -256,6 +257,8 @@ func SalesforcePatch(auth SalesforceAuth, endpoint string, payload interface{}) 
 }
 
 func UpdateAccount(auth SalesforceAuth, newAccount model.NewAccount) error {
+
+	fmt.Println("salesforce UpdateAccount")
 
 	return nil
 }

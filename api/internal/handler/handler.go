@@ -303,7 +303,7 @@ func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 
 	err = salesforce.UpdateAccount(h.sfauth, newAccount)
 	if err != nil {
-		respondError(w, http.StatusNotFound, "Error updating user")
+		respondError(w, http.StatusNotFound, "Error updating account")
 		return
 	}
 
