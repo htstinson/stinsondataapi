@@ -257,6 +257,7 @@ func (h *Handler) ListUsers(w http.ResponseWriter, r *http.Request) {
 // Salesforce
 
 func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
+	h.logger.Println("GetAccount")
 	vars := mux.Vars(r)
 	id := vars["id"]
 
