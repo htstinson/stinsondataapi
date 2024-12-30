@@ -278,9 +278,12 @@ func (h *Handler) GetAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
+
 	h.logger.Println("UpdateAccount")
+
 	vars := mux.Vars(r)
 	id := vars["id"]
+
 	h.logger.Println("id: ", id)
 
 	var newAccount model.NewAccount // this is for new or updated accounts
@@ -355,34 +358,7 @@ func (h *Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) ListAccounts(w http.ResponseWriter, r *http.Request) {
 
-	query := `SELECT 
-	Id,
-	Name,
-	Industry,
-	Description,
-	Phone,
-	Fax,
-	Website,
-	LastModifiedDate, 
-	CreatedDate,
-	LastActivityDate,	
-	LastViewedDate,
-	IsDeleted,
-	MasterRecordId,
-	Type,
-	ParentId,
-	BillingStreet,
-	BillingCity,
-	BillingState,
-	BillingPostalCode,
-	BillingCountry,
-	AnnualRevenue,
-	NumberOfEmployees,
-	OwnerId,
-	CreatedById,
-	LastModifiedById,
-	AccountSource
-	FROM Account LIMIT 200`
+	query := `SELECT Id, Name, Industry, Description, Phone, Fax, Website, LastModifiedDate, CreatedDate, LastActivityDate,	LastViewedDate, IsDeleted, MasterRecordId, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, AnnualRevenue, NumberOfEmployees, OwnerId, CreatedById, LastModifiedById, AccountSource FROM Account LIMIT 200`
 
 	data, err := salesforce.SalesforceGet(h.sfauth, "/services/data/v59.0/query?q=", query, nil)
 	if err != nil {
