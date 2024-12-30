@@ -312,7 +312,7 @@ func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
-	h.logger.Println("Account Handler")
+	h.logger.Println("Create Account")
 
 	var bodyBytes bytes.Buffer
 	_, err := bodyBytes.ReadFrom(r.Body)
