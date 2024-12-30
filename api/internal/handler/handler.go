@@ -310,7 +310,7 @@ func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.logger.Println(newAccount)
+	h.logger.Println(newAccount.Name, newAccount.AccountType)
 
 	respondJSON(w, http.StatusOK, newAccount)
 }
