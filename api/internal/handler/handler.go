@@ -280,8 +280,6 @@ func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 	h.logger.Println("id: ", id)
 
-	//ctx := r.Context()
-
 	var newAccount model.NewAccount // this is for new or updated accounts
 
 	if err := json.NewDecoder(r.Body).Decode(&newAccount); err != nil {
