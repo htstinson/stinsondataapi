@@ -21,7 +21,7 @@ type SalesforceHandler struct {
 	logger *log.Logger
 }
 
-func New(creds *auth.SalesforceCreds, logger *log.Logger) (*SalesforceHandler, error) {
+func New(creds auth.SalesforceCreds, logger *log.Logger) (*SalesforceHandler, error) {
 
 	var SalesforceHandler = SalesforceHandler{}
 

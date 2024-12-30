@@ -10,7 +10,7 @@ import (
 
 type Salesforce struct {
 	InstanceURL string
-	Creds       *auth.SalesforceCreds
+	Creds       auth.SalesforceCreds
 	Handler     handler.SalesforceHandler
 	logger      *log.Logger
 }
@@ -29,7 +29,7 @@ func New(logger *log.Logger) (*Salesforce, error) {
 	}
 	json.Unmarshal(salesforceCreds, &SalesforceCreds)
 
-	salesforce.Creds = &SalesforceCreds
+	salesforce.Creds = SalesforceCreds
 
 	h, err := handler.New(salesforce.Creds, logger)
 	if err != nil {
