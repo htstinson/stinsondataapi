@@ -13,14 +13,6 @@ type RDSLogin struct {
 	DdbInstanceIdentifier string `json:"dbInstanceIdentifier"`
 }
 
-type SalesforceCreds struct {
-	ClientId     string `json:"clientId"`
-	ClientSecret string `json:"clientSecret"`
-	Username     string `json:"username"`
-	Password     string `json:"password"`
-	AccessToken  string `json:"accessToken"`
-}
-
 // Item
 type Item struct {
 	ID        string    `json:"id"`

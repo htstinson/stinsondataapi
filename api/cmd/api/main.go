@@ -2,15 +2,16 @@ package main
 
 import (
 	"api/internal/auth"
+	common "api/internal/commonweb"
 	"api/internal/handler"
 	"api/internal/middleware"
 	"api/internal/model"
 	"api/internal/salesforce"
 	"api/pkg/database"
+
 	"context"
 	"crypto/tls"
 	"encoding/json"
-	"fmt"
 	"log"
 	"mime"
 	"net/http"
@@ -22,10 +23,6 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 )
 
 func init() {
@@ -40,29 +37,15 @@ func main() {
 	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
 
 	logger.Println("initialize salesforce")
-	var SalesforceCreds = model.SalesforceCreds{}
-
-	salesforceCreds, err := GetSecretString("Salesforce", "us-west-2")
+	sf, err := salesforce.New(logger)
 	if err != nil {
-		logger.Println("Salesforce Creds", err.Error())
+		logger.Println(err.Error())
 		return
-	}
-	json.Unmarshal(salesforceCreds, &SalesforceCreds)
-
-	authResponse, err := salesforce.SalesForceLogin(SalesforceCreds)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-
-	SFauth := salesforce.SalesforceAuth{
-		AccessToken: authResponse.AccessToken,
-		InstanceURL: "https://stinsondata.my.salesforce.com",
 	}
 
 	logger.Println("initializing database")
 	var RDSLogin = &model.RDSLogin{}
-	rdsLogin, err := GetSecretString("RDS/apidb", "us-west-2")
+	rdsLogin, err := common.GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
 		logger.Println("RDS Login", err.Error())
 		return
@@ -95,7 +78,7 @@ func main() {
 
 	jwtAuth := auth.New(authConfig)
 	// Create handler with auth and SFauth
-	h := handler.NewHandler(db, *jwtAuth, SFauth, logger)
+	h := handler.NewHandler(db, *jwtAuth, logger)
 
 	// Create router and handler
 	router := mux.NewRouter()
@@ -118,16 +101,14 @@ func main() {
 	protected.HandleFunc("/items/{id}", h.UpdateItem).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.GetItem).Methods("GET")
 	protected.HandleFunc("/items", h.ListItems).Methods("GET", "OPTIONS")
-
 	protected.HandleFunc("/items/{id}", h.DeleteItem).Methods("DELETE")
 
-	protected.HandleFunc("/accounts", h.CreateAccount).Methods("POST", "OPTIONS")
-	protected.HandleFunc("/accounts/{id}", h.UpdateAccount).Methods("PATCH", "OPTIONS")
-	protected.HandleFunc("/accounts", h.ListAccounts).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/accounts", sf.Handler.CreateAccount).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/accounts/{id}", sf.Handler.UpdateAccount).Methods("PATCH", "OPTIONS")
+	protected.HandleFunc("/accounts", sf.Handler.ListAccounts).Methods("GET", "OPTIONS")
 
 	protected.HandleFunc("/users", h.CreateUser).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT", "OPTIONS")
-
 	protected.HandleFunc("/users/{id}", h.DeleteUser).Methods("DELETE")
 	protected.HandleFunc("/users/{id}", h.GetUser).Methods("GET")
 	protected.HandleFunc("/users", h.ListUsers).Methods("GET", "OPTIONS")
@@ -139,17 +120,16 @@ func main() {
 	api.Use(middleware.CORS)
 
 	//static assets
-
 	distPath := "/home/ec2-user/go/src/stinsondata-tools-reactapp/dist"
-	log.Printf("Serving files from: %s", distPath)
+	logger.Printf("Serving files from: %s", distPath)
 
 	// Handle all static assets including the index.js file
 	router.PathPrefix("/assets/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("Asset request for: %s", r.URL.Path)
+		logger.Printf("Asset request for: %s", r.URL.Path)
 
 		// Remove the leading /assets/ to get the file path
 		filePath := filepath.Join(distPath, r.URL.Path)
-		log.Printf("Looking for file at: %s", filePath)
+		logger.Printf("Looking for file at: %s", filePath)
 
 		// Set appropriate headers based on file extension
 		switch ext := path.Ext(r.URL.Path); ext {
@@ -165,7 +145,7 @@ func main() {
 
 	// Handle root and all other routes with index.html
 	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("Serving index.html for path: %s", r.URL.Path)
+		logger.Printf("Serving index.html for path: %s", r.URL.Path)
 		w.Header().Set("Content-Type", "text/html")
 		http.ServeFile(w, r, filepath.Join(distPath, "index.html"))
 	})
@@ -206,32 +186,4 @@ func main() {
 	}
 
 	logger.Println("Server stopped")
-}
-
-func GetSecretString(secretName string, region string) ([]byte, error) {
-
-	var SecretValue []byte
-
-	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
-	if err != nil {
-		return SecretValue, err
-	}
-
-	// Create Secrets Manager client
-	svc := secretsmanager.NewFromConfig(config)
-
-	input := &secretsmanager.GetSecretValueInput{
-		SecretId:     aws.String(secretName),
-		VersionStage: aws.String("AWSCURRENT"), // VersionStage defaults to AWSCURRENT if unspecified
-	}
-
-	result, err := svc.GetSecretValue(context.TODO(), input)
-	if err != nil {
-		return SecretValue, err
-	}
-
-	SecretValue = []byte(*result.SecretString)
-
-	return SecretValue, err
-
 }
