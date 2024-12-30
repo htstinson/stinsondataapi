@@ -43,7 +43,7 @@ func main() {
 		return
 	}
 
-	logger.Println(sf)
+	logger.Println(sf.InstanceURL, sf.Creds.ClientId, sf.Creds.ClientSecret, sf.Creds.Username, sf.Creds.LoginURL)
 
 	logger.Println("initializing database")
 	var RDSLogin = &model.RDSLogin{}
