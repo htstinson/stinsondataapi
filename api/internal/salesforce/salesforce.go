@@ -9,10 +9,9 @@ import (
 )
 
 type Salesforce struct {
-	InstanceURL string
-	Creds       auth.SalesforceCreds
-	Handler     handler.SalesforceHandler
-	logger      *log.Logger
+	Creds   auth.SalesforceCreds
+	Handler handler.SalesforceHandler
+	logger  *log.Logger
 }
 
 func New(logger *log.Logger) (*Salesforce, error) {
