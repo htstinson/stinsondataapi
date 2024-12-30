@@ -301,11 +301,18 @@ func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = salesforce.UpdateAccount(h.sfauth, newAccount)
+	// {{_endpoint}}/services/data/v{{version}}/sobjects/:SOBJECT_API_NAME/:RECORD_ID
+
+	endpoint := fmt.Sprintf("https://stinsondata.my.salesforce.com/services/data/v61.0/sobjects/Account/%s", currentAccount.Id)
+
+	fmt.Println(endpoint)
+
+	result, err := salesforce.SalesforcePatch(h.sfauth, endpoint, newAccount)
 	if err != nil {
 		respondError(w, http.StatusNotFound, "Error updating account")
 		return
 	}
+	fmt.Println(string(result))
 
 	respondJSON(w, http.StatusOK, newAccount)
 }
