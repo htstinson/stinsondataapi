@@ -303,7 +303,7 @@ func (h *Handler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
 
 	// {{_endpoint}}/services/data/v{{version}}/sobjects/:SOBJECT_API_NAME/:RECORD_ID
 
-	endpoint := fmt.Sprintf("https://stinsondata.my.salesforce.com/services/data/v61.0/sobjects/Account/%s", currentAccount.Id)
+	endpoint := fmt.Sprintf("/services/data/v61.0/sobjects/Account/%s", currentAccount.Id)
 
 	fmt.Println(endpoint)
 
