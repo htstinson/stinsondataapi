@@ -225,7 +225,7 @@ func SalesforcePatch(auth SalesforceAuth, endpoint string, payload interface{}) 
 	fmt.Println("url", url)
 
 	// Create request
-	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("PATCH", url, bytes.NewBuffer(jsonData))
 	if err != nil {
 		return nil, fmt.Errorf("error creating request: %v", err)
 	}
