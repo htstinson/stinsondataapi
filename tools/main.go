@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/htstinson/stinsondataapi/tree/main/api/internal/salesforce"
+	salesforce "github.com/htstinson/stinsondataapi/api/internal/salesforce"
 )
 
 func main() {
