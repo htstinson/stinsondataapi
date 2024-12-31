@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"io"
+	"os"
 
 	common "api/internal/commonweb"
 	"api/internal/model"
@@ -18,7 +19,7 @@ import (
 
 type SalesforceHandler struct {
 	Auth   *auth.SalesforceAuth
-	logger log.Logger
+	logger *log.Logger
 }
 
 func New(creds *auth.SalesforceCreds, logger *log.Logger) (*SalesforceHandler, error) {
@@ -37,6 +38,8 @@ func New(creds *auth.SalesforceCreds, logger *log.Logger) (*SalesforceHandler, e
 		AccessToken: authResponse.AccessToken,
 		InstanceURL: creds.InstanceURL,
 	}
+
+	SalesforceHandler.logger = log.New(os.Stdout, "[API] ", log.LstdFlags)
 
 	return SalesforceHandler, err
 }
