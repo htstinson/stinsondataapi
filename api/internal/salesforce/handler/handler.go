@@ -17,7 +17,7 @@ import (
 )
 
 type SalesforceHandler struct {
-	auth   *auth.SalesforceAuth
+	Auth   *auth.SalesforceAuth
 	logger *log.Logger
 }
 
@@ -31,7 +31,7 @@ func New(creds *auth.SalesforceCreds, logger *log.Logger) (*SalesforceHandler, e
 		return SalesforceHandler, err
 	}
 
-	SalesforceHandler.auth = &auth.SalesforceAuth{
+	SalesforceHandler.Auth = &auth.SalesforceAuth{
 		AccessToken: authResponse.AccessToken,
 		InstanceURL: creds.InstanceURL,
 	}
@@ -42,7 +42,7 @@ func New(creds *auth.SalesforceCreds, logger *log.Logger) (*SalesforceHandler, e
 func (h *SalesforceHandler) Get(endpoint string, query string) ([]byte, error) {
 
 	// Construct full URL
-	baseurl := h.auth.InstanceURL + endpoint
+	baseurl := h.Auth.InstanceURL + endpoint
 
 	// Create URL with encoded query parameter
 	u, err := url.Parse(baseurl)
@@ -61,7 +61,7 @@ func (h *SalesforceHandler) Get(endpoint string, query string) ([]byte, error) {
 	}
 
 	// Set headers
-	req.Header.Set("Authorization", "Bearer "+h.auth.AccessToken)
+	req.Header.Set("Authorization", "Bearer "+h.Auth.AccessToken)
 	req.Header.Set("Content-Type", "application/json")
 
 	// Send request
@@ -239,7 +239,7 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 	}
 
 	// Construct full URL
-	url := h.auth.InstanceURL + endpoint
+	url := h.Auth.InstanceURL + endpoint
 
 	// Create request
 	req, err := http.NewRequest("PATCH", url, bytes.NewBuffer(jsonData))
@@ -248,7 +248,7 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 	}
 
 	// Set headers
-	req.Header.Set("Authorization", "Bearer "+h.auth.AccessToken)
+	req.Header.Set("Authorization", "Bearer "+h.Auth.AccessToken)
 	req.Header.Set("Content-Type", "application/json")
 
 	// Send request
@@ -284,7 +284,7 @@ func (h *SalesforceHandler) SalesforcePost(endpoint string, payload interface{})
 	fmt.Println(string(jsonData))
 
 	// Construct full URL
-	url := h.auth.InstanceURL + endpoint
+	url := h.Auth.InstanceURL + endpoint
 
 	fmt.Println("url", url)
 
@@ -295,7 +295,7 @@ func (h *SalesforceHandler) SalesforcePost(endpoint string, payload interface{})
 	}
 
 	// Set headers
-	req.Header.Set("Authorization", "Bearer "+h.auth.AccessToken)
+	req.Header.Set("Authorization", "Bearer "+h.Auth.AccessToken)
 	req.Header.Set("Content-Type", "application/json")
 
 	// Send request
