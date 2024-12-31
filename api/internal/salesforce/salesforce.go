@@ -6,18 +6,21 @@ import (
 	"api/internal/salesforce/handler"
 	"encoding/json"
 	"log"
+	"os"
 )
 
 type Salesforce struct {
 	Creds   *auth.SalesforceCreds
 	Handler *handler.SalesforceHandler
+	logger  *log.Logger
 }
 
-func New(logger *log.Logger) (Salesforce, error) {
+func New() (Salesforce, error) {
 
 	var salesforce = Salesforce{}
-
+	var logger = log.New(os.Stdout, "[API] ", log.LstdFlags)
 	var SalesforceCreds = &auth.SalesforceCreds{}
+
 	salesforceCreds, err := common.GetSecretString("Salesforce", "us-west-2")
 	if err != nil {
 		logger.Println("Salesforce Creds", err.Error())
@@ -34,6 +37,7 @@ func New(logger *log.Logger) (Salesforce, error) {
 	}
 
 	salesforce.Handler = handler
+	salesforce.logger = logger
 
 	return salesforce, nil
 }
