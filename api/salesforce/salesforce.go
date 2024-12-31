@@ -1,12 +1,13 @@
 package salesforce
 
 import (
-	common "api/internal/commonweb"
 	"api/salesforce/auth"
 	"api/salesforce/handler"
 	"encoding/json"
 	"log"
 	"os"
+
+	common "github.com/htstinson/stinsondataapi/api/internal/commonweb"
 )
 
 type Salesforce struct {
