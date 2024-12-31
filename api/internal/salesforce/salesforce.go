@@ -10,7 +10,7 @@ import (
 
 type Salesforce struct {
 	Creds   auth.SalesforceCreds
-	Handler handler.SalesforceHandler
+	Handler *handler.SalesforceHandler
 	logger  *log.Logger
 }
 
@@ -35,7 +35,7 @@ func New(logger *log.Logger) (*Salesforce, error) {
 		return salesforce, err
 	}
 
-	salesforce.Handler = *h
+	salesforce.Handler = h
 
 	return salesforce, nil
 }

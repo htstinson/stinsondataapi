@@ -43,6 +43,8 @@ func main() {
 		return
 	}
 
+	logger.Println(sf.Handler)
+
 	logger.Println("initializing database")
 	var RDSLogin = &model.RDSLogin{}
 	rdsLogin, err := common.GetSecretString("RDS/apidb", "us-west-2")
