@@ -1,8 +1,8 @@
 package main
 
 import (
+	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/auth"
-	common "github.com/htstinson/stinsondataapi/api/internal/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/handler"
 	"github.com/htstinson/stinsondataapi/api/internal/middleware"
 	"github.com/htstinson/stinsondataapi/api/internal/model"

@@ -8,7 +8,7 @@ import (
 	"github.com/htstinson/stinsondataapi/api/salesforce/auth"
 	"github.com/htstinson/stinsondataapi/api/salesforce/handler"
 
-	common "github.com/htstinson/stinsondataapi/api/internal/commonweb"
+	common "github.com/htstinson/stinsondataapi/api/commonweb"
 )
 
 type Salesforce struct {

@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/auth"
-	common "github.com/htstinson/stinsondataapi/api/internal/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 	"github.com/htstinson/stinsondataapi/api/pkg/database"
 

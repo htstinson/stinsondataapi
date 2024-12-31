@@ -11,7 +11,7 @@ import (
 	"net/http"
 	"net/url"
 
-	common "github.com/htstinson/stinsondataapi/api/internal/commonweb"
+	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	//"github.com/htstinson/stinsondataapi/api/internal/model"
 	auth "github.com/htstinson/stinsondataapi/api/salesforce/auth"
 	"github.com/htstinson/stinsondataapi/api/salesforce/model"
