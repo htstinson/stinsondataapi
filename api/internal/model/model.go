@@ -41,11 +41,6 @@ type LoginResponse struct {
 }
 
 // Salesforce
-type AccountQueryResponse struct {
-	TotalSize int       `json:"totalSize"`
-	Done      bool      `json:"done"`
-	Records   []Account `json:"records"`
-}
 
 type NewAccount struct {
 	Name              string                 `json:"Name,omitempty"`
@@ -67,6 +62,11 @@ type NewAccount struct {
 	NumberOfEmployees *int16                 `json:"NumberOfEmployees,omitempty"`
 	OwnerId           *string                `json:"OwnerId,omitempty"`
 	AccountSource     *string                `json:"AccountSource,omitempty"`
+}
+
+type AccountAttributes struct {
+	Type string `json:"type"`
+	URL  string `json:"url"`
 }
 
 type Account struct {
@@ -97,9 +97,4 @@ type Account struct {
 	CreatedById       *string                `json:"CreatedById,omitempty"`
 	LastModifiedById  *string                `json:"LastModifiedById,omitempty"`
 	AccountSource     *string                `json:"AccountSource,omitempty"`
-}
-
-type AccountAttributes struct {
-	Type string `json:"type"`
-	URL  string `json:"url"`
 }
