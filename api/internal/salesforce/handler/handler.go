@@ -18,7 +18,7 @@ import (
 
 type SalesforceHandler struct {
 	Auth   *auth.SalesforceAuth
-	logger *log.Logger
+	logger log.Logger
 }
 
 func New(creds *auth.SalesforceCreds, logger *log.Logger) (*SalesforceHandler, error) {
