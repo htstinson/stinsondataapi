@@ -1,7 +1,7 @@
 package model
 
 import (
-	sftime "api/internal/salesforce/time"
+	sftime "api/salesforce/time"
 	"time"
 )
 

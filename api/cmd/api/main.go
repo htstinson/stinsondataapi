@@ -6,8 +6,8 @@ import (
 	"api/internal/handler"
 	"api/internal/middleware"
 	"api/internal/model"
-	"api/internal/salesforce"
 	"api/pkg/database"
+	"api/salesforce"
 
 	"context"
 	"crypto/tls"

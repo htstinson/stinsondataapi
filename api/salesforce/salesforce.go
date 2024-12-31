@@ -2,8 +2,8 @@ package salesforce
 
 import (
 	common "api/internal/commonweb"
-	"api/internal/salesforce/auth"
-	"api/internal/salesforce/handler"
+	"api/salesforce/auth"
+	"api/salesforce/handler"
 	"encoding/json"
 	"log"
 	"os"

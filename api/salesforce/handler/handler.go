@@ -8,7 +8,7 @@ import (
 
 	common "api/internal/commonweb"
 	"api/internal/model"
-	auth "api/internal/salesforce/auth"
+	auth "api/salesforce/auth"
 	"fmt"
 	"log"
 	"net/http"
