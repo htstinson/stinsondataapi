@@ -15,6 +15,7 @@ type Salesforce struct {
 }
 
 func New(logger *log.Logger) (*Salesforce, error) {
+	logger.Println("New Salesforce Handler")
 
 	var salesforce = &Salesforce{
 		logger: logger,
