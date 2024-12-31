@@ -17,26 +17,26 @@ import (
 )
 
 type SalesforceHandler struct {
-	auth   auth.SalesforceAuth
+	auth   *auth.SalesforceAuth
 	logger *log.Logger
 }
 
-func New(creds auth.SalesforceCreds, logger *log.Logger) (*SalesforceHandler, error) {
+func New(creds *auth.SalesforceCreds, logger *log.Logger) (*SalesforceHandler, error) {
 
-	var SalesforceHandler = SalesforceHandler{}
+	var SalesforceHandler = &SalesforceHandler{}
 
 	authResponse, err := auth.SalesForceLogin(creds)
 	if err != nil {
 		fmt.Println(err.Error())
-		return &SalesforceHandler, err
+		return SalesforceHandler, err
 	}
 
-	SalesforceHandler.auth = auth.SalesforceAuth{
+	SalesforceHandler.auth = &auth.SalesforceAuth{
 		AccessToken: authResponse.AccessToken,
 		InstanceURL: creds.InstanceURL,
 	}
 
-	return &SalesforceHandler, err
+	return SalesforceHandler, err
 }
 
 func (h *SalesforceHandler) Get(endpoint string, query string) ([]byte, error) {

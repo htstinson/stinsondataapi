@@ -9,7 +9,7 @@ import (
 )
 
 type Salesforce struct {
-	Creds   auth.SalesforceCreds
+	Creds   *auth.SalesforceCreds
 	Handler *handler.SalesforceHandler
 	logger  *log.Logger
 }
@@ -20,7 +20,7 @@ func New(logger *log.Logger) (*Salesforce, error) {
 		logger: logger,
 	}
 
-	var SalesforceCreds = auth.SalesforceCreds{}
+	var SalesforceCreds = &auth.SalesforceCreds{}
 	salesforceCreds, err := common.GetSecretString("Salesforce", "us-west-2")
 	if err != nil {
 		logger.Println("Salesforce Creds", err.Error())
