@@ -7,7 +7,6 @@ import (
 	"api/internal/middleware"
 	"api/internal/model"
 	"api/internal/salesforce"
-	sfhandler "api/internal/salesforce/handler"
 	"api/pkg/database"
 
 	"context"
@@ -39,12 +38,6 @@ func main() {
 
 	logger.Println("initialize salesforce")
 	sf, err := salesforce.New(logger)
-	if err != nil {
-		logger.Println(err.Error())
-		return
-	}
-
-	h2, err := sfhandler.New(sf.Creds, logger)
 	if err != nil {
 		logger.Println(err.Error())
 		return
@@ -110,9 +103,9 @@ func main() {
 	protected.HandleFunc("/items", h.ListItems).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.DeleteItem).Methods("DELETE")
 
-	protected.HandleFunc("/accounts", h2.CreateAccount).Methods("POST", "OPTIONS")
-	protected.HandleFunc("/accounts/{id}", h2.UpdateAccount).Methods("PATCH", "OPTIONS")
-	protected.HandleFunc("/accounts", h2.ListAccounts).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/accounts", sf.Handler.CreateAccount).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/accounts/{id}", sf.Handler.UpdateAccount).Methods("PATCH", "OPTIONS")
+	protected.HandleFunc("/accounts", sf.Handler.ListAccounts).Methods("GET", "OPTIONS")
 
 	protected.HandleFunc("/users", h.CreateUser).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT", "OPTIONS")

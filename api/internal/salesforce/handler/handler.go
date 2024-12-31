@@ -22,9 +22,7 @@ type SalesforceHandler struct {
 	logger *log.Logger
 }
 
-func New(creds *auth.SalesforceCreds, logger *log.Logger) (*SalesforceHandler, error) {
-
-	logger.Println("New Salesforce Handler")
+func New(creds *auth.SalesforceCreds) (*SalesforceHandler, error) {
 
 	var SalesforceHandler = &SalesforceHandler{}
 
@@ -176,7 +174,7 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 
 func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
-	//h.logger.Println("Create Account")
+	h.logger.Println("Create Account")
 
 	var bodyBytes bytes.Buffer
 	_, err := bodyBytes.ReadFrom(r.Body)
