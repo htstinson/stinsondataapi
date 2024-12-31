@@ -12,8 +12,9 @@ import (
 	"net/url"
 
 	common "github.com/htstinson/stinsondataapi/api/internal/commonweb"
-	"github.com/htstinson/stinsondataapi/api/internal/model"
+	//"github.com/htstinson/stinsondataapi/api/internal/model"
 	auth "github.com/htstinson/stinsondataapi/api/salesforce/auth"
+	"github.com/htstinson/stinsondataapi/api/salesforce/model"
 
 	"github.com/gorilla/mux"
 )
