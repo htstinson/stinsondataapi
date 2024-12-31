@@ -14,10 +14,10 @@ type Salesforce struct {
 	logger  *log.Logger
 }
 
-func New(logger *log.Logger) (*Salesforce, error) {
+func New(logger *log.Logger) (Salesforce, error) {
 	logger.Println("New Salesforce Handler")
 
-	var salesforce = &Salesforce{
+	var salesforce = Salesforce{
 		logger: logger,
 	}
 
