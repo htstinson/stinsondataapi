@@ -87,6 +87,7 @@ func (h *SalesforceHandler) Get(endpoint string, query string) ([]byte, error) {
 }
 
 func (h *SalesforceHandler) ListAccounts(w http.ResponseWriter, r *http.Request) {
+	h.logger.Println("ListAccounts")
 
 	query := `SELECT Id, Name, Industry, Description, Phone, Fax, Website, LastModifiedDate, CreatedDate, LastActivityDate,	LastViewedDate, IsDeleted, MasterRecordId, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, AnnualRevenue, NumberOfEmployees, OwnerId, CreatedById, LastModifiedById, AccountSource FROM Account LIMIT 200`
 
