@@ -45,6 +45,7 @@ func main() {
 
 	logger.Println(sf.Handler.Auth.AccessToken)
 	logger.Println(sf.Handler.Auth.InstanceURL)
+	sf.Handler.CreateAccount(nil, nil)
 
 	logger.Println("initializing database")
 	var RDSLogin = &model.RDSLogin{}
