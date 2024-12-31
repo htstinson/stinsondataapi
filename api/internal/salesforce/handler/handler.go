@@ -173,7 +173,7 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 
 func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
-	h.logger.Println("Create Account")
+	//h.logger.Println("Create Account")
 
 	var bodyBytes bytes.Buffer
 	_, err := bodyBytes.ReadFrom(r.Body)
