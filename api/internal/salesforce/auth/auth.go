@@ -31,7 +31,7 @@ type SalesforceAuthResponse struct {
 	TokenType   string `json:"token_type"`
 }
 
-func SalesForceLogin(SalesforceCreds SalesforceCreds) (*SalesforceAuthResponse, error) {
+func SalesForceLogin(SalesforceCreds *SalesforceCreds) (*SalesforceAuthResponse, error) {
 	// Your Salesforce credentials
 	var (
 		clientID     = SalesforceCreds.ClientId
