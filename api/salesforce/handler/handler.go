@@ -6,13 +6,14 @@ import (
 	"io"
 	"os"
 
-	common "api/internal/commonweb"
-	"api/internal/model"
-	auth "api/salesforce/auth"
 	"fmt"
 	"log"
 	"net/http"
 	"net/url"
+
+	common "github.com/htstinson/stinsondataapi/api/internal/commonweb"
+	"github.com/htstinson/stinsondataapi/api/internal/model"
+	auth "github.com/htstinson/stinsondataapi/api/salesforce/auth"
 
 	"github.com/gorilla/mux"
 )

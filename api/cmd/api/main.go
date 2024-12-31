@@ -1,13 +1,13 @@
 package main
 
 import (
-	"api/internal/auth"
-	common "api/internal/commonweb"
-	"api/internal/handler"
-	"api/internal/middleware"
-	"api/internal/model"
-	"api/pkg/database"
-	"api/salesforce"
+	"github.com/htstinson/stinsondataapi/api/internal/auth"
+	common "github.com/htstinson/stinsondataapi/api/internal/commonweb"
+	"github.com/htstinson/stinsondataapi/api/internal/handler"
+	"github.com/htstinson/stinsondataapi/api/internal/middleware"
+	"github.com/htstinson/stinsondataapi/api/internal/model"
+	"github.com/htstinson/stinsondataapi/api/pkg/database"
+	"github.com/htstinson/stinsondataapi/api/salesforce"
 
 	"context"
 	"crypto/tls"

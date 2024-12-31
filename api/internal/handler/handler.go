@@ -7,10 +7,10 @@ import (
 	"net/http"
 	"time"
 
-	"api/internal/auth"
-	common "api/internal/commonweb"
-	"api/internal/model"
-	"api/pkg/database"
+	"github.com/htstinson/stinsondataapi/api/internal/auth"
+	common "github.com/htstinson/stinsondataapi/api/internal/commonweb"
+	"github.com/htstinson/stinsondataapi/api/internal/model"
+	"github.com/htstinson/stinsondataapi/api/pkg/database"
 
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"

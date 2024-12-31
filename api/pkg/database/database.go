@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"api/internal/model"
+	"github.com/htstinson/stinsondataapi/api/internal/model"
 
 	"github.com/google/uuid"
 	_ "github.com/lib/pq"

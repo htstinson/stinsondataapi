@@ -1,8 +1,9 @@
 package model
 
 import (
-	sftime "api/salesforce/time"
 	"time"
+
+	sftime "github.com/htstinson/stinsondataapi/api/salesforce/time"
 )
 
 type RDSLogin struct {
