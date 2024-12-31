@@ -1,11 +1,12 @@
 package salesforce
 
 import (
-	"api/salesforce/auth"
-	"api/salesforce/handler"
 	"encoding/json"
 	"log"
 	"os"
+
+	"github.com/htstinson/stinsondataapi/api/salesforce/auth"
+	"github.com/htstinson/stinsondataapi/api/salesforce/handler"
 
 	common "github.com/htstinson/stinsondataapi/api/internal/commonweb"
 )
