@@ -43,10 +43,9 @@ func main() {
 		return
 	}
 
-	logger.Println(sf.Handler.Auth.AccessToken)
-	logger.Println(sf.Handler.Auth.InstanceURL)
-
 	h2 := *sf.Handler
+	logger.Println(h2.Auth.AccessToken)
+	logger.Println(h2.Auth.InstanceURL)
 
 	h2.CreateAccount(nil, nil)
 
