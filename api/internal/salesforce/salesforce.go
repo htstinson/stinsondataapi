@@ -3,15 +3,13 @@ package salesforce
 import (
 	common "api/internal/commonweb"
 	"api/internal/salesforce/auth"
-	"api/internal/salesforce/handler"
 	"encoding/json"
 	"log"
 )
 
 type Salesforce struct {
-	Creds   *auth.SalesforceCreds
-	Handler *handler.SalesforceHandler
-	logger  *log.Logger
+	Creds  *auth.SalesforceCreds
+	logger *log.Logger
 }
 
 func New(logger *log.Logger) (Salesforce, error) {
@@ -30,13 +28,6 @@ func New(logger *log.Logger) (Salesforce, error) {
 	json.Unmarshal(salesforceCreds, &SalesforceCreds)
 
 	salesforce.Creds = SalesforceCreds
-
-	h, err := handler.New(salesforce.Creds, logger)
-	if err != nil {
-		return salesforce, err
-	}
-
-	salesforce.Handler = h
 
 	return salesforce, nil
 }
