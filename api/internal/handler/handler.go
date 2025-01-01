@@ -251,8 +251,6 @@ func (h *Handler) ListUsers(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// Salesforce
-
 // All - UI
 func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 	var req model.LoginRequest
@@ -298,9 +296,6 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	fmt.Println(req.Username)
-	fmt.Println(req.Password)
-
 	// Get user
 	user, err := h.db.GetUserByUsername(r.Context(), req.Username)
 	if err != nil {
@@ -311,6 +306,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		common.RespondError(w, http.StatusUnauthorized, "Invalid credentials")
 		return
 	}
+
+	fmt.Println(user.PasswordHash)
 
 	// Check password
 	if err := bcrypt.CompareHashAndPassword(
