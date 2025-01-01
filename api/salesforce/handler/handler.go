@@ -138,6 +138,8 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 	vars := mux.Vars(r)
 	id := vars["id"]
 
+	h.logger.Println(id)
+
 	var Account model.Account // this is for new or updated accounts
 
 	if err := json.NewDecoder(r.Body).Decode(&Account); err != nil {
