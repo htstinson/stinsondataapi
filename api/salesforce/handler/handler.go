@@ -138,9 +138,9 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	var newAccount model.NewAccount // this is for new or updated accounts
+	var Account model.Account // this is for new or updated accounts
 
-	if err := json.NewDecoder(r.Body).Decode(&newAccount); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&Account); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
@@ -159,15 +159,15 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 
 	endpoint := fmt.Sprintf("/services/data/v61.0/sobjects/Account/%s", currentAccount.Id)
 
-	_, err = h.SalesforcePatch(endpoint, newAccount)
+	_, err = h.SalesforcePatch(endpoint, Account)
 	if err != nil {
 		common.RespondError(w, http.StatusNotFound, "Error updating account")
 		return
 	}
 
-	h.logger.Println(newAccount.Name, *newAccount.AccountType, *newAccount.AccountSource)
+	h.logger.Println(Account.Name, *Account.AccountType, *Account.AccountSource)
 
-	common.RespondJSON(w, http.StatusOK, newAccount)
+	common.RespondJSON(w, http.StatusOK, Account)
 }
 
 func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
