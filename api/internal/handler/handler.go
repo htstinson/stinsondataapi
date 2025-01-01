@@ -325,8 +325,6 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Authorization", fmt.Sprintf("Bearer %s", token))
 
-	fmt.Println(token)
-
 	common.RespondJSON(w, http.StatusOK, model.LoginResponse{
 		Token:     token,
 		ExpiresIn: int64(h.auth.Config.TokenDuration.Seconds()),
