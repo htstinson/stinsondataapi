@@ -307,8 +307,6 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(user.PasswordHash)
-
 	// Check password
 	if err := bcrypt.CompareHashAndPassword(
 		[]byte(user.PasswordHash),
@@ -326,6 +324,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Authorization", fmt.Sprintf("Bearer %s", token))
+
+	fmt.Println(token)
 
 	common.RespondJSON(w, http.StatusOK, model.LoginResponse{
 		Token:     token,
