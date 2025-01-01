@@ -48,7 +48,6 @@ func SalesForceLogin(SalesforceCreds *SalesforceCreds) (*SalesforceAuthResponse,
 	auth, err := GetSalesforceToken(clientID, clientSecret, username, password, loginURL)
 	if err != nil {
 		fmt.Printf("Error getting token: %v\n", err)
-		fmt.Println(clientID, clientSecret, username, password, loginURL)
 	}
 
 	return auth, err

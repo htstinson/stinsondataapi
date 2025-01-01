@@ -128,8 +128,6 @@ func (h *SalesforceHandler) GetAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.logger.Println(account)
-
 	common.RespondJSON(w, http.StatusOK, account)
 }
 
@@ -139,8 +137,6 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 
 	vars := mux.Vars(r)
 	id := vars["id"]
-
-	h.logger.Println("id: ", id)
 
 	var newAccount model.NewAccount // this is for new or updated accounts
 
@@ -198,8 +194,6 @@ func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request
 		return
 	}
 	defer r.Body.Close()
-
-	fmt.Println(account)
 
 	response, err := h.SalesforcePost("/services/data/v62.0/sobjects/Account", account)
 	if err != nil {
@@ -286,12 +280,8 @@ func (h *SalesforceHandler) SalesforcePost(endpoint string, payload interface{})
 		return nil, fmt.Errorf("error marshaling JSON: %v", err)
 	}
 
-	fmt.Println(string(jsonData))
-
 	// Construct full URL
 	url := h.Auth.InstanceURL + endpoint
-
-	fmt.Println("url", url)
 
 	// Create request
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
