@@ -298,6 +298,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	fmt.Println(req)
+
 	// Get user
 	user, err := h.db.GetUserByUsername(r.Context(), req.Username)
 	if err != nil {
