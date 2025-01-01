@@ -237,6 +237,8 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 		return nil, fmt.Errorf("error marshaling JSON: %v", err)
 	}
 
+	fmt.Println(string(jsonData))
+
 	// Construct full URL
 	url := h.Auth.InstanceURL + endpoint
 
