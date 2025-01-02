@@ -244,6 +244,8 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 	// Construct full URL
 	url := h.Auth.InstanceURL + endpoint
 
+	h.logger.Println(url)
+
 	// Create request
 	req, err := http.NewRequest("PATCH", url, bytes.NewBuffer(jsonData))
 	if err != nil {
