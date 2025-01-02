@@ -274,6 +274,9 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 		return nil, fmt.Errorf("error reading response: %v", err)
 	}
 
+	fmt.Println(resp.StatusCode)
+	fmt.Println(string(body))
+
 	// Check status code
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return nil, fmt.Errorf("unexpected status code: %d, body: %s", resp.StatusCode, string(body))
