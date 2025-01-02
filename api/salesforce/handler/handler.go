@@ -260,6 +260,8 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 
 	h.logger.Println(h.Auth.AccessToken)
 
+	h.logger.Println("a")
+
 	// Send request
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -268,11 +270,15 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 	}
 	defer resp.Body.Close()
 
+	h.logger.Println("b")
+
 	// Read response
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response: %v", err)
 	}
+
+	h.logger.Println("c")
 
 	fmt.Println(resp.StatusCode)
 	fmt.Println(string(body))
