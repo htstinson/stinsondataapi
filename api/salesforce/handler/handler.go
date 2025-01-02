@@ -92,7 +92,6 @@ func (h *SalesforceHandler) Get(endpoint string, query string) ([]byte, error) {
 }
 
 func (h *SalesforceHandler) ListAccounts(w http.ResponseWriter, r *http.Request) {
-	h.logger.Println("ListAccounts")
 
 	query := `SELECT Id, Name, Industry, Description, Phone, Fax, Website, LastModifiedDate, CreatedDate, LastActivityDate,	LastViewedDate, IsDeleted, MasterRecordId, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, AnnualRevenue, NumberOfEmployees, OwnerId, CreatedById, LastModifiedById, AccountSource FROM Account LIMIT 200`
 
@@ -113,7 +112,7 @@ func (h *SalesforceHandler) ListAccounts(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *SalesforceHandler) GetAccount(w http.ResponseWriter, r *http.Request) {
-	h.logger.Println("GetAccount")
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 
@@ -132,8 +131,6 @@ func (h *SalesforceHandler) GetAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request) {
-
-	h.logger.Println("UpdateAccount")
 
 	vars := mux.Vars(r)
 	id := vars["id"]
@@ -174,8 +171,6 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 
 func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 
-	h.logger.Println("Create Account")
-
 	var bodyBytes bytes.Buffer
 	_, err := bodyBytes.ReadFrom(r.Body)
 	if err != nil {
@@ -210,8 +205,6 @@ func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request
 
 func (h *SalesforceHandler) GetAccountById(id string) (model.Account, error) {
 
-	fmt.Println("GetAccount")
-
 	query := fmt.Sprintf(`SELECT Id, Name, Industry, Description, Phone, Fax, Website, LastModifiedDate, CreatedDate, LastActivityDate,	LastViewedDate, IsDeleted, MasterRecordId, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, AnnualRevenue, NumberOfEmployees, OwnerId, CreatedById, LastModifiedById, AccountSource FROM Account Where Id = '%s' LIMIT 200`, id)
 
 	data, err := h.Get("/services/data/v59.0/query?q=", query)
@@ -232,7 +225,6 @@ func (h *SalesforceHandler) GetAccountById(id string) (model.Account, error) {
 }
 
 func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}) ([]byte, error) {
-	fmt.Println("SalesforcePatch")
 
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
@@ -275,7 +267,6 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 }
 
 func (h *SalesforceHandler) SalesforcePost(endpoint string, payload interface{}) ([]byte, error) {
-	fmt.Println("SalesforcePost")
 
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
