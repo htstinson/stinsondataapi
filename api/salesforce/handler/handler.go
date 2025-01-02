@@ -256,6 +256,8 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 	req.Header.Set("Authorization", "Bearer "+h.Auth.AccessToken)
 	req.Header.Set("Content-Type", "application/json")
 
+	h.logger.Println(h.Auth.AccessToken)
+
 	// Send request
 	client := &http.Client{}
 	resp, err := client.Do(req)
