@@ -159,7 +159,7 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	endpoint := fmt.Sprintf("/services/data/v61.0/sobjects/Account/%s", currentAccount.Id)
+	endpoint := fmt.Sprintf("/services/data/v59.0/sobjects/Account/%s", currentAccount.Id)
 
 	_, err = h.SalesforcePatch(endpoint, Account)
 	if err != nil {
