@@ -161,7 +161,9 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 
 	endpoint := fmt.Sprintf("/services/data/v59.0/sobjects/Account/%s", currentAccount.Id)
 
-	_, err = h.SalesforcePatch(endpoint, Account)
+	transformedAccount := model.Transform(Account)
+
+	_, err = h.SalesforcePatch(endpoint, transformedAccount)
 	if err != nil {
 		common.RespondError(w, http.StatusNotFound, "Error updating account")
 		return
