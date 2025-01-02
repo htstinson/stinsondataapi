@@ -169,8 +169,6 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	h.logger.Println(Account.Name, *Account.AccountType, *Account.AccountSource)
-
 	common.RespondJSON(w, http.StatusOK, Account)
 }
 
@@ -241,12 +239,8 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 		return nil, fmt.Errorf("error marshaling JSON: %v", err)
 	}
 
-	fmt.Println(string(jsonData))
-
 	// Construct full URL
 	url := h.Auth.InstanceURL + endpoint
-
-	h.logger.Println(url)
 
 	// Create request
 	req, err := http.NewRequest("PATCH", url, bytes.NewBuffer(jsonData))
@@ -258,10 +252,6 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 	req.Header.Set("Authorization", "Bearer "+h.Auth.AccessToken)
 	req.Header.Set("Content-Type", "application/json")
 
-	h.logger.Println(h.Auth.AccessToken)
-
-	h.logger.Println("a")
-
 	// Send request
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -270,18 +260,11 @@ func (h *SalesforceHandler) SalesforcePatch(endpoint string, payload interface{}
 	}
 	defer resp.Body.Close()
 
-	h.logger.Println("b")
-
 	// Read response
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("error reading response: %v", err)
 	}
-
-	h.logger.Println("c")
-
-	fmt.Println(resp.StatusCode)
-	fmt.Println(string(body))
 
 	// Check status code
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
