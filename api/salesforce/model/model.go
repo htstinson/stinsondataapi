@@ -2,6 +2,33 @@ package model
 
 import sftime "github.com/htstinson/stinsondataapi/api/salesforce/time"
 
+func Transform(full Account) NewAccount {
+
+	transformed := NewAccount{
+		Attributes:        full.Attributes,
+		Name:              full.Name,
+		Industry:          full.Industry,
+		Description:       full.Description,
+		Phone:             full.Phone,
+		Fax:               full.Fax,
+		Website:           full.Website,
+		LastActivityDate:  full.LastActivityDate,
+		MasterRecordId:    full.MasterRecordId,
+		AccountType:       full.AccountType,
+		ParentId:          full.ParentId,
+		BillingCity:       full.BillingCity,
+		BillingState:      full.BillingState,
+		BillingPostalCode: full.BillingPostalCode,
+		BillingCountry:    full.BillingCountry,
+		AnnualRevenue:     full.AnnualRevenue,
+		NumberOfEmployees: full.NumberOfEmployees,
+		OwnerId:           full.OwnerId,
+		AccountSource:     full.AccountSource,
+	}
+
+	return transformed
+}
+
 type AccountQueryResponse struct {
 	TotalSize int       `json:"totalSize"`
 	Done      bool      `json:"done"`
@@ -39,6 +66,7 @@ type Account struct {
 }
 
 type NewAccount struct {
+	Attributes        AccountAttributes      `json:"attributes"`
 	Name              string                 `json:"Name,omitempty"`
 	Industry          *string                `json:"Industry,omitempty"` // Using pointer since it can be null
 	Description       string                 `json:"Description,omitempty"`
