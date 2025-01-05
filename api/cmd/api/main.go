@@ -109,6 +109,7 @@ func main() {
 
 	protected.HandleFunc("/contacts", sf.Handler.ListContacts).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/contacts/{id}", sf.Handler.ListContacts).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/contacts/{id}", sf.Handler.GetContactById).Methods("PATCG", "OPTIONS")
 
 	protected.HandleFunc("/users", h.CreateUser).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT", "OPTIONS")
