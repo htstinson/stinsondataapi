@@ -171,10 +171,10 @@ type Contact struct {
 	LastReferencedDate     string `json:"LastReferencedDate,omitempty"`
 	EmailBouncedReason     string `json:"EmailBouncedReason,omitempty"`
 	EmailBouncedDate       string `json:"EmailBouncedDate,omitempty"`
-	IsEmailBounced         string `json:"IsEmailBounced ,omitempty"`
+	IsEmailBounced         bool   `json:"IsEmailBounced ,omitempty"`
 	PhotoURL               string `json:"PhotoURL,omitempty"`
 	Jigsaw                 string `json:"Jigsaw,omitempty"`
 	JigsawContactId        string `json:"JigsawContactId,omitempty"`
 	IndividualId           string `json:"IndividualId,omitempty"`
-	IsPriorityRecord       string `json:"IsPriorityRecord,omitempty"`
+	IsPriorityRecord       bool   `json:"IsPriorityRecord,omitempty"`
 }
