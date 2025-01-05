@@ -169,7 +169,6 @@ type Contact struct {
 	ReportsToId            string `json:"ReportsToId,omitempty"`
 	LastCURequestDate      string `json:"LastCURequestDate,omitempty"`
 	LastCUUpdateDate       string `json:"LastCUUpdateDate,omitempty"`
-	LastViewDate           string `json:"LastViewDate,omitempty"`
 	LastReferencedDate     string `json:"LastReferencedDate,omitempty"`
 	EmailBouncedReason     string `json:"EmailBouncedReason,omitempty"`
 	EmailBouncedDate       string `json:"EmailBouncedDate,omitempty"`

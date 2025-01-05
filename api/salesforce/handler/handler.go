@@ -331,7 +331,7 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 	PreferredName__c, HomePhone,
 	MasterRecordId,	Salutation, OtherLatitude, OtherLongitude, OtherGeocodeAccuracy, OtherAddress, OtherPhone,
 	MailingLatitude,MailingLongitude, MailingGeocodeAccuracy, MailingAddress, ReportsToId, LastCURequestDate,
-	LastCUUpdateDate, LastViewDate, LastReferencedDate, EmailBouncedReason, EmailBouncedDate, IsEmailBounced,
+	LastCUUpdateDate, LastReferencedDate, EmailBouncedReason, EmailBouncedDate, IsEmailBounced,
 	PhotoURL, Jigsaw, JigsawContactId, IndividualId, IsPriorityRecord
 	FROM Contact %s ORDER BY LastName ASC`, whereClause)
 
