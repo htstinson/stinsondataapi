@@ -325,7 +325,7 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 	Department, Description, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, 
 	OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, Fax, AssistantName,	AssistantPhone,
 	LeadSource,	Birthdate, 	CreatedDate, LastModifiedDate, SystemModstamp, LastActivityDate, IsDeleted, 
-	OwnerId, CreatedById, LastModifiedById, RecordTypeId
+	OwnerId, CreatedById, LastModifiedById
 	FROM Contact %s ORDER BY LastName ASC`, whereClause)
 
 	data, err := h.Get("/services/data/v59.0/query?q=", query)
