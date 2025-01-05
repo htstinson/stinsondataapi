@@ -149,9 +149,9 @@ type Contact struct {
 	Birth_Year__c           string `json:"Birth_Year__c,omitempty"`
 	Middle_Name__c          string `json:"Middle_Name__c string,omitempty"`
 	Non_Standard_Address__c string `json:"Non_Standard_Address__c,omitempty"`
-	HasEmailPermission__c   string `json:"HasEmailPermission__c,omitempty"`
-	HasPhonePermission__c   string `json:"HasPhonePermission__c,omitempty"`
-	HasSMSPermission__c     string `json:"HasSMSPermission__c,omitempty"`
+	HasEmailPermission__c   bool   `json:"HasEmailPermission__c,omitempty"`
+	HasPhonePermission__c   bool   `json:"HasPhonePermission__c,omitempty"`
+	HasSMSPermission__c     bool   `json:"HasSMSPermission__c,omitempty"`
 	PreferredName__c        string `json:"PreferredName__c,omitempty"`
 
 	HomePhone              string `json:"HomePhone,omitempty"`
