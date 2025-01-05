@@ -165,7 +165,6 @@ type Contact struct {
 	MailingLatitude        string `json:"MailingLatitude,omitempty"`
 	MailingLongitude       string `json:"MailingLongitude,omitempty"`
 	MailingGeocodeAccuracy string `json:"MailingGeocodeAccuracy,omitempty"`
-	MailingAddress         string
 	ReportsToId            string `json:"ReportsToId,omitempty"`
 	LastCURequestDate      string `json:"LastCURequestDate,omitempty"`
 	LastCUUpdateDate       string `json:"LastCUUpdateDate,omitempty"`
