@@ -326,7 +326,7 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 	OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, Fax, AssistantName,	AssistantPhone,
 	LeadSource,	Birthdate, CreatedDate, LastModifiedDate, SystemModstamp, LastActivityDate, IsDeleted, 
 	OwnerId, CreatedById, LastModifiedById,
-	LinkedIn_Profile__c, Facebook_Friend__c, Type__c, Scheduling_Site__c, Name__c, Suffix_c, Birth_Year__c,
+	LinkedIn_Profile__c, Facebook_Friend__c, Type__c, Scheduling_Site__c, Name__c, Suffix__c, Birth_Year__c,
 	Middle_Name__c, Non_Standard_Address__c, HasEmailPermission__c,	HasPhonePermission__c, 	HasSMSPermission__c,
 	PreferredName__c, Smagicinteract__SMSOptOut__c, Smagicinteract__Contact__c,	HomePhone,
 	MasterRecordId,	Salutation, OtherLatitude, OtherLongitude, OtherGeocodeAccuracy, OtherAddress, OtherPhone,
