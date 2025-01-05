@@ -320,7 +320,7 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 		whereClause = fmt.Sprintf(`WHERE AccountId = '%s'`, accountId)
 	}
 
-	query := fmt.Sprintf(`SELECT AccontId, Id, Name FROM Contact %s ORDER BY LastName ASC LIMIT 10`, whereClause)
+	query := fmt.Sprintf(`SELECT AccountId, Id, Name FROM Contact %s ORDER BY LastName ASC LIMIT 10`, whereClause)
 
 	data, err := h.Get("/services/data/v59.0/query?q=", query)
 	if err != nil {
