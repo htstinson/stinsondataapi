@@ -321,6 +321,7 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 	}
 
 	query := fmt.Sprintf(`SELECT AccountId, Id, FirstName, LastName, Email, Phone, LinkedIn_Profile__c,
+	MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, 
 	LastModifiedDate FROM Contact %s ORDER BY LastName ASC`, whereClause)
 
 	data, err := h.Get("/services/data/v59.0/query?q=", query)
