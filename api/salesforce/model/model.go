@@ -35,6 +35,12 @@ type AccountQueryResponse struct {
 	Records   []Account `json:"records"`
 }
 
+type ContactQueryResponse struct {
+	TotalSize int       `json:"totalSize"`
+	Done      bool      `json:"done"`
+	Records   []Account `json:"records"`
+}
+
 type Account struct {
 	Attributes        AccountAttributes      `json:"attributes"`
 	Id                string                 `json:"Id"`

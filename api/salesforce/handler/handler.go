@@ -328,12 +328,12 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	response := model.AccountQueryResponse{}
+	response := model.ContactQueryResponse{}
 
 	err = json.Unmarshal(data, &response)
 	if err != nil {
 		h.logger.Println(err.Error())
 	}
 
-	common.RespondJSON(w, http.StatusOK, response.Records)
+	common.RespondJSON(w, http.StatusOK, response)
 }
