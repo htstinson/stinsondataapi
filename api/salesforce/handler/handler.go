@@ -12,6 +12,7 @@ import (
 	"net/url"
 
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
+
 	auth "github.com/htstinson/stinsondataapi/api/salesforce/auth"
 	"github.com/htstinson/stinsondataapi/api/salesforce/model"
 
@@ -92,7 +93,7 @@ func (h *SalesforceHandler) Get(endpoint string, query string) ([]byte, error) {
 
 func (h *SalesforceHandler) ListAccounts(w http.ResponseWriter, r *http.Request) {
 
-	query := `SELECT Id, Name, Industry, Description, Phone, Fax, Website, LastModifiedDate, CreatedDate, LastActivityDate,	LastViewedDate, IsDeleted, MasterRecordId, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, AnnualRevenue, NumberOfEmployees, OwnerId, CreatedById, LastModifiedById, AccountSource FROM Account ORDER BY Name LIMIT 200`
+	query := `SELECT Id, Name, Industry, Description, Phone, Fax, Website, LastModifiedDate, CreatedDate, LastActivityDate,	LastViewedDate, IsDeleted, MasterRecordId, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, AnnualRevenue, NumberOfEmployees, OwnerId, CreatedById, LastModifiedById, AccountSource FROM Account LIMIT 200`
 
 	data, err := h.Get("/services/data/v59.0/query?q=", query)
 	if err != nil {
@@ -305,4 +306,31 @@ func (h *SalesforceHandler) SalesforcePost(endpoint string, payload interface{})
 	}
 
 	return body, nil
+}
+
+//Contacts
+
+func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request) {
+
+	accountId := "001PP00000Ro1d8YAB" // Replace with your account ID
+	query := `
+		SELECT Id, FirstName, LastName, Email, Phone, AccountId, LastModifiedDate 
+		FROM Contact 
+		WHERE AccountId = '` + accountId + `' 
+		ORDER BY LastName ASC`
+
+	data, err := h.Get("/services/data/v59.0/query?q=", query)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		return
+	}
+
+	response := model.AccountQueryResponse{}
+
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		h.logger.Println(err.Error())
+	}
+
+	common.RespondJSON(w, http.StatusOK, response.Records)
 }
