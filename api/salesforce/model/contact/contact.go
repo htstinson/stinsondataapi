@@ -34,18 +34,60 @@ type Contact struct {
 	AssistantPhone     string                         `json:"AssistantPhone,omitempty"`
 	LeadSource         string                         `json:"LeadSource,omitempty"`
 	Birthdate          *salesforcetime.SalesforceTime `json:"Birthdate,omitempty"`
-	CreatedDate        *salesforcetime.SalesforceTime `json:"CreatedDate,omitempty"`      // Read-only
-	LastModifiedDate   *salesforcetime.SalesforceTime `json:"LastModifiedDate,omitempty"` // Read-only
-	SystemModstamp     *salesforcetime.SalesforceTime `json:"SystemModstamp,omitempty"`   // Read-only
-	LastActivityDate   *salesforcetime.SalesforceTime `json:"LastActivityDate,omitempty"` // Read-only
-	IsDeleted          bool                           `json:"IsDeleted,omitempty"`        // Read-only
-	DoNotCall          bool                           `json:"DoNotCall,omitempty"`
-	HasOptedOutOfEmail bool                           `json:"HasOptedOutOfEmail,omitempty"`
-	HasOptedOutOfFax   bool                           `json:"HasOptedOutOfFax,omitempty"`
+	CreatedDate        *salesforcetime.SalesforceTime `json:"CreatedDate,omitempty"`        // Read-only
+	LastModifiedDate   *salesforcetime.SalesforceTime `json:"LastModifiedDate,omitempty"`   // Read-only
+	SystemModstamp     *salesforcetime.SalesforceTime `json:"SystemModstamp,omitempty"`     // Read-only
+	LastActivityDate   *salesforcetime.SalesforceTime `json:"LastActivityDate,omitempty"`   // Read-only
+	IsDeleted          bool                           `json:"IsDeleted,omitempty"`          // Read-only
+	DoNotCall          bool                           `json:"DoNotCall,omitempty"`          // custom needs __c
+	HasOptedOutOfEmail bool                           `json:"HasOptedOutOfEmail,omitempty"` // custom needs __c
+	HasOptedOutOfFax   bool                           `json:"HasOptedOutOfFax,omitempty"`   // custom needs __c
 	OwnerId            string                         `json:"OwnerId,omitempty"`
 	CreatedById        string                         `json:"CreatedById,omitempty"`      // Read-only
 	LastModifiedById   string                         `json:"LastModifiedById,omitempty"` // Read-only
-	RecordTypeId       string                         `json:"RecordTypeId,omitempty"`
+
+	LinkedIn_Profile__c     string `json:"LinkedIn_Profile__c,omitempty"`
+	Facebook_Friend__c      string `json:"Facebook_Friend__c,omitempty"`
+	Type__c                 string `json:"Type__c,omitempty"`
+	Scheduling_Site__c      string `json:"Scheduling_Site__c,omitempty"`
+	Name__c                 string `json:"Name__c,omitempty"`
+	Suffix_c                string `json:"Suffix__c,omitempty"`
+	Birth_Year__c           string `json:"Birth_Year__c,omitempty"`
+	Middle_Name__c          string `json:"Middle_Name__c string,omitempty"`
+	Non_Standard_Address__c string `json:"Non_Standard_Address__c,omitempty"`
+	HasEmailPermission__c   string `json:"HasEmailPermission__c,omitempty"`
+	HasPhonePermission__c   string `json:"HasPhonePermission__c,omitempty"`
+	HasSMSPermission__c     string `json:"HasSMSPermission__c,omitempty"`
+	PreferredName__c        string `json:"PreferredName__c,omitempty"`
+
+	Smagicinteract__SMSOptOut__c string `json:"smagicinteract__SMSOptOut__c,omitempty"`
+	Smagicinteract__Contact__c   string `json:"smagicinteract__Contact__c,omitempty"`
+
+	HomePhone              string `json:"HomePhone,omitempty"`
+	MasterRecordId         string `json:"MasterRecordId,omitempty"`
+	Salutation             string `json:"Salutation,omitempty"`
+	OtherLatitude          string `json:"OtherLatitude,omitempty"`
+	OtherLongitude         string `json:"OtherLongitude,omitempty"`
+	OtherGeocodeAccuracy   string `json:"OtherGeocodeAccuracy,omitempty"`
+	OtherAddress           string `json:"OtherAddress,omitempty"`
+	OtherPhone             string `json:"OtherPhone,omitempty"`
+	MailingLatitude        string `json:"MailingLatitude,omitempty"`
+	MailingLongitude       string `json:"MailingLongitude,omitempty"`
+	MailingGeocodeAccuracy string `json:"MailingGeocodeAccuracy,omitempty"`
+	MailingAddress         string `json:"MailingAddress,omitempty"`
+	ReportsToId            string `json:"ReportsToId,omitempty"`
+	LastCURequestDate      string `json:"LastCURequestDate,omitempty"`
+	LastCUUpdateDate       string `json:"LastCUUpdateDate,omitempty"`
+	LastViewDate           string `json:"LastViewDate,omitempty"`
+	LastReferencedDate     string `json:"LastReferencedDate,omitempty"`
+	EmailBouncedReason     string `json:"EmailBouncedReason,omitempty"`
+	EmailBouncedDate       string `json:"EmailBouncedDate,omitempty"`
+	IsEmailBounced         string `json:"IsEmailBounced ,omitempty"`
+	PhotoURL               string `json:"PhotoURL,omitempty"`
+	Jigsaw                 string `json:"Jigsaw,omitempty"`
+	JigsawContactId        string `json:"JigsawContactId,omitempty"`
+	IndividualId           string `json:"IndividualId,omitempty"`
+	IsPriorityRecord       string `json:"IsPriorityRecord,omitempty"`
 }
 
 // NewContact creates a new Contact with required fields

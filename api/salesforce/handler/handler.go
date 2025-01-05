@@ -324,8 +324,15 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 	Id, AccountId, FirstName, LastName,	Name, Email, Phone, MobilePhone, Title, 
 	Department, Description, MailingStreet, MailingCity, MailingState, MailingPostalCode, MailingCountry, 
 	OtherStreet, OtherCity, OtherState, OtherPostalCode, OtherCountry, Fax, AssistantName,	AssistantPhone,
-	LeadSource,	Birthdate, 	CreatedDate, LastModifiedDate, SystemModstamp, LastActivityDate, IsDeleted, 
-	OwnerId, CreatedById, LastModifiedById
+	LeadSource,	Birthdate, CreatedDate, LastModifiedDate, SystemModstamp, LastActivityDate, IsDeleted, 
+	OwnerId, CreatedById, LastModifiedById,
+	LinkedIn_Profile__c, Facebook_Friend__c, Type__c, Scheduling_Site__c, Name__c, Suffix_c, Birth_Year__c,
+	Middle_Name__c, Non_Standard_Address__c, HasEmailPermission__c,	HasPhonePermission__c, 	HasSMSPermission__c,
+	PreferredName__c, Smagicinteract__SMSOptOut__c, Smagicinteract__Contact__c,	HomePhone,
+	MasterRecordId,	Salutation, OtherLatitude, OtherLongitude, OtherGeocodeAccuracy, OtherAddress, OtherPhone,
+	MailingLatitude,MailingLongitude, MailingGeocodeAccuracy, MailingAddress, ReportsToId, LastCURequestDate,
+	LastCUUpdateDate, LastViewDate, LastReferencedDate, EmailBouncedReason, EmailBouncedDate, IsEmailBounced,
+	PhotoURL, Jigsaw, JigsawContactId, IndividualId, IsPriorityRecord,
 	FROM Contact %s ORDER BY LastName ASC`, whereClause)
 
 	data, err := h.Get("/services/data/v59.0/query?q=", query)
