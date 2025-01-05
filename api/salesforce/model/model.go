@@ -43,20 +43,21 @@ type ContactQueryResponse struct {
 }
 
 type Contact struct {
-	Id                string `json:"Id"`
-	FirstName         string `json:"FirstName"`
-	LastName          string `json:"LastName"`
-	Email             string `json:"Email"`
-	Phone             string `json:"Phone"`
-	AccountId         string `json:"AccountId"`
-	LeadSource        string `json:"LeadSource"`
-	LinkedIn_Profile  string `json:"LinkedIn_Profile__c"`
-	LastModifiedDate  string `json:"LastModifiedDate"`
-	MailingStreet     string `json:"MailingStreet"`
-	MailingCity       string `json:"MailingCity"`
-	MailingState      string `json:"MailingState"`
-	MailingPostalCode string `json:"MailingPostalCode"`
-	MailingCountry    string `json:"MailingCountry"`
+	AccountAttributes AccountAttributes `json:"attributes"`
+	Id                string            `json:"Id"`
+	FirstName         string            `json:"FirstName"`
+	LastName          string            `json:"LastName"`
+	Email             string            `json:"Email"`
+	Phone             string            `json:"Phone"`
+	AccountId         string            `json:"AccountId"`
+	LeadSource        string            `json:"LeadSource"`
+	LinkedIn_Profile  string            `json:"LinkedIn_Profile__c"`
+	LastModifiedDate  string            `json:"LastModifiedDate"`
+	MailingStreet     string            `json:"MailingStreet"`
+	MailingCity       string            `json:"MailingCity"`
+	MailingState      string            `json:"MailingState"`
+	MailingPostalCode string            `json:"MailingPostalCode"`
+	MailingCountry    string            `json:"MailingCountry"`
 }
 
 type Account struct {
