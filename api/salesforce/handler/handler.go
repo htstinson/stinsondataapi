@@ -374,6 +374,8 @@ func (h *SalesforceHandler) GetContactById(w http.ResponseWriter, r *http.Reques
 		// Handle error
 	}
 
+	fmt.Println(string(data))
+
 	contact, err := json.Marshal(response.Records[0])
 	if err != nil {
 		fmt.Println(err.Error())
