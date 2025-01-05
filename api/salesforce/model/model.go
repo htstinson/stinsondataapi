@@ -49,6 +49,7 @@ type Contact struct {
 	Email            string `json:"Email"`
 	Phone            string `json:"Phone"`
 	AccountId        string `json:"AccountId"`
+	LinkedIn_Profile string `json:"LinkedIn_Profile__c"`
 	LastModifiedDate string `json:"LastModifiedDate"`
 }
 
