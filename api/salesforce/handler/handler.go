@@ -314,12 +314,16 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 
 	vars := mux.Vars(r)
 	accountId := vars["id"]
+	var whereClause = ""
 
-	query := `
+	if accountId != "" {
+		whereClause = fmt.Sprintf(`WHERE AccountId = '%s'`, accountId)
+	}
+
+	query := fmt.Sprintf(`
 		SELECT Id, FirstName, LastName, Email, Phone, AccountId, LastModifiedDate 
-		FROM Contact 
-		WHERE AccountId = '` + accountId + `' 
-		ORDER BY LastName ASC`
+		FROM Contact %s
+		ORDER BY LastName ASC`, whereClause)
 
 	data, err := h.Get("/services/data/v59.0/query?q=", query)
 	if err != nil {
