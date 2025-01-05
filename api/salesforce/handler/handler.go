@@ -350,3 +350,24 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 
 	common.RespondJSON(w, http.StatusOK, response)
 }
+
+func (h *SalesforceHandler) GetContactById(id string) (salesforcemodel.Contact, error) {
+
+	query := fmt.Sprintf(`SELECT Id,LastName,FirstName FROM Contact WHERE Id='%s'`, id)
+
+	data, err := h.Get("/services/data/v59.0/query?q=", query)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err)
+		return salesforcemodel.Contact{}, err
+	}
+
+	response := salesforcemodel.ContactQueryResponse{}
+
+	err = json.Unmarshal(data, &response)
+	if err != nil {
+		// Handle error
+	}
+
+	return response.Records[0], nil
+
+}
