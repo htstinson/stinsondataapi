@@ -14,7 +14,7 @@ import (
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 
 	auth "github.com/htstinson/stinsondataapi/api/salesforce/auth"
-	"github.com/htstinson/stinsondataapi/api/salesforce/model"
+	salesforcemodel "github.com/htstinson/stinsondataapi/api/salesforce/model"
 
 	"github.com/gorilla/mux"
 )
@@ -101,7 +101,7 @@ func (h *SalesforceHandler) ListAccounts(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	response := model.AccountQueryResponse{}
+	response := salesforcemodel.AccountQueryResponse{}
 
 	err = json.Unmarshal(data, &response)
 	if err != nil {
@@ -137,7 +137,7 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 
 	h.logger.Println(id)
 
-	var Account model.Account // this is for new or updated accounts
+	var Account salesforcemodel.Account // this is for new or updated accounts
 
 	if err := json.NewDecoder(r.Body).Decode(&Account); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
@@ -158,7 +158,7 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 
 	endpoint := fmt.Sprintf("/services/data/v59.0/sobjects/Account/%s", currentAccount.Id)
 
-	transformedAccount := model.Transform(Account)
+	transformedAccount := salesforcemodel.Transform(Account)
 
 	_, err = h.SalesforcePatch(endpoint, transformedAccount)
 	if err != nil {
@@ -185,7 +185,7 @@ func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request
 	// Restore the body for further processing
 	r.Body = io.NopCloser(bytes.NewReader(bodyBytes.Bytes()))
 
-	var account *model.NewAccount
+	var account *salesforcemodel.NewAccount
 	if err := json.NewDecoder(r.Body).Decode(&account); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
 		return
@@ -203,17 +203,17 @@ func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request
 	common.RespondJSON(w, http.StatusOK, "test complete")
 }
 
-func (h *SalesforceHandler) GetAccountById(id string) (model.Account, error) {
+func (h *SalesforceHandler) GetAccountById(id string) (salesforcemodel.Account, error) {
 
 	query := fmt.Sprintf(`SELECT Id, Name, Industry, Description, Phone, Fax, Website, LastModifiedDate, CreatedDate, LastActivityDate,	LastViewedDate, IsDeleted, MasterRecordId, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, AnnualRevenue, NumberOfEmployees, OwnerId, CreatedById, LastModifiedById, AccountSource FROM Account Where Id = '%s' LIMIT 200`, id)
 
 	data, err := h.Get("/services/data/v59.0/query?q=", query)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
-		return model.Account{}, err
+		return salesforcemodel.Account{}, err
 	}
 
-	response := model.AccountQueryResponse{}
+	response := salesforcemodel.AccountQueryResponse{}
 
 	err = json.Unmarshal(data, &response)
 	if err != nil {
@@ -332,7 +332,7 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 	MasterRecordId,	Salutation, OtherLatitude, OtherLongitude, OtherGeocodeAccuracy, OtherAddress, OtherPhone,
 	MailingLatitude,MailingLongitude, MailingGeocodeAccuracy, MailingAddress, ReportsToId, LastCURequestDate,
 	LastCUUpdateDate, LastViewDate, LastReferencedDate, EmailBouncedReason, EmailBouncedDate, IsEmailBounced,
-	PhotoURL, Jigsaw, JigsawContactId, IndividualId, IsPriorityRecord,
+	PhotoURL, Jigsaw, JigsawContactId, IndividualId, IsPriorityRecord
 	FROM Contact %s ORDER BY LastName ASC`, whereClause)
 
 	data, err := h.Get("/services/data/v59.0/query?q=", query)
@@ -341,7 +341,7 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	response := model.ContactQueryResponse{}
+	response := salesforcemodel.ContactQueryResponse{}
 
 	err = json.Unmarshal(data, &response)
 	if err != nil {
