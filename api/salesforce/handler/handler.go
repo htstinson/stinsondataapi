@@ -349,6 +349,8 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 		h.logger.Println(err.Error())
 	}
 
+	fmt.Println(string(data))
+
 	common.RespondJSON(w, http.StatusOK, data)
 }
 
