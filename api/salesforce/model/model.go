@@ -145,7 +145,7 @@ type Contact struct {
 	Type__c                 string `json:"Type__c,omitempty"`
 	Scheduling_Site__c      string `json:"Scheduling_Site__c,omitempty"`
 	Name__c                 string `json:"Name__c,omitempty"`
-	Suffix_c                string `json:"Suffix__c,omitempty"`
+	Suffix__c               string `json:"Suffix__c,omitempty"`
 	Birth_Year__c           string `json:"Birth_Year__c,omitempty"`
 	Middle_Name__c          string `json:"Middle_Name__c string,omitempty"`
 	Non_Standard_Address__c string `json:"Non_Standard_Address__c,omitempty"`
