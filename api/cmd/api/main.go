@@ -105,7 +105,7 @@ func main() {
 
 	protected.HandleFunc("/accounts", sf.Handler.CreateAccount).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/accounts/{id}", sf.Handler.UpdateAccount).Methods("PATCH", "OPTIONS")
-	protected.HandleFunc("/accounts", sf.Handler.ListAccounts).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/accounts/{id}", sf.Handler.ListAccounts).Methods("GET", "OPTIONS")
 
 	protected.HandleFunc("/contacts", sf.Handler.ListContacts).Methods("GET", "OPTIONS")
 

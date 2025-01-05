@@ -312,7 +312,9 @@ func (h *SalesforceHandler) SalesforcePost(endpoint string, payload interface{})
 
 func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request) {
 
-	accountId := "001PP00000Ro1d8YAB" // Replace with your account ID
+	vars := mux.Vars(r)
+	accountId := vars["id"]
+
 	query := `
 		SELECT Id, FirstName, LastName, Email, Phone, AccountId, LastModifiedDate 
 		FROM Contact 
