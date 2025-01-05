@@ -141,7 +141,7 @@ type Contact struct {
 	LastModifiedById   string                 `json:"LastModifiedById,omitempty"` // Read-only
 
 	LinkedIn_Profile__c     string `json:"LinkedIn_Profile__c,omitempty"`
-	Facebook_Friend__c      string `json:"Facebook_Friend__c,omitempty"`
+	Facebook_Friend__c      bool   `json:"Facebook_Friend__c,omitempty"`
 	Type__c                 string `json:"Type__c,omitempty"`
 	Scheduling_Site__c      string `json:"Scheduling_Site__c,omitempty"`
 	Name__c                 string `json:"Name__c,omitempty"`
