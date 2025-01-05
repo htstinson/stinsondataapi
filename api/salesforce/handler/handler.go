@@ -313,7 +313,8 @@ func (h *SalesforceHandler) SalesforcePost(endpoint string, payload interface{})
 func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
-	accountId := vars["id"]
+	accountId := vars["accountid"]
+	//limit := vars["limit"]
 	var whereClause = ""
 
 	if accountId != "" {
@@ -354,7 +355,7 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 func (h *SalesforceHandler) GetContactById(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
-	id := vars["id"]
+	id := vars["contactid"]
 
 	query := fmt.Sprintf(`SELECT Id,LastName,FirstName FROM Contact WHERE Id='%s'`, id)
 
@@ -371,11 +372,11 @@ func (h *SalesforceHandler) GetContactById(w http.ResponseWriter, r *http.Reques
 		// Handle error
 	}
 
-	resp, err := json.Marshal(response.Records[0])
+	contact, err := json.Marshal(response.Records[0])
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 
-	common.RespondJSON(w, http.StatusOK, resp)
+	common.RespondJSON(w, http.StatusOK, contact)
 
 }
