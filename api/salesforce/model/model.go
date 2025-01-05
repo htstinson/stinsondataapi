@@ -154,9 +154,6 @@ type Contact struct {
 	HasSMSPermission__c     string `json:"HasSMSPermission__c,omitempty"`
 	PreferredName__c        string `json:"PreferredName__c,omitempty"`
 
-	Smagicinteract__SMSOptOut__c string `json:"smagicinteract__SMSOptOut__c,omitempty"`
-	Smagicinteract__Contact__c   string `json:"smagicinteract__Contact__c,omitempty"`
-
 	HomePhone              string `json:"HomePhone,omitempty"`
 	MasterRecordId         string `json:"MasterRecordId,omitempty"`
 	Salutation             string `json:"Salutation,omitempty"`
