@@ -36,9 +36,20 @@ type AccountQueryResponse struct {
 }
 
 type ContactQueryResponse struct {
-	TotalSize int       `json:"totalSize"`
-	Done      bool      `json:"done"`
-	Records   []Account `json:"records"`
+	TotalSize      int       `json:"totalSize"`
+	Done           bool      `json:"done"`
+	Records        []Contact `json:"records"`
+	NextRecordsUrl string    `json:"nextRecordsUrl"`
+}
+
+type Contact struct {
+	Id               string `json:"Id"`
+	FirstName        string `json:"FirstName"`
+	LastName         string `json:"LastName"`
+	Email            string `json:"Email"`
+	Phone            string `json:"Phone"`
+	AccountId        string `json:"AccountId"`
+	LastModifiedDate string `json:"LastModifiedDate"`
 }
 
 type Account struct {
