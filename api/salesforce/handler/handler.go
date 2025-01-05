@@ -349,7 +349,7 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 		h.logger.Println(err.Error())
 	}
 
-	common.RespondJSON(w, http.StatusOK, response)
+	common.RespondJSON(w, http.StatusOK, data)
 }
 
 func (h *SalesforceHandler) GetContactById(w http.ResponseWriter, r *http.Request) {
