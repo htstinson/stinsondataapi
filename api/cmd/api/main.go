@@ -66,6 +66,8 @@ func main() {
 	}
 	defer db.Close()
 
+	logger.Println("Connected to Database")
+
 	// Initialize auth
 	authConfig := auth.Config{
 		SecretKey:     os.Getenv("JWT_SECRET_KEY"), // Use environment variable
