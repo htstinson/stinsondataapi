@@ -84,11 +84,13 @@ func main() {
 	router := mux.NewRouter()
 	// debug region start
 
+	router.HandleFunc("/health", h.HealthCheck).Methods("GET")
+
 	// Setup routes
 	api := router.PathPrefix("/api/v1").Subrouter()
 
 	// Public routes
-	api.HandleFunc("/health", h.HealthCheck).Methods("GET")
+	//api.HandleFunc("/health", h.HealthCheck).Methods("GET")
 	api.HandleFunc("/register", h.Register).Methods("POST")
 	api.HandleFunc("/login", h.Login).Methods("POST", "OPTIONS")
 	api.HandleFunc("/", h.HealthCheck).Methods("GET")
