@@ -86,8 +86,9 @@ func main() {
 	router := mux.NewRouter()
 	// debug region start
 
-	test := router.PathPrefix("/test").Subrouter()
+	test := router.PathPrefix("/test").Subrouter()           //
 	test.HandleFunc("/health", h.HealthCheck).Methods("GET") //
+	test.HandleFunc("/users", h.ListUsers).Methods("GET", "OPTIONS")
 
 	// Setup routes
 	api := router.PathPrefix("/api/v1").Subrouter()
