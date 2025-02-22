@@ -27,6 +27,7 @@ func NewHandler(db database.Repository, auth auth.JWTAuth, logger *log.Logger) *
 }
 
 func (h *Handler) HealthCheck(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("HealthChecks")
 	common.RespondJSON(w, http.StatusOK, map[string]string{
 		"status": "healthy",
 		"time":   time.Now().Format(time.RFC3339),
