@@ -13,6 +13,7 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"log"
+	"log/syslog"
 	"mime"
 	"net/http"
 	"os"
@@ -34,20 +35,25 @@ func init() {
 
 func main() {
 	// Create logger
-	logger := log.New(os.Stdout, "[API] ", log.LstdFlags)
+	logger, err := syslog.New(syslog.LOG_INFO|syslog.LOG_LOCAL0, "webserver")
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	logger.Println("initialize salesforce")
+	log.SetOutput(logger)
+
+	log.Println("initialize salesforce")
 	sf, err := salesforce.New()
 	if err != nil {
-		logger.Println(err.Error())
+		log.Println(err.Error())
 		return
 	}
 
-	logger.Println("initializing database")
+	log.Println("initializing database")
 	var RDSLogin = &model.RDSLogin{}
 	rdsLogin, err := common.GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
-		logger.Println("RDS Login", err.Error())
+		log.Println("RDS Login", err.Error())
 		return
 	}
 	json.Unmarshal(rdsLogin, RDSLogin)
@@ -62,11 +68,11 @@ func main() {
 		SSLMode:  "require",
 	})
 	if err != nil {
-		logger.Fatalf("Failed to connect to database: %v", err)
+		log.Fatalf("Failed to connect to database: %v", err)
 	}
 	defer db.Close()
 
-	logger.Println("Connected to Database")
+	log.Println("Connected to Database")
 
 	// Initialize auth
 	authConfig := auth.Config{
@@ -80,7 +86,7 @@ func main() {
 
 	jwtAuth := auth.New(authConfig)
 	// Create handler with auth and SFauth
-	h := handler.NewHandler(db, *jwtAuth, logger)
+	h := handler.NewHandler(db, *jwtAuth, &log.Logger{})
 
 	// Create router and handler
 	router := mux.NewRouter()
@@ -124,22 +130,22 @@ func main() {
 	protected.HandleFunc("/users", h.ListUsers).Methods("GET", "OPTIONS")
 
 	// Add middleware
-	api.Use(middleware.Logger(logger))
+	api.Use(middleware.Logger(&log.Logger{}))
 	api.Use(middleware.RequestID)
 	api.Use(middleware.SecurityHeaders)
 	api.Use(middleware.CORS)
 
 	//static assets
 	distPath := "/home/ec2-user/go/src/stinsondata-tools-reactapp/dist"
-	logger.Printf("Serving files from: %s", distPath)
+	log.Printf("Serving files from: %s", distPath)
 
 	// Handle all static assets including the index.js file
 	router.PathPrefix("/assets/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logger.Printf("Asset request for: %s", r.URL.Path)
+		log.Printf("Asset request for: %s", r.URL.Path)
 
 		// Remove the leading /assets/ to get the file path
 		filePath := filepath.Join(distPath, r.URL.Path)
-		logger.Printf("Looking for file at: %s", filePath)
+		log.Printf("Looking for file at: %s", filePath)
 
 		// Set appropriate headers based on file extension
 		switch ext := path.Ext(r.URL.Path); ext {
@@ -155,7 +161,7 @@ func main() {
 
 	// Handle root and all other routes with index.html
 	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logger.Printf("Serving index.html for path: %s", r.URL.Path)
+		log.Printf("Serving index.html for path: %s", r.URL.Path)
 		w.Header().Set("Content-Type", "text/html")
 		http.ServeFile(w, r, filepath.Join(distPath, "index.html"))
 	})
@@ -171,13 +177,13 @@ func main() {
 
 	// Start server
 	go func() {
-		logger.Printf("Server starting.")
+		log.Printf("Server starting.")
 
 		err := srv.ListenAndServeTLS("../../certs/certificate.crt", "../../certs/private.key")
 		if err == http.ErrServerClosed {
-			logger.Printf("Failed to start server (tls): %v", err)
+			log.Printf("Failed to start server (tls): %v", err)
 		} else {
-			logger.Println(err.Error())
+			log.Println(err.Error())
 		}
 	}()
 
@@ -187,13 +193,13 @@ func main() {
 	<-quit
 
 	// Graceful shutdown
-	logger.Println("Server stopping...")
+	log.Println("Server stopping...")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		logger.Fatalf("Server forced to shutdown: %v", err)
+		log.Fatalf("Server forced to shutdown: %v", err)
 	}
 
-	logger.Println("Server stopped")
+	log.Println("Server stopped")
 }
