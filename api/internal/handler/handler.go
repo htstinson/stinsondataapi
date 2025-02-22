@@ -288,6 +288,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Login")
 	var req model.LoginRequest
 
 	for k, v := range r.Header {
