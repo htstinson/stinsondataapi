@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -51,7 +50,7 @@ func SalesForceLogin(SalesforceCreds *SalesforceCreds) (*SalesforceAuthResponse,
 		fmt.Printf("Error getting token: %v\n", err)
 	} else {
 		fmt.Println("Token success")
-		log.Println("this is a test")
+		fmt.Println("this is a test")
 	}
 
 	return auth, err
