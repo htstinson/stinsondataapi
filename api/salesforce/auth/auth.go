@@ -50,7 +50,6 @@ func SalesForceLogin(SalesforceCreds *SalesforceCreds) (*SalesforceAuthResponse,
 		fmt.Printf("Error getting token: %v\n", err)
 	} else {
 		fmt.Println("Token success")
-		fmt.Println("this is a test")
 	}
 
 	return auth, err

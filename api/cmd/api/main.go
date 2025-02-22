@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/auth"
 	"github.com/htstinson/stinsondataapi/api/internal/handler"
@@ -42,18 +44,18 @@ func main() {
 
 	log.SetOutput(logger)
 
-	log.Println("initialize salesforce")
+	fmt.Println("initialize salesforce")
 	sf, err := salesforce.New()
 	if err != nil {
-		log.Println(err.Error())
+		fmt.Println(err.Error())
 		return
 	}
 
-	log.Println("initializing database")
+	fmt.Println("initializing database")
 	var RDSLogin = &model.RDSLogin{}
 	rdsLogin, err := common.GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
-		log.Println("RDS Login", err.Error())
+		fmt.Println("RDS Login", err.Error())
 		return
 	}
 	json.Unmarshal(rdsLogin, RDSLogin)
@@ -72,7 +74,7 @@ func main() {
 	}
 	defer db.Close()
 
-	log.Println("Connected to Database")
+	fmt.Println("Connected to Database")
 
 	// Initialize auth
 	authConfig := auth.Config{
@@ -137,15 +139,15 @@ func main() {
 
 	//static assets
 	distPath := "/home/ec2-user/go/src/stinsondata-tools-reactapp/dist"
-	log.Printf("Serving files from: %s", distPath)
+	fmt.Printf("Serving files from: %s", distPath)
 
 	// Handle all static assets including the index.js file
 	router.PathPrefix("/assets/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("Asset request for: %s", r.URL.Path)
+		fmt.Printf("Asset request for: %s", r.URL.Path)
 
 		// Remove the leading /assets/ to get the file path
 		filePath := filepath.Join(distPath, r.URL.Path)
-		log.Printf("Looking for file at: %s", filePath)
+		fmt.Printf("Looking for file at: %s", filePath)
 
 		// Set appropriate headers based on file extension
 		switch ext := path.Ext(r.URL.Path); ext {
@@ -161,7 +163,7 @@ func main() {
 
 	// Handle root and all other routes with index.html
 	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log.Printf("Serving index.html for path: %s", r.URL.Path)
+		fmt.Printf("Serving index.html for path: %s", r.URL.Path)
 		w.Header().Set("Content-Type", "text/html")
 		http.ServeFile(w, r, filepath.Join(distPath, "index.html"))
 	})
@@ -177,13 +179,13 @@ func main() {
 
 	// Start server
 	go func() {
-		log.Printf("Server starting.")
+		fmt.Printf("Server starting.")
 
 		err := srv.ListenAndServeTLS("../../certs/certificate.crt", "../../certs/private.key")
 		if err == http.ErrServerClosed {
-			log.Printf("Failed to start server (tls): %v", err)
+			fmt.Printf("Failed to start server (tls): %v", err)
 		} else {
-			log.Println(err.Error())
+			fmt.Println(err.Error())
 		}
 	}()
 
@@ -193,7 +195,7 @@ func main() {
 	<-quit
 
 	// Graceful shutdown
-	log.Println("Server stopping...")
+	fmt.Println("Server stopping...")
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -201,5 +203,5 @@ func main() {
 		log.Fatalf("Server forced to shutdown: %v", err)
 	}
 
-	log.Println("Server stopped")
+	fmt.Println("Server stopped")
 }
