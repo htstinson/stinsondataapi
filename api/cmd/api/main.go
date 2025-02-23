@@ -211,5 +211,5 @@ func main() {
 		return
 	}
 
-	fmt.Printf("[%v] Server stopped. %s\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] Server stopped.\n", time.Now().Format(time.RFC3339))
 }
