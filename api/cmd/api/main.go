@@ -52,7 +52,7 @@ func main() {
 		return
 	}
 
-	fmt.Printf("[%x] Initializing database", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] Initializing database", time.Now().Format(time.RFC3339))
 	var RDSLogin = &model.RDSLogin{}
 	rdsLogin, err := common.GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
