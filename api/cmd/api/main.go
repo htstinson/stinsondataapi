@@ -79,7 +79,7 @@ func main() {
 	}
 	defer db.Close()
 
-	fmt.Println("Connected to Database")
+	fmt.Printf("[%v] Connected to database\n", time.Now().Format(time.RFC3339))
 
 	// Initialize auth
 	authConfig := auth.Config{
@@ -184,7 +184,7 @@ func main() {
 
 	// Start server
 	go func() {
-		fmt.Printf("Server starting.")
+		fmt.Printf("[%v] Server starting\n", time.Now().Format(time.RFC3339))
 
 		err := srv.ListenAndServeTLS("../../certs/certificate.crt", "../../certs/private.key")
 		if err == http.ErrServerClosed {

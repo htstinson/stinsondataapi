@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 )
 
 type SalesforceCreds struct {
@@ -49,7 +50,7 @@ func SalesForceLogin(SalesforceCreds *SalesforceCreds) (*SalesforceAuthResponse,
 	if err != nil {
 		fmt.Printf("Error getting token: %v\n", err)
 	} else {
-		fmt.Println("Token success")
+		fmt.Printf("[%v] Token retrieved\n", time.Now().Format(time.RFC3339))
 	}
 
 	return auth, err
