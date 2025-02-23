@@ -39,7 +39,8 @@ func main() {
 	// Create logger
 	logger, err := syslog.New(syslog.LOG_INFO|syslog.LOG_LOCAL0, "webserver")
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
+		return
 	}
 
 	log.SetOutput(logger)
@@ -51,7 +52,7 @@ func main() {
 		return
 	}
 
-	fmt.Println("initializing database")
+	fmt.Printf("[%x] Initializing database", time.Now().Format(time.RFC3339))
 	var RDSLogin = &model.RDSLogin{}
 	rdsLogin, err := common.GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
@@ -70,7 +71,8 @@ func main() {
 		SSLMode:  "require",
 	})
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		fmt.Printf("Failed to connect to database: %v", err)
+		return
 	}
 	defer db.Close()
 
@@ -200,7 +202,8 @@ func main() {
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatalf("Server forced to shutdown: %v", err)
+		fmt.Printf("Server forced to shutdown: %v", err)
+		return
 	}
 
 	fmt.Println("Server stopped")
