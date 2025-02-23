@@ -48,10 +48,11 @@ func main() {
 
 	log.SetOutput(logger)
 
-	fmt.Println("initialize salesforce")
+	fmt.Printf("[%v] Initializing salesforce\n", time.Now().Format(time.RFC3339))
+
 	sf, err := salesforce.New()
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Printf("[%v] Salesforce error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 
@@ -59,7 +60,7 @@ func main() {
 	var RDSLogin = &model.RDSLogin{}
 	rdsLogin, err := common.GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
-		fmt.Println("RDS Login", err.Error())
+		fmt.Printf("[%v] RDS error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 	json.Unmarshal(rdsLogin, RDSLogin)
@@ -74,7 +75,7 @@ func main() {
 		SSLMode:  "require",
 	})
 	if err != nil {
-		fmt.Printf("Failed to connect to database: %v", err)
+		fmt.Printf("[%v] Failed to connect to database: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 	defer db.Close()
@@ -148,7 +149,7 @@ func main() {
 
 	// Handle all static assets including the index.js file
 	router.PathPrefix("/assets/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("Asset request for: %s", r.URL.Path)
+		fmt.Printf("[%v] Asset request for: %s\n", time.Now().Format(time.RFC3339), r.URL.Path)
 
 		// Remove the leading /assets/ to get the file path
 		filePath := filepath.Join(distPath, r.URL.Path)
@@ -200,14 +201,15 @@ func main() {
 	<-quit
 
 	// Graceful shutdown
-	fmt.Println("Server stopping...")
+	fmt.Printf("[%v] Server stopping...\n", time.Now().Format(time.RFC3339))
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		fmt.Printf("Server forced to shutdown: %v", err)
+		fmt.Printf("[%v] Server forced to shutdown: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 
-	fmt.Println("Server stopped")
+	fmt.Printf("[%v] Server stopped. %s\n", time.Now().Format(time.RFC3339))
 }
