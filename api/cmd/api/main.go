@@ -144,7 +144,7 @@ func main() {
 
 	//static assets
 	distPath := "/home/ec2-user/go/src/stinsondata-tools-reactapp/dist"
-	fmt.Printf("Serving files from: %s", distPath)
+	fmt.Printf("[%v] Serving files from: %s", time.Now().Format(time.RFC3339), distPath)
 
 	// Handle all static assets including the index.js file
 	router.PathPrefix("/assets/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -168,7 +168,7 @@ func main() {
 
 	// Handle root and all other routes with index.html
 	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("Serving index.html for path: %s", r.URL.Path)
+		fmt.Printf("[%v] Serving index.html for path: %s", time.Now().Format(time.RFC3339), r.URL.Path)
 		w.Header().Set("Content-Type", "text/html")
 		http.ServeFile(w, r, filepath.Join(distPath, "index.html"))
 	})
