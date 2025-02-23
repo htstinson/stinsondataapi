@@ -15,7 +15,6 @@ import (
 	"crypto/tls"
 	"encoding/json"
 	"log"
-	"log/syslog"
 	"mime"
 	"net/http"
 	"os"
@@ -40,13 +39,13 @@ func main() {
 	fmt.Printf("\n[%v] ---------------------------------------------------------------\n", time.Now().Format(time.RFC3339))
 
 	// Create logger
-	logger, err := syslog.New(syslog.LOG_INFO|syslog.LOG_LOCAL0, "webserver")
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
+	// logger, err := syslog.New(syslog.LOG_INFO|syslog.LOG_LOCAL0, "webserver")
+	// if err != nil {
+	// 	fmt.Println(err.Error())
+	// 	return
+	// }
 
-	log.SetOutput(logger)
+	log.SetOutput(os.Stdout)
 
 	fmt.Printf("[%v] Initializing salesforce\n", time.Now().Format(time.RFC3339))
 
