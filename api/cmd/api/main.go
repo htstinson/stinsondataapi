@@ -36,6 +36,9 @@ func init() {
 }
 
 func main() {
+
+	fmt.Printf("\n[%v] ---------------------------------------------------------------\n", time.Now().Format(time.RFC3339))
+
 	// Create logger
 	logger, err := syslog.New(syslog.LOG_INFO|syslog.LOG_LOCAL0, "webserver")
 	if err != nil {
@@ -52,7 +55,7 @@ func main() {
 		return
 	}
 
-	fmt.Printf("[%v] Initializing database", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] Initializing database\n", time.Now().Format(time.RFC3339))
 	var RDSLogin = &model.RDSLogin{}
 	rdsLogin, err := common.GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
