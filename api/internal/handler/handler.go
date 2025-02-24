@@ -314,6 +314,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Printf("[%v] Password Hash: %s\n", time.Now().Format(time.RFC3339), user.PasswordHash)
+
 	// Check password
 	if err := bcrypt.CompareHashAndPassword(
 		[]byte(user.PasswordHash),

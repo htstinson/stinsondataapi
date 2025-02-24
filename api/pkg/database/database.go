@@ -288,7 +288,7 @@ func (d *Database) GetUserByUsername(ctx context.Context, username string) (*mod
 	}
 
 	if user.ID != "" {
-		fmt.Printf("[%v] User found: %s", time.Now().Format(time.RFC3339), user.ID)
+		fmt.Printf("[%v] User ID: %s\n", time.Now().Format(time.RFC3339), user.ID)
 	}
 
 	return user, nil
