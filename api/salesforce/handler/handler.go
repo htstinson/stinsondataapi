@@ -105,7 +105,7 @@ func (h *SalesforceHandler) ListAccounts(w http.ResponseWriter, r *http.Request)
 
 	err = json.Unmarshal(data, &response)
 	if err != nil {
-		h.logger.Println(err.Error())
+		fmt.Println(err.Error())
 	}
 
 	common.RespondJSON(w, http.StatusOK, response.Records)
@@ -135,7 +135,7 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	h.logger.Println(id)
+	fmt.Println(id)
 
 	var Account salesforcemodel.Account // this is for new or updated accounts
 
@@ -174,13 +174,13 @@ func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request
 	var bodyBytes bytes.Buffer
 	_, err := bodyBytes.ReadFrom(r.Body)
 	if err != nil {
-		h.logger.Printf("Error reading body: %v", err)
+		fmt.Printf("Error reading body: %v", err)
 		http.Error(w, "can't read body", http.StatusBadRequest)
 		return
 	}
 
 	// Display the body
-	h.logger.Printf("Body: %s", bodyBytes.String())
+	fmt.Printf("Body: %s", bodyBytes.String())
 
 	// Restore the body for further processing
 	r.Body = io.NopCloser(bytes.NewReader(bodyBytes.Bytes()))
@@ -198,7 +198,7 @@ func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	h.logger.Println(string(response))
+	fmt.Println(string(response))
 
 	common.RespondJSON(w, http.StatusOK, "test complete")
 }
@@ -346,7 +346,7 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 
 	err = json.Unmarshal(data, &response)
 	if err != nil {
-		h.logger.Println(err.Error())
+		fmt.Println(err.Error())
 	}
 
 	fmt.Println(string(data))
