@@ -307,7 +307,6 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if user == nil {
-		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		common.RespondError(w, http.StatusUnauthorized, "Invalid credentials")
 		return
 	}
