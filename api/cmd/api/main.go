@@ -168,7 +168,7 @@ func main() {
 
 	// Handle root and all other routes with index.html
 	router.PathPrefix("/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("[%v] Serving index.html for path: %s\n", time.Now().Format(time.RFC3339), r.URL.Path)
+		//fmt.Printf("[%v] Serving index.html for path: %s\n", time.Now().Format(time.RFC3339), r.URL.Path)
 		w.Header().Set("Content-Type", "text/html")
 		http.ServeFile(w, r, filepath.Join(distPath, "index.html"))
 	})
