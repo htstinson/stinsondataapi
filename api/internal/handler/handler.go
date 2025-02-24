@@ -27,7 +27,7 @@ func NewHandler(db database.Repository, auth auth.JWTAuth, logger *log.Logger) *
 }
 
 func (h *Handler) HealthCheck(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("HealthChecks")
+	fmt.Printf("[%v] HealthCheck\n", time.Now().Format(time.RFC3339))
 	common.RespondJSON(w, http.StatusOK, map[string]string{
 		"status": "healthy",
 		"time":   time.Now().Format(time.RFC3339),
@@ -289,7 +289,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("[%v] Login", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] Login\n", time.Now().Format(time.RFC3339))
 	var req model.LoginRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {

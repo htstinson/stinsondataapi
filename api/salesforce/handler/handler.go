@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"time"
 
 	"fmt"
 	"log"
@@ -30,7 +31,7 @@ func New(creds *auth.SalesforceCreds) (*SalesforceHandler, error) {
 
 	authResponse, err := auth.SalesForceLogin(creds)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return SalesforceHandler, err
 	}
 
@@ -105,7 +106,7 @@ func (h *SalesforceHandler) ListAccounts(w http.ResponseWriter, r *http.Request)
 
 	err = json.Unmarshal(data, &response)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 	}
 
 	common.RespondJSON(w, http.StatusOK, response.Records)
@@ -135,8 +136,6 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	fmt.Println(id)
-
 	var Account salesforcemodel.Account // this is for new or updated accounts
 
 	if err := json.NewDecoder(r.Body).Decode(&Account); err != nil {
@@ -147,7 +146,7 @@ func (h *SalesforceHandler) UpdateAccount(w http.ResponseWriter, r *http.Request
 
 	currentAccount, err := h.GetAccountById(id)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 
@@ -346,7 +345,7 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 
 	err = json.Unmarshal(data, &response)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 	}
 
 	fmt.Println(string(data))
@@ -378,7 +377,7 @@ func (h *SalesforceHandler) GetContactById(w http.ResponseWriter, r *http.Reques
 
 	contact, err := json.Marshal(response.Records[0])
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 	}
 
 	common.RespondJSON(w, http.StatusOK, contact)

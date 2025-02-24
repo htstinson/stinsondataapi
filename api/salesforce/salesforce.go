@@ -2,8 +2,10 @@ package salesforce
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/htstinson/stinsondataapi/api/salesforce/auth"
 	"github.com/htstinson/stinsondataapi/api/salesforce/handler"
@@ -25,7 +27,7 @@ func New() (Salesforce, error) {
 
 	salesforceCreds, err := common.GetSecretString("Salesforce", "us-west-2")
 	if err != nil {
-		logger.Println("Salesforce Creds", err.Error())
+		fmt.Printf("[%v] Error: Salesforce Creds %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return salesforce, err
 	}
 	json.Unmarshal(salesforceCreds, &SalesforceCreds)
@@ -34,7 +36,7 @@ func New() (Salesforce, error) {
 
 	handler, err := handler.New(SalesforceCreds)
 	if err != nil {
-		logger.Println(err.Error())
+		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return salesforce, err
 	}
 
