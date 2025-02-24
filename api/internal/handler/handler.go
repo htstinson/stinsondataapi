@@ -292,45 +292,41 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("[%v] Login", time.Now().Format(time.RFC3339))
 	var req model.LoginRequest
 
-	for k, v := range r.Header {
-		fmt.Printf("[%v] Header: %v | %s\n", time.Now().Format(time.RFC3339), k, v)
-	}
-
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 	defer r.Body.Close()
-	fmt.Printf("[%v] Username: %s\n", time.Now().Format(time.RFC3339), req.Username)
 
 	// Get user
 	user, err := h.db.GetUserByUsername(r.Context(), req.Username)
 	if err != nil {
+		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Error finding user")
 		return
 	}
 	if user == nil {
+		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		common.RespondError(w, http.StatusUnauthorized, "Invalid credentials")
 		return
 	}
-
-	fmt.Printf("[%v] Password Hash: %s\n", time.Now().Format(time.RFC3339), user.PasswordHash)
 
 	// Check password
 	if err := bcrypt.CompareHashAndPassword(
 		[]byte(user.PasswordHash),
 		[]byte(req.Password),
 	); err != nil {
-		common.RespondError(w, http.StatusUnauthorized, "Invalid credentials")
 		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
+		common.RespondError(w, http.StatusUnauthorized, "Invalid credentials")
 		return
 	}
 
 	// Generate token
 	token, err := h.auth.GenerateToken(user.ID, user.Username)
 	if err != nil {
-		common.RespondError(w, http.StatusInternalServerError, "Error generating token")
 		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Error generating token")
 		return
 	}
 
