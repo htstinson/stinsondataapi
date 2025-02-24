@@ -293,7 +293,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	var req model.LoginRequest
 
 	for k, v := range r.Header {
-		fmt.Printf("[%v] Header: %v | %s", time.Now().Format(time.RFC3339), k, v)
+		fmt.Printf("[%v] Header: %v | %s\n", time.Now().Format(time.RFC3339), k, v)
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -301,7 +301,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
-	fmt.Printf("[%v] Username: %s", time.Now().Format(time.RFC3339), req.Username)
+	fmt.Printf("[%v] Username: %s\n", time.Now().Format(time.RFC3339), req.Username)
 
 	// Get user
 	user, err := h.db.GetUserByUsername(r.Context(), req.Username)
