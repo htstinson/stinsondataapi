@@ -322,6 +322,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		[]byte(req.Password),
 	); err != nil {
 		common.RespondError(w, http.StatusUnauthorized, "Invalid credentials")
+		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 
@@ -329,10 +330,9 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	token, err := h.auth.GenerateToken(user.ID, user.Username)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Error generating token")
+		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
-
-	fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 
 	w.Header().Set("Authorization", fmt.Sprintf("Bearer %s", token))
 
