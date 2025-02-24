@@ -290,10 +290,11 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Login")
+	fmt.Printf("[%v] Login", time.Now().Format(time.RFC3339))
 	var req model.LoginRequest
 
 	for k, v := range r.Header {
-		h.logger.Println(k, v)
+		fmt.Println(k, v)
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {

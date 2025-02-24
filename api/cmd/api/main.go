@@ -152,7 +152,7 @@ func main() {
 
 		// Remove the leading /assets/ to get the file path
 		filePath := filepath.Join(distPath, r.URL.Path)
-		fmt.Printf("Looking for file at: %s", filePath)
+		fmt.Printf("[%v] Looking for file at: %s\n", time.Now().Format(time.RFC3339), filePath)
 
 		// Set appropriate headers based on file extension
 		switch ext := path.Ext(r.URL.Path); ext {
