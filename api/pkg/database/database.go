@@ -79,15 +79,12 @@ func initializeSchema(db *sql.DB) error {
 	// Create Users table
 	queries := []string{
 		`CREATE TABLE IF NOT EXISTS blocked (
-            id VARCHAR(36) PRIMARY KEY,
+            id VARCHAR(36) PRIMARY KEY SET DEFAULT gen_random_uuid(),
             ip VARCHAR(15) UNIQUE NOT NULL,
             notes VARCHAR(255),
-            created_at TIMESTAMP WITH TIME ZONE NOT NULL
+            created_at TIMESTAMP WITH TIME ZONE NOT NULL SET DEFAULT CURRENT_TIMESTAMP
         )`,
 		`CREATE INDEX IF NOT EXISTS blocked_ip_idx ON blocked(ip)`,
-		`ALTER TABLE blocked`,
-		`ALTER COLUMN id SET DEFAULT gen_random_uuid()`,
-		`ALTER COLUMN created_at SET DEFAULT CURRENT_TIMESTAMP;`,
 		`CREATE TABLE IF NOT EXISTS users (
             id VARCHAR(36) PRIMARY KEY,
             username VARCHAR(255) UNIQUE NOT NULL,
