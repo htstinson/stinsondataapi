@@ -78,6 +78,13 @@ func initializeSchema(db *sql.DB) error {
 
 	// Create Users table
 	queries := []string{
+		`CREATE TABLE IF NOT EXISTS blocked (
+            id VARCHAR(36) PRIMARY KEY,
+            ip VARCHAR(15) UNIQUE NOT NULL,
+            notes VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP WITH TIME ZONE NOT NULL
+        )`,
+		`CREATE INDEX IF NOT EXISTS blocked_ip_idx ON blocked(ip)`,
 		`CREATE TABLE IF NOT EXISTS users (
             id VARCHAR(36) PRIMARY KEY,
             username VARCHAR(255) UNIQUE NOT NULL,
