@@ -29,6 +29,9 @@ type Repository interface {
 	UpdateUser(cts context.Context, item *model.User) error
 	DeleteUser(ctx context.Context, id string) error
 
+	//Blocked
+	ListBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error)
+
 	Close() error
 }
 
@@ -195,6 +198,28 @@ func (d *Database) ListItems(ctx context.Context, limit, offset int) ([]model.It
 		var item model.Item
 		if err := rows.Scan(&item.ID, &item.Name, &item.CreatedAt); err != nil {
 			return nil, fmt.Errorf("error scanning item: %w", err)
+		}
+		items = append(items, item)
+	}
+	return items, nil
+}
+
+// Admin - Blocked
+func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error) {
+	rows, err := d.db.QueryContext(ctx,
+		"SELECT id, ip, notes, created_at FROM blocked ORDER BY ip DESC LIMIT $1 OFFSET $2",
+		limit, offset,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("error listing blocked: %w", err)
+	}
+	defer rows.Close()
+
+	var items []model.Blocked
+	for rows.Next() {
+		var item model.Blocked
+		if err := rows.Scan(&item.ID, &item.IP, &item.Notes, &item.CreatedAt); err != nil {
+			return nil, fmt.Errorf("error scanning blocked: %w", err)
 		}
 		items = append(items, item)
 	}

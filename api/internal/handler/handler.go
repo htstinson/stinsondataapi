@@ -140,6 +140,19 @@ func (h *Handler) ListItems(w http.ResponseWriter, r *http.Request) {
 	common.RespondJSON(w, http.StatusOK, items)
 }
 
+// Admin
+
+func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+	items, err := h.db.ListBlocked(ctx, 100, 0)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to list items")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, items)
+}
+
 // User - Create, Update, Delete, Get, List
 
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
