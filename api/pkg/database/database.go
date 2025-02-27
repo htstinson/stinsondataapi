@@ -212,7 +212,6 @@ func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.
 		limit, offset,
 	)
 	if err != nil {
-		fmt.Println(err.Error())
 		return nil, fmt.Errorf("error listing blocked: %w", err)
 	}
 	defer rows.Close()
@@ -221,6 +220,7 @@ func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.
 	for rows.Next() {
 		var item model.Blocked
 		if err := rows.Scan(&item.ID, &item.IP, &item.Notes, &item.CreatedAt); err != nil {
+			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning blocked: %w", err)
 		}
 		items = append(items, item)
