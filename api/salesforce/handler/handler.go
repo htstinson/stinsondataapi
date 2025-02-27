@@ -173,13 +173,13 @@ func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request
 	var bodyBytes bytes.Buffer
 	_, err := bodyBytes.ReadFrom(r.Body)
 	if err != nil {
-		fmt.Printf("Error reading body: %v", err)
+		fmt.Printf("Error reading body: %v\n", err)
 		http.Error(w, "can't read body", http.StatusBadRequest)
 		return
 	}
 
 	// Display the body
-	fmt.Printf("Body: %s", bodyBytes.String())
+	fmt.Printf("Body: %s\n", bodyBytes.String())
 
 	// Restore the body for further processing
 	r.Body = io.NopCloser(bytes.NewReader(bodyBytes.Bytes()))
