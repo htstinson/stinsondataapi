@@ -230,6 +230,7 @@ func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.
 		} else {
 			item.Notes = ""
 		}
+		fmt.Println(item)
 		items = append(items, item)
 	}
 
