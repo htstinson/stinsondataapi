@@ -217,11 +217,18 @@ func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.
 	defer rows.Close()
 
 	var items []model.Blocked
+
 	for rows.Next() {
 		var item model.Blocked
-		if err := rows.Scan(&item.ID, &item.IP, &item.Notes, &item.CreatedAt); err != nil {
+		var notesNullable sql.NullString
+		if err := rows.Scan(&item.ID, &item.IP, &notesNullable, &item.CreatedAt); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning blocked: %w", err)
+		}
+		if notesNullable.Valid {
+			item.Notes = notesNullable.String
+		} else {
+			item.Notes = ""
 		}
 		items = append(items, item)
 	}
