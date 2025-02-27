@@ -143,6 +143,7 @@ func (h *Handler) ListItems(w http.ResponseWriter, r *http.Request) {
 // Admin
 
 func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("ListBlocked")
 	ctx := r.Context()
 	items, err := h.db.ListBlocked(ctx, 100, 0)
 	if err != nil {
