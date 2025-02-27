@@ -150,7 +150,7 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("Items = ", len(items))
+	fmt.Printf("Items = %v\n", len(items))
 
 	common.RespondJSON(w, http.StatusOK, items)
 }
