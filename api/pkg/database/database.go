@@ -224,6 +224,7 @@ func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.
 		}
 		items = append(items, item)
 	}
+	fmt.Println(len(items))
 	return items, nil
 }
 
