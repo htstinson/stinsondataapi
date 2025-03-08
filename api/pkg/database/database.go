@@ -243,7 +243,7 @@ func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.
 func (d *Database) UpdateBlocked(ctx context.Context, blocked *model.Blocked) error {
 	fmt.Println("d UpdateBlocked", blocked.IP, blocked.Notes)
 
-	query := `UPDATE blocked SET ip=$1, notes=$2 WHERE id = $3`
+	query := `UPDATE blocked SET ip=$1, notes='$2' WHERE id = $3`
 
 	_, err := d.db.ExecContext(ctx, query, blocked.IP, blocked.Notes, blocked.ID)
 
