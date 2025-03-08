@@ -161,7 +161,7 @@ func (h *Handler) UpdateBlocked(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
 
-	fmt.Println("UpdateBlocked", id)
+	fmt.Println("h UpdateBlocked", id)
 
 	ctx := r.Context()
 
@@ -186,10 +186,11 @@ func (h *Handler) UpdateBlocked(w http.ResponseWriter, r *http.Request) {
 	}
 
 	current.IP = blocked.IP
+	current.Notes = blocked.Notes
 	err = h.db.UpdateBlocked(ctx, current)
 	if err != nil {
 		fmt.Println(4, err.Error())
-		common.RespondError(w, http.StatusNotFound, "Error updating user")
+		common.RespondError(w, http.StatusNotFound, "Error updating blocked")
 		return
 	}
 
