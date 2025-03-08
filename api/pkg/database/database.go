@@ -241,6 +241,7 @@ func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.
 }
 
 func (d *Database) UpdateBlocked(ctx context.Context, blocked *model.Blocked) error {
+	fmt.Println("d UpdateBlocked")
 
 	query := `UPDATE blocked SET ip=$1, notes=$2 WHERE id = $3`
 
@@ -252,6 +253,7 @@ func (d *Database) UpdateBlocked(ctx context.Context, blocked *model.Blocked) er
 
 func (d *Database) GetBlocked(ctx context.Context, id string) (*model.Blocked, error) {
 	var blocked model.Blocked
+	fmt.Println("d GetBlocked")
 
 	query := "SELECT id, ip, notes, created_at FROM blocked WHERE id = $1"
 
@@ -262,7 +264,8 @@ func (d *Database) GetBlocked(ctx context.Context, id string) (*model.Blocked, e
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("error getting user: %w", err)
+		fmt.Println("d GetBlocked", err.Error())
+		return nil, fmt.Errorf("error getting blocked: %w", err)
 	}
 
 	return &blocked, nil
