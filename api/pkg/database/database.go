@@ -253,11 +253,12 @@ func (d *Database) UpdateBlocked(ctx context.Context, blocked *model.Blocked) er
 
 func (d *Database) GetBlocked(ctx context.Context, id string) (*model.Blocked, error) {
 	var blocked model.Blocked
+	var notesNull sql.NullString // Use sql.NullString to handle NULL values
 	fmt.Println("d GetBlocked")
 
 	query := "SELECT id, ip, notes, created_at FROM blocked WHERE id = $1"
 
-	err := d.db.QueryRowContext(ctx, query, id).Scan(&blocked.ID, &blocked.IP, &blocked.Notes, &blocked.CreatedAt)
+	err := d.db.QueryRowContext(ctx, query, id).Scan(&blocked.ID, &blocked.IP, &notesNull, &blocked.CreatedAt)
 
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -266,6 +267,13 @@ func (d *Database) GetBlocked(ctx context.Context, id string) (*model.Blocked, e
 	if err != nil {
 		fmt.Println("d GetBlocked", err.Error())
 		return nil, fmt.Errorf("error getting blocked: %w", err)
+	}
+
+	// Only assign the value if it's not NULL
+	if notesNull.Valid {
+		blocked.Notes = notesNull.String
+	} else {
+		blocked.Notes = "" // Or another default value of your choice
 	}
 
 	return &blocked, nil
