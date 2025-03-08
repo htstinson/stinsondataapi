@@ -157,8 +157,11 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateBlocked(w http.ResponseWriter, r *http.Request) {
+
 	vars := mux.Vars(r)
 	id := vars["id"]
+
+	fmt.Println("UpdateBlocked", id)
 
 	ctx := r.Context()
 
