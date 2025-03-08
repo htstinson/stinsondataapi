@@ -29,8 +29,10 @@ type Repository interface {
 	UpdateUser(cts context.Context, item *model.User) error
 	DeleteUser(ctx context.Context, id string) error
 
-	//Blocked
+	// Blocked
 	ListBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error)
+	GetBlocked(ctx context.Context, id string) (*model.Blocked, error)
+	UpdateBlocked(cts context.Context, item *model.Blocked) error
 
 	Close() error
 }
@@ -235,6 +237,34 @@ func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.
 	}
 
 	return items, nil
+}
+
+func (d *Database) UpdateBlocked(ctx context.Context, blocked *model.Blocked) error {
+
+	query := `UPDATE blocked SET ip=$1, notes=$2 WHERE id = $3`
+
+	_, err := d.db.ExecContext(ctx, query, blocked.IP, blocked.Notes, blocked.ID)
+
+	return err
+
+}
+
+func (d *Database) GetBlocked(ctx context.Context, id string) (*model.Blocked, error) {
+	var blocked model.Blocked
+
+	query := "SELECT id, ip, notes, created_at FROM blocked WHERE id = $1"
+
+	err := d.db.QueryRowContext(ctx, query, id).Scan(&blocked.ID, &blocked.IP, &blocked.Notes, &blocked.CreatedAt)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	if err != nil {
+		return nil, fmt.Errorf("error getting user: %w", err)
+	}
+
+	return &blocked, nil
 }
 
 //User

@@ -156,6 +156,57 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 	common.RespondJSON(w, http.StatusOK, items)
 }
 
+func (h *Handler) UpdateBlocked(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+
+	var blocked model.Blocked
+	if err := json.NewDecoder(r.Body).Decode(&blocked); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	current, err := h.db.GetBlocked(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get blokced")
+		return
+	}
+	if current == nil {
+		common.RespondError(w, http.StatusNotFound, "Blocked not found")
+		return
+	}
+
+	current.IP = blocked.IP
+	err = h.db.UpdateBlocked(ctx, current)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error updating user")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, blocked)
+}
+
+func (h *Handler) GetBlocked(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+	user, err := h.db.GetBlocked(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get blocked")
+		return
+	}
+	if user == nil {
+		common.RespondError(w, http.StatusNotFound, "Item not found")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, user)
+}
+
 // User - Create, Update, Delete, Get, List
 
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
