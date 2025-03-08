@@ -167,7 +167,7 @@ func (h *Handler) UpdateBlocked(w http.ResponseWriter, r *http.Request) {
 
 	var blocked model.Blocked
 	if err := json.NewDecoder(r.Body).Decode(&blocked); err != nil {
-		fmt.Println(err.Error())
+		fmt.Println(1, err.Error())
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
@@ -175,12 +175,12 @@ func (h *Handler) UpdateBlocked(w http.ResponseWriter, r *http.Request) {
 
 	current, err := h.db.GetBlocked(ctx, id)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println(2, err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get blokced")
 		return
 	}
 	if current == nil {
-		fmt.Println(id, "not found")
+		fmt.Println(3, id, "not found")
 		common.RespondError(w, http.StatusNotFound, "Blocked not found")
 		return
 	}
@@ -188,7 +188,7 @@ func (h *Handler) UpdateBlocked(w http.ResponseWriter, r *http.Request) {
 	current.IP = blocked.IP
 	err = h.db.UpdateBlocked(ctx, current)
 	if err != nil {
-		fmt.Println(err.Error())
+		fmt.Println(4, err.Error())
 		common.RespondError(w, http.StatusNotFound, "Error updating user")
 		return
 	}
