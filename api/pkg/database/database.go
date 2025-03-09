@@ -33,6 +33,7 @@ type Repository interface {
 	ListBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error)
 	GetBlocked(ctx context.Context, id string) (*model.Blocked, error)
 	UpdateBlocked(cts context.Context, item *model.Blocked) error
+	CreateBlocked(ctx context.Context, blocked model.Blocked) (*model.Blocked, error)
 
 	Close() error
 }
@@ -277,6 +278,25 @@ func (d *Database) GetBlocked(ctx context.Context, id string) (*model.Blocked, e
 	}
 
 	return &blocked, nil
+}
+
+func (d *Database) CreateBlocked(ctx context.Context, blocked model.Blocked) (*model.Blocked, error) {
+	fmt.Println("d CreateBlocked")
+
+	blocked.CreatedAt = time.Now()
+
+	query := `
+        INSERT INTO blocked (ip, notes, created_at)
+        VALUES ($1, $2, $3
+    `
+
+	_, err := d.db.ExecContext(ctx, query, blocked.IP, blocked.Notes, blocked.CreatedAt)
+	if err != nil {
+		return nil, fmt.Errorf("error creating blocked: %w", err)
+	}
+
+	return &blocked, nil
+
 }
 
 //User
