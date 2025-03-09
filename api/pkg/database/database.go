@@ -258,7 +258,7 @@ func (d *Database) GetBlockedByIP(ctx context.Context, ip string) (*model.Blocke
 	var notesNull sql.NullString // Use sql.NullString to handle NULL values
 	fmt.Println("d GetBlockedByIP")
 
-	query := fmt.Sprintf(`SELECT id, ip, notes, created_at FROM blocked WHERE ip ="%s"`, ip)
+	query := fmt.Sprintf(`SELECT id, ip, notes, created_at FROM blocked WHERE ip ='%s'`, ip)
 	fmt.Println(query)
 
 	err := d.db.QueryRowContext(ctx, query).Scan(&blocked.ID, &blocked.IP, &notesNull, &blocked.CreatedAt)
