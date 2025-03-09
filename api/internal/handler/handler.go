@@ -229,6 +229,7 @@ func (h *Handler) CreateBlocked(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	newblocked, err := h.db.CreateBlocked(ctx, *blocked)
 	if err != nil {
+		fmt.Println("h create blocked ", err.Error())
 		if err == sql.ErrNoRows {
 			fmt.Println("duplicate")
 			common.RespondJSON(w, http.StatusAlreadyReported, nil)
