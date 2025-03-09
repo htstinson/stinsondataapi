@@ -292,6 +292,7 @@ func (d *Database) CreateBlocked(ctx context.Context, blocked model.Blocked) (*m
 
 	_, err := d.db.ExecContext(ctx, query, blocked.IP, blocked.Notes, blocked.CreatedAt)
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, fmt.Errorf("error creating blocked: %w", err)
 	}
 
