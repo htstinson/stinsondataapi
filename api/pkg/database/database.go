@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"time"
 
@@ -265,7 +264,7 @@ func (d *Database) GetBlockedByIP(ctx context.Context, ip string) (*model.Blocke
 
 	if err == sql.ErrNoRows {
 		fmt.Println(ip, "not found")
-		return nil, nil
+		return nil, err
 	}
 
 	if err != nil {
@@ -319,7 +318,7 @@ func (d *Database) CreateBlocked(ctx context.Context, blocked model.Blocked) (*m
 	_, err := d.GetBlockedByIP(ctx, blocked.IP)
 	if err == nil {
 		fmt.Println("IP already exists", blocked.IP)
-		return nil, errors.New("record already exists")
+		return nil, err
 	}
 
 	query := `

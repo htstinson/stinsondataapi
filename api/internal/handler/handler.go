@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -226,13 +227,17 @@ func (h *Handler) CreateBlocked(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	ctx := r.Context()
-	user, err := h.db.CreateBlocked(ctx, *blocked)
+	newblocked, err := h.db.CreateBlocked(ctx, *blocked)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			fmt.Println("duplicate")
+			common.RespondJSON(w, http.StatusAlreadyReported, nil)
+		}
 		common.RespondError(w, http.StatusInternalServerError, "Failed to create blocked")
 		return
 	}
 
-	common.RespondJSON(w, http.StatusCreated, user)
+	common.RespondJSON(w, http.StatusCreated, newblocked)
 }
 
 // User - Create, Update, Delete, Get, List
