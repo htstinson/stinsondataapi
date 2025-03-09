@@ -318,7 +318,7 @@ func (d *Database) CreateBlocked(ctx context.Context, blocked model.Blocked) (*m
 
 	_, err := d.GetBlockedByIP(ctx, blocked.IP)
 	if err == nil {
-		fmt.Println("IP already exists", blocked.IP)
+		fmt.Println("d create blocked IP already exists", blocked.IP)
 		return nil, errors.New("d create blocked duplicate ip")
 	}
 
