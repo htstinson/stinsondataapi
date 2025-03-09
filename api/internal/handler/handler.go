@@ -231,7 +231,7 @@ func (h *Handler) CreateBlocked(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("h create blocked ", err.Error())
 		if err.Error() == "duplicate" {
 			fmt.Println("h create blocked duplicate address")
-			common.RespondJSON(w, http.StatusAlreadyReported, nil)
+			common.RespondJSON(w, 409, nil)
 		}
 		common.RespondError(w, http.StatusInternalServerError, "Failed to create blocked")
 		return
