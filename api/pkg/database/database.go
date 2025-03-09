@@ -287,7 +287,7 @@ func (d *Database) CreateBlocked(ctx context.Context, blocked model.Blocked) (*m
 
 	query := `
         INSERT INTO blocked (ip, notes, created_at)
-        VALUES ($1, $2, $3
+        VALUES ($1, $2, $3)
     `
 
 	_, err := d.db.ExecContext(ctx, query, blocked.IP, blocked.Notes, blocked.CreatedAt)
