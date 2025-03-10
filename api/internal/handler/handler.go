@@ -240,6 +240,32 @@ func (h *Handler) CreateBlocked(w http.ResponseWriter, r *http.Request) {
 	common.RespondJSON(w, http.StatusCreated, newblocked)
 }
 
+func (h *Handler) DeleteBlocked(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+
+	blocked, err := h.db.GetBlocked(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
+		return
+	}
+	if blocked == nil {
+		common.RespondError(w, http.StatusNotFound, "Blocked not found")
+		return
+	}
+
+	err = h.db.DeleteBlocked(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error deleting user")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, blocked)
+
+}
+
 // User - Create, Update, Delete, Get, List
 
 func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {

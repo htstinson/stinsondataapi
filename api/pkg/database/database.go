@@ -35,6 +35,7 @@ type Repository interface {
 	GetBlocked(ctx context.Context, id string) (*model.Blocked, error)
 	UpdateBlocked(cts context.Context, item *model.Blocked) error
 	CreateBlocked(ctx context.Context, blocked model.Blocked) (*model.Blocked, error)
+	DeleteBlocked(ctx context.Context, id string) error
 
 	Close() error
 }
@@ -335,6 +336,15 @@ func (d *Database) CreateBlocked(ctx context.Context, blocked model.Blocked) (*m
 
 	return &blocked, nil
 
+}
+
+func (d *Database) DeleteBlocked(ctx context.Context, id string) error {
+
+	query := `DELETE FROM blocked WHERE id = $1`
+
+	_, err := d.db.ExecContext(ctx, query, id)
+
+	return err
 }
 
 //User
