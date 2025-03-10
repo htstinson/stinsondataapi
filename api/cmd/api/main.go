@@ -121,7 +121,7 @@ func main() {
 	protected.HandleFunc("/blocked", h.ListBlocked).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/blocked/{id}", h.UpdateBlocked).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/blocked", h.CreateBlocked).Methods("POST", "OPTIONS")
-	protected.HandleFunc("/items/{id}", h.DeleteBlocked).Methods("DELETE")
+	protected.HandleFunc("/blocked/{id}", h.DeleteBlocked).Methods("DELETE")
 
 	protected.HandleFunc("/items", h.CreateItem).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.UpdateItem).Methods("PUT", "OPTIONS")
