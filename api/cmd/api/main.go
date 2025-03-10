@@ -105,7 +105,7 @@ func main() {
 
 	// Protected rounts
 	protected := api.PathPrefix("/").Subrouter()
-
+	protected.Use(ipLoggingMiddleware)
 	protected.Use(jwtAuth.Middleware)
 
 	protected.HandleFunc("/admin", h.ListBlocked).Methods("GET", "OPTIONS")
