@@ -237,8 +237,7 @@ func ipLoggingMiddleware(next http.Handler) http.Handler {
 		ipAddr := getTCPAddr(r)
 
 		// Log the connection information
-		fmt.Printf("Layer 3 connection from: %s, Method: %s, Path: %s",
-			ipAddr, r.Method, r.URL.Path)
+		fmt.Printf("Layer 3 connection from: %s, Method: %s, Path: %s\n", ipAddr, r.Method, r.URL.Path)
 
 		//fmt.Printf("X-Forwarded-For: %s", r.Header.Get("X-Forwarded-For"))
 
