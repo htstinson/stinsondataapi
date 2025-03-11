@@ -41,19 +41,19 @@ func main() {
 
 	log.SetOutput(os.Stdout)
 
-	fmt.Printf("[%v] Initializing salesforce\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v]main Initializing salesforce\n", time.Now().Format(time.RFC3339))
 
 	sf, err := salesforce.New()
 	if err != nil {
-		fmt.Printf("[%v] Salesforce error: %s\n", time.Now().Format(time.RFC3339), err.Error())
+		fmt.Printf("[%v]main Salesforce error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 
-	fmt.Printf("[%v] Initializing database\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v]main Initializing database\n", time.Now().Format(time.RFC3339))
 	var RDSLogin = &model.RDSLogin{}
 	rdsLogin, err := common.GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
-		fmt.Printf("[%v] RDS error: %s\n", time.Now().Format(time.RFC3339), err.Error())
+		fmt.Printf("[%v]main RDS error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 	json.Unmarshal(rdsLogin, RDSLogin)
@@ -68,12 +68,12 @@ func main() {
 		SSLMode:  "require",
 	})
 	if err != nil {
-		fmt.Printf("[%v] Failed to connect to database: %s\n", time.Now().Format(time.RFC3339), err.Error())
+		fmt.Printf("[%v]main Failed to connect to database: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 	defer db.Close()
 
-	fmt.Printf("[%v] Connected to database\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v]main Connected to database\n", time.Now().Format(time.RFC3339))
 
 	// Initialize auth
 	authConfig := auth.Config{
@@ -108,10 +108,11 @@ func main() {
 	protected.Use(ipLoggingMiddleware)
 	protected.Use(jwtAuth.Middleware)
 
-	protected.HandleFunc("/admin", h.ListBlocked).Methods("GET", "OPTIONS")
+	//protected.HandleFunc("/admin", h.ListBlocked).Methods("GET", "OPTIONS")
 
 	protected.HandleFunc("/blocked", h.ListBlocked).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/blocked/{id}", h.UpdateBlocked).Methods("PUT", "OPTIONS")
+	protected.HandleFunc("/blocked/{id}", h.GetBlocked).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/blocked", h.CreateBlocked).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/blocked/{id}", h.DeleteBlocked).Methods("DELETE")
 
@@ -143,15 +144,15 @@ func main() {
 
 	//static assets
 	distPath := "/home/ec2-user/go/src/stinsondata-tools-reactapp/dist"
-	fmt.Printf("[%v] Serving files from: %s\n", time.Now().Format(time.RFC3339), distPath)
+	fmt.Printf("[%v] main Serving files from: %s\n", time.Now().Format(time.RFC3339), distPath)
 
 	// Handle all static assets including the index.js file
 	router.PathPrefix("/assets/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("[%v] Asset request for: %s\n", time.Now().Format(time.RFC3339), r.URL.Path)
+		fmt.Printf("[%v]main Asset request for: %s\n", time.Now().Format(time.RFC3339), r.URL.Path)
 
 		// Remove the leading /assets/ to get the file path
 		filePath := filepath.Join(distPath, r.URL.Path)
-		fmt.Printf("[%v] Looking for file at: %s\n", time.Now().Format(time.RFC3339), filePath)
+		fmt.Printf("[%v]main Looking for file at: %s\n", time.Now().Format(time.RFC3339), filePath)
 
 		// Set appropriate headers based on file extension
 		switch ext := path.Ext(r.URL.Path); ext {
@@ -183,13 +184,13 @@ func main() {
 
 	// Start server
 	go func() {
-		fmt.Printf("[%v] Server starting\n", time.Now().Format(time.RFC3339))
+		fmt.Printf("[%v]main Server starting\n", time.Now().Format(time.RFC3339))
 
 		err := srv.ListenAndServeTLS("../../certs/certificate.crt", "../../certs/private.key")
 		if err == http.ErrServerClosed {
-			fmt.Printf("[%v] Failed to start server (tls): %v\n", time.Now().Format(time.RFC3339), err.Error())
+			fmt.Printf("[%v]main Failed to start server (tls): %v\n", time.Now().Format(time.RFC3339), err.Error())
 		} else {
-			fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
+			fmt.Printf("[%v]main Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		}
 	}()
 
@@ -199,21 +200,22 @@ func main() {
 	<-quit
 
 	// Graceful shutdown
-	fmt.Printf("[%v] Server stopping...\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v]main Server stopping...\n", time.Now().Format(time.RFC3339))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		fmt.Printf("[%v] Server forced to shutdown: %s\n", time.Now().Format(time.RFC3339), err.Error())
+		fmt.Printf("[%v]main Server forced to shutdown: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 
-	fmt.Printf("[%v] Server stopped.\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v]main Server stopped.\n", time.Now().Format(time.RFC3339))
 }
 
 // Get the direct TCP/IP connection address (Layer 3)
 func getTCPAddr(r *http.Request) string {
+	fmt.Printf("[%v]getTCPAddr.\n", time.Now().Format(time.RFC3339))
 	// RemoteAddr contains the actual TCP connection address (IP:port)
 	// This is the most reliable source of the client's direct IP
 	// but will be the proxy's IP if the client is behind a proxy
@@ -224,6 +226,7 @@ func getTCPAddr(r *http.Request) string {
 	ip, _, err := net.SplitHostPort(addr)
 	if err != nil {
 		// If there's an error splitting, just return the whole thing
+		fmt.Printf("[%v]getTCPAddr err. %v\n", time.Now().Format(time.RFC3339), err.Error())
 		return addr
 	}
 
@@ -232,15 +235,14 @@ func getTCPAddr(r *http.Request) string {
 
 // Log middleware that captures the TCP address
 func ipLoggingMiddleware(next http.Handler) http.Handler {
+	fmt.Printf("[%v]ipLoggingMiddleware.\n", time.Now().Format(time.RFC3339))
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Get the TCP address
 		ipAddr := getTCPAddr(r)
 
 		// Log the connection information
-		fmt.Printf("Layer 3 connection from: %s, Method: %s, Path: %s\n", ipAddr, r.Method, r.URL.Path)
-
-		fmt.Printf("X-Forwarded-For: %s\n", r.Header.Get("X-Forwarded-For"))
-
+		fmt.Printf("[%v]Layer 3 connection from: %s, Method: %s, Path: %s\n", time.Now().Format(time.RFC3339), ipAddr, r.Method, r.URL.Path)
+		fmt.Printf("[%v]X-Forwarded-For: %s\n", r.Header.Get("X-Forwarded-For"), time.Now().Format(time.RFC3339))
 		// Continue to the next handler
 		next.ServeHTTP(w, r)
 	})
