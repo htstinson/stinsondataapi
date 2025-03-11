@@ -239,7 +239,7 @@ func ipLoggingMiddleware(next http.Handler) http.Handler {
 		// Log the connection information
 		fmt.Printf("Layer 3 connection from: %s, Method: %s, Path: %s\n", ipAddr, r.Method, r.URL.Path)
 
-		//fmt.Printf("X-Forwarded-For: %s", r.Header.Get("X-Forwarded-For"))
+		fmt.Printf("X-Forwarded-For: %s\n", r.Header.Get("X-Forwarded-For"))
 
 		// Continue to the next handler
 		next.ServeHTTP(w, r)
