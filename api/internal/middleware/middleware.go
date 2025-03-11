@@ -29,10 +29,11 @@ func Logger(logger *log.Logger) func(http.Handler) http.Handler {
 func RequestID(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		requestID := r.Header.Get("X-Request-ID")
+		key := "requestID"
 		if requestID == "" {
 			requestID = uuid.New().String()
 		}
-		ctx := context.WithValue(r.Context(), "requestID", requestID)
+		ctx := context.WithValue(r.Context(), key, requestID)
 		w.Header().Set("X-Request-ID", requestID)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
