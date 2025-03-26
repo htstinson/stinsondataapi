@@ -50,7 +50,7 @@ func SalesForceLogin(SalesforceCreds *SalesforceCreds) (*SalesforceAuthResponse,
 	if err != nil {
 		fmt.Printf("Error getting token: %v\n", err)
 	} else {
-		fmt.Printf("[%v] trieved\n", time.Now().Format(time.RFC3339))
+		fmt.Printf("[%v]token retrieved\n", time.Now().Format(time.RFC3339))
 	}
 
 	return auth, err
