@@ -27,6 +27,8 @@ type SalesforceHandler struct {
 
 func New(creds *auth.SalesforceCreds) (*SalesforceHandler, error) {
 
+	fmt.Println("handler New")
+
 	var SalesforceHandler = &SalesforceHandler{}
 
 	authResponse, err := auth.SalesForceLogin(creds)
