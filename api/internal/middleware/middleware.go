@@ -17,11 +17,11 @@ func Logger(logger *log.Logger) func(http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			fmt.Printf(
 				"[%v] %s %s %s %s\n",
+				time.Now().Format(time.RFC3339),
 				r.Method,
 				r.URL.Path,
 				r.RemoteAddr,
 				time.Since(start),
-				time.Now().Format(time.RFC3339),
 			)
 		})
 	}
