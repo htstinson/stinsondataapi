@@ -22,10 +22,15 @@ func (st *SalesforceTime) UnmarshalJSON(data []byte) error {
 		// If that fails, try alternate format with +0000
 		t, err = time.Parse("2006-01-02T15:04:05.000+0000", str)
 		if err != nil {
-			fmt.Printf("[%v] ********* error parsing time ************* %s\n", time.Now().Format(time.RFC3339), err.Error())
-			*st = SalesforceTime{}
-			//return err
-			return nil
+
+			t, err = time.Parse("2006-01-02", str)
+			if err != nil {
+
+				fmt.Printf("[%v] ********* error parsing time ************* %s\n", time.Now().Format(time.RFC3339), err.Error())
+				*st = SalesforceTime{}
+				//return err
+				return nil
+			}
 		}
 	}
 
