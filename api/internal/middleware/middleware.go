@@ -20,7 +20,7 @@ func Logger(logger *log.Logger) func(http.Handler) http.Handler {
 				time.Now().Format(time.RFC3339),
 				r.Method,
 				r.URL.Path,
-				r.RemoteAddr,
+				r.Header.Get("X-Forwarded-For"),
 				time.Since(start),
 			)
 		})
