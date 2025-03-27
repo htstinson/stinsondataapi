@@ -21,8 +21,6 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Printf("Items = %v\n", len(items))
-
 	common.RespondJSON(w, http.StatusOK, items)
 }
 
@@ -30,9 +28,6 @@ func (h *Handler) UpdateBlocked(w http.ResponseWriter, r *http.Request) {
 
 	vars := mux.Vars(r)
 	id := vars["id"]
-
-	fmt.Println("h UpdateBlocked", id)
-
 	ctx := r.Context()
 
 	var blocked model.Blocked
@@ -86,7 +81,6 @@ func (h *Handler) GetBlocked(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateBlocked(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h CreateBlocked")
 	var blocked *model.Blocked
 	if err := json.NewDecoder(r.Body).Decode(&blocked); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")

@@ -211,7 +211,6 @@ func (d *Database) ListItems(ctx context.Context, limit, offset int) ([]model.It
 
 // Admin - Blocked
 func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error) {
-	fmt.Println("Admin ListBlocked")
 
 	rows, err := d.db.QueryContext(ctx,
 		"SELECT id, ip, notes, created_at FROM blocked ORDER BY ip DESC LIMIT $1 OFFSET $2",
@@ -257,7 +256,7 @@ func (d *Database) UpdateBlocked(ctx context.Context, blocked *model.Blocked) er
 func (d *Database) GetBlockedByIP(ctx context.Context, ip string) (*model.Blocked, error) {
 	var blocked model.Blocked
 	var notesNull sql.NullString // Use sql.NullString to handle NULL values
-	fmt.Println("d GetBlockedByIP")
+	fmt.Println("etBlockedByIP")
 
 	query := fmt.Sprintf(`SELECT id, ip, notes, created_at FROM blocked WHERE ip ='%s'`, ip)
 
@@ -286,7 +285,6 @@ func (d *Database) GetBlockedByIP(ctx context.Context, ip string) (*model.Blocke
 func (d *Database) GetBlocked(ctx context.Context, id string) (*model.Blocked, error) {
 	var blocked model.Blocked
 	var notesNull sql.NullString // Use sql.NullString to handle NULL values
-	fmt.Println("d GetBlocked")
 
 	query := "SELECT id, ip, notes, created_at FROM blocked WHERE id = $1"
 
@@ -312,7 +310,6 @@ func (d *Database) GetBlocked(ctx context.Context, id string) (*model.Blocked, e
 }
 
 func (d *Database) CreateBlocked(ctx context.Context, blocked model.Blocked) (*model.Blocked, error) {
-	fmt.Println("d CreateBlocked")
 
 	blocked.CreatedAt = time.Now()
 

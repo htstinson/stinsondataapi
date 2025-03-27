@@ -48,9 +48,9 @@ func SalesForceLogin(SalesforceCreds *SalesforceCreds) (*SalesforceAuthResponse,
 	var auth *SalesforceAuthResponse
 	auth, err := GetSalesforceToken(clientID, clientSecret, username, password, loginURL)
 	if err != nil {
-		fmt.Printf("Error getting token: %v\n", err)
+		fmt.Printf("[%v] [SalesForceLogin] Error getting token: %v.\n", time.Now().Format(time.RFC3339), err)
 	} else {
-		fmt.Printf("[%v] SalesForceLogin token retrieved\n", time.Now().Format(time.RFC3339))
+		fmt.Printf("[%v] [SalesForceLogin] Token retrieved.\n", time.Now().Format(time.RFC3339))
 	}
 
 	return auth, err
