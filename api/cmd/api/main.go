@@ -40,19 +40,19 @@ func main() {
 
 	log.SetOutput(os.Stdout)
 
-	fmt.Printf("[%v] main Initializing salesforce\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] [main] Initializing SalesForce.com connection.\n", time.Now().Format(time.RFC3339))
 
 	sf, err := salesforce.New()
 	if err != nil {
-		fmt.Printf("[%v] main Salesforce error: %s\n", time.Now().Format(time.RFC3339), err.Error())
+		fmt.Printf("[%v] [main] SalesForce error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 
-	fmt.Printf("[%v] main Initializing database\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] [main] Initializing RDS database.\n", time.Now().Format(time.RFC3339))
 	var RDSLogin = &model.RDSLogin{}
 	rdsLogin, err := common.GetSecretString("RDS/apidb", "us-west-2")
 	if err != nil {
-		fmt.Printf("[%v] main RDS error: %s\n", time.Now().Format(time.RFC3339), err.Error())
+		fmt.Printf("[%v] [main] RDS error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 	json.Unmarshal(rdsLogin, RDSLogin)
@@ -67,12 +67,12 @@ func main() {
 		SSLMode:  "require",
 	})
 	if err != nil {
-		fmt.Printf("[%v]main Failed to connect to database: %s\n", time.Now().Format(time.RFC3339), err.Error())
+		fmt.Printf("[%v] [main] Failed to connect to RDS database: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 	defer db.Close()
 
-	fmt.Printf("[%v] main Connected to database\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] [main] Connected to RDS database.\n", time.Now().Format(time.RFC3339))
 
 	// Initialize auth
 	authConfig := auth.Config{
@@ -143,15 +143,15 @@ func main() {
 
 	//static assets
 	distPath := "/home/ec2-user/go/src/stinsondata-tools-reactapp/dist"
-	fmt.Printf("[%v] main Serving files from: %s\n", time.Now().Format(time.RFC3339), distPath)
+	fmt.Printf("[%v] [main] Serving files from: %s.\n", time.Now().Format(time.RFC3339), distPath)
 
 	// Handle all static assets including the index.js file
 	router.PathPrefix("/assets/").HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		fmt.Printf("[%v] main Asset request for: %s\n", time.Now().Format(time.RFC3339), r.URL.Path)
+		fmt.Printf("[%v] [main] Asset request for: %s.\n", time.Now().Format(time.RFC3339), r.URL.Path)
 
 		// Remove the leading /assets/ to get the file path
 		filePath := filepath.Join(distPath, r.URL.Path)
-		fmt.Printf("[%v] main Looking for file at: %s\n", time.Now().Format(time.RFC3339), filePath)
+		fmt.Printf("[%v] [main] Looking for file at: %s.\n", time.Now().Format(time.RFC3339), filePath)
 
 		// Set appropriate headers based on file extension
 		switch ext := path.Ext(r.URL.Path); ext {
@@ -183,13 +183,13 @@ func main() {
 
 	// Start server
 	go func() {
-		fmt.Printf("[%v] main Server starting\n", time.Now().Format(time.RFC3339))
+		fmt.Printf("[%v] [main] Server starting...\n", time.Now().Format(time.RFC3339))
 
 		err := srv.ListenAndServeTLS("../../certs/certificate.crt", "../../certs/private.key")
 		if err == http.ErrServerClosed {
-			fmt.Printf("[%v] main Failed to start server (tls): %v\n", time.Now().Format(time.RFC3339), err.Error())
+			fmt.Printf("[%v] [main] Failed to start server (tls): %v.\n", time.Now().Format(time.RFC3339), err.Error())
 		} else {
-			fmt.Printf("[%v] main Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
+			fmt.Printf("[%v] [main] Error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 		}
 
 	}()
@@ -200,15 +200,15 @@ func main() {
 	<-quit
 
 	// Graceful shutdown
-	fmt.Printf("[%v] main Server stopping...\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] [main] Server stopping...\n", time.Now().Format(time.RFC3339))
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
 	if err := srv.Shutdown(ctx); err != nil {
-		fmt.Printf("[%v] main Server forced to shutdown: %s\n", time.Now().Format(time.RFC3339), err.Error())
+		fmt.Printf("[%v] [main] Server forced to shutdown: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 		return
 	}
 
-	fmt.Printf("[%v] main Server stopped.\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] [main] Server stopped.\n", time.Now().Format(time.RFC3339))
 }

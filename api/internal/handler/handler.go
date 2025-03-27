@@ -70,7 +70,7 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("[%v] Login\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] [Login]\n", time.Now().Format(time.RFC3339))
 	var req model.LoginRequest
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
