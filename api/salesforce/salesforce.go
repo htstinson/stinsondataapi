@@ -34,14 +34,6 @@ func New() (Salesforce, error) {
 
 	salesforce.Creds = SalesforceCreds
 
-	fmt.Println(salesforce.Creds.AccessToken)
-	fmt.Println(salesforce.Creds.ClientId)
-	fmt.Println(salesforce.Creds.ClientSecret)
-	fmt.Println(salesforce.Creds.InstanceURL)
-	fmt.Println(salesforce.Creds.LoginURL)
-	fmt.Println(salesforce.Creds.Password)
-	fmt.Println(salesforce.Creds.Username)
-
 	handler, err := handler.New(SalesforceCreds)
 	if err != nil {
 		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
