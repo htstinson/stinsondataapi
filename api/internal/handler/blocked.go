@@ -13,7 +13,7 @@ import (
 // blocked
 
 func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("ListBlocked")
+
 	ctx := r.Context()
 	items, err := h.db.ListBlocked(ctx, 100, 0)
 	if err != nil {
@@ -64,7 +64,6 @@ func (h *Handler) UpdateBlocked(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("Update Blocked end")
 	common.RespondJSON(w, http.StatusOK, blocked)
 }
 

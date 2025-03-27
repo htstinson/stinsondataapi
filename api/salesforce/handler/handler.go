@@ -93,7 +93,6 @@ func (h *SalesforceHandler) Get(endpoint string, query string) ([]byte, error) {
 }
 
 func (h *SalesforceHandler) ListAccounts(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("List Accounts")
 
 	query := `SELECT Id, Name, Industry, Description, Phone, Fax, Website, LastModifiedDate, CreatedDate, LastActivityDate,	LastViewedDate, IsDeleted, MasterRecordId, Type, ParentId, BillingStreet, BillingCity, BillingState, BillingPostalCode, BillingCountry, AnnualRevenue, NumberOfEmployees, OwnerId, CreatedById, LastModifiedById, AccountSource FROM Account LIMIT 200`
 
@@ -192,13 +191,11 @@ func (h *SalesforceHandler) CreateAccount(w http.ResponseWriter, r *http.Request
 	}
 	defer r.Body.Close()
 
-	response, err := h.SalesforcePost("/services/data/v62.0/sobjects/Account", account)
+	_, err = h.SalesforcePost("/services/data/v62.0/sobjects/Account", account)
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return
 	}
-
-	fmt.Println(string(response))
 
 	common.RespondJSON(w, http.StatusOK, "test complete")
 }
@@ -349,8 +346,6 @@ func (h *SalesforceHandler) ListContacts(w http.ResponseWriter, r *http.Request)
 		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 	}
 
-	fmt.Println(string(data))
-
 	common.RespondJSON(w, http.StatusOK, data)
 }
 
@@ -373,8 +368,6 @@ func (h *SalesforceHandler) GetContactById(w http.ResponseWriter, r *http.Reques
 	if err != nil {
 		// Handle error
 	}
-
-	fmt.Println(string(data))
 
 	contact, err := json.Marshal(response.Records[0])
 	if err != nil {
