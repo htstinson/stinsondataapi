@@ -419,7 +419,7 @@ func (d *Database) CreateUser(ctx context.Context, username, password string) (*
 }
 
 func (d *Database) GetUserByUsername(ctx context.Context, username string) (*model.User, error) {
-	fmt.Printf("[%v] GetUserByUsername\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] [GetUserByUsername] %s\n", time.Now().Format(time.RFC3339), username)
 
 	user := &model.User{}
 	query := `
