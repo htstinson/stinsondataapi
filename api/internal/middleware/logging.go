@@ -29,13 +29,13 @@ func getTCPAddr(r *http.Request) string {
 
 // Log middleware that captures the TCP address
 func IpLoggingMiddleware(next http.Handler) http.Handler {
-	fmt.Printf("[%v] ipLoggingMiddleware.\n", time.Now().Format(time.RFC3339))
+	//fmt.Printf("[%v] ipLoggingMiddleware.\n", time.Now().Format(time.RFC3339))
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Get the TCP address
-		ipAddr := getTCPAddr(r)
+		//ipAddr := getTCPAddr(r)
 
 		// Log the connection information
-		fmt.Printf("[%v] Layer 3 connection from: %s, Method: %s, Path: %s\n", time.Now().Format(time.RFC3339), ipAddr, r.Method, r.URL.Path)
+		//fmt.Printf("[%v] Layer 3 connection from: %s, Method: %s, Path: %s\n", time.Now().Format(time.RFC3339), ipAddr, r.Method, r.URL.Path)
 		fmt.Printf("[%v] X-Forwarded-For: %s\n", time.Now().Format(time.RFC3339), r.Header.Get("X-Forwarded-For"))
 		// Continue to the next handler
 		next.ServeHTTP(w, r)

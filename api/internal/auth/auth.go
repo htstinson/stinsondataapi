@@ -78,11 +78,11 @@ func (a *JWTAuth) ValidateToken(tokenString string) (*Claims, error) {
 
 func (a *JWTAuth) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		ip, _, err := net.SplitHostPort(r.RemoteAddr)
+		_, _, err := net.SplitHostPort(r.RemoteAddr)
 		if err != nil {
 			fmt.Println("handler err", err.Error())
 		}
-		fmt.Println("request from", ip)
+
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
 			http.Error(w, "Authorization header required", http.StatusUnauthorized)
