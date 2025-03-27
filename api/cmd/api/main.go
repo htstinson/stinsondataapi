@@ -191,6 +191,7 @@ func main() {
 		} else {
 			fmt.Printf("[%v] main Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		}
+
 	}()
 
 	// Wait for interrupt signal
