@@ -14,7 +14,7 @@ func (st *SalesforceTime) UnmarshalJSON(data []byte) error {
 	str := string(data)
 	str = strings.Trim(str, `"`)
 
-	fmt.Printf("test %s", str)
+	fmt.Printf("test %s\n", str)
 
 	// Use layout matching exact Salesforce format
 	t, err := time.Parse("2006-01-02T15:04:05.000-0700", str)
