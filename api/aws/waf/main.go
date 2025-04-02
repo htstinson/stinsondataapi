@@ -2,67 +2,23 @@ package waf
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"log"
 	"os"
-	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2/types"
 )
 
-func main() {
-	// Define command-line flags
-	var (
-		ipSetName  string
-		scopeInput string
-		addIP      string
-		removeIP   string
-		listOnly   bool
-	)
-
-	flag.StringVar(&ipSetName, "name", "", "Name of the IP set")
-	flag.StringVar(&scopeInput, "scope", "REGIONAL", "Scope: REGIONAL or CLOUDFRONT")
-	flag.StringVar(&addIP, "add", "", "IP address to add (CIDR format)")
-	flag.StringVar(&removeIP, "remove", "", "IP address to remove (CIDR format)")
-	flag.BoolVar(&listOnly, "list", false, "Only list IPs without modifying")
-	flag.Parse()
-
-	// Validate required parameters
-	if ipSetName == "" {
-		fmt.Println("Usage: go run main.go -name <ip-set-name> -scope <REGIONAL|CLOUDFRONT> [-add <ip-cidr>] [-remove <ip-cidr>] [-list]")
-		flag.PrintDefaults()
-		os.Exit(1)
-	}
-
+func block(ipSetName string, addIP string, removeIP string, region string) {
 	// Convert string to proper Scope type
-	scopeInput = strings.ToUpper(scopeInput)
-	var scope types.Scope
-	if scopeInput == "REGIONAL" {
-		scope = types.ScopeRegional
-	} else if scopeInput == "CLOUDFRONT" {
-		scope = types.ScopeCloudfront
-	} else {
-		log.Fatalf("Invalid scope: %s. Must be either REGIONAL or CLOUDFRONT", scopeInput)
-	}
+	var scope types.Scope = types.ScopeRegional
 
-	// Read credentials from environment variables
-	accessKey := os.Getenv("AWS_ACCESS_KEY_ID")
-	secretKey := os.Getenv("AWS_SECRET_ACCESS_KEY")
-
-	// Check if credentials are available
-	if accessKey == "" || secretKey == "" {
-		log.Fatalf("AWS credentials not found. Please set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables")
-	}
-
-	// Load AWS configuration with explicit credentials
+	// Load AWS configuration - will use EC2 instance role credentials automatically
 	cfg, err := config.LoadDefaultConfig(
 		context.TODO(),
-		config.WithRegion("us-west-2"),
-		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(accessKey, secretKey, "")),
+		config.WithRegion(region),
 	)
 	if err != nil {
 		log.Fatalf("failed to load AWS config: %v", err)
@@ -70,7 +26,6 @@ func main() {
 
 	// Create WAF client
 	client := wafv2.NewFromConfig(cfg)
-
 	var mylimit int32 = 100
 
 	// List IP Sets to get the ID
@@ -94,10 +49,6 @@ func main() {
 			ipSetARN = *ipSet.ARN
 			break
 		}
-	}
-
-	if ipSetId == "" {
-		log.Fatalf("IP set '%s' not found in %s scope", ipSetName, scopeInput)
 	}
 
 	// Get IP set details
