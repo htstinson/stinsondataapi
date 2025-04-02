@@ -124,7 +124,7 @@ func (h *Handler) DeleteBlocked(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	id += "/32"
+	blocked.IP += "/32"
 
 	err = h.db.DeleteBlocked(ctx, id)
 	if err != nil {
