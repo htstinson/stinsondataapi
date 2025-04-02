@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	waf "github.com/htstinson/stinsondataapi/api/aws/mywaf"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
@@ -20,6 +21,8 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to list items")
 		return
 	}
+
+	waf.Block("Blocked", "", "", "us-west-2")
 
 	common.RespondJSON(w, http.StatusOK, items)
 }
