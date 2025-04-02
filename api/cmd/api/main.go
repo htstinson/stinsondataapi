@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/htstinson/stinsondataapi/api/aws/waf"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/auth"
 	"github.com/htstinson/stinsondataapi/api/internal/handler"
@@ -39,6 +40,8 @@ func main() {
 	fmt.Printf("\n[%v] ---------------------------------------------------------------\n", time.Now().Format(time.RFC3339))
 
 	log.SetOutput(os.Stdout)
+
+	waf.Block("Blocked", "", "", "us-west-2")
 
 	fmt.Printf("[%v] [main] Initializing SalesForce.com connection.\n", time.Now().Format(time.RFC3339))
 

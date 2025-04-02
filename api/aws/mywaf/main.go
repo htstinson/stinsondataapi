@@ -1,4 +1,4 @@
-package waf
+package mywaf
 
 import (
 	"context"
