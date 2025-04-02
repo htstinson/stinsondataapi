@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/wafv2/types"
 )
 
-func block(ipSetName string, addIP string, removeIP string, region string) {
+func Block(ipSetName string, addIP string, removeIP string, region string) {
 	// Convert string to proper Scope type
 	var scope types.Scope = types.ScopeRegional
 
