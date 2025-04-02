@@ -103,6 +103,8 @@ func (h *Handler) CreateBlocked(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	waf.Block("Blocked", *&blocked.IP, "", "us-west-2")
+
 	common.RespondJSON(w, http.StatusCreated, newblocked)
 }
 
