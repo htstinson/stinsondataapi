@@ -49,7 +49,10 @@ func main() {
 	if err != nil {
 		fmt.Println("error", err.Error())
 	} else {
-		fmt.Println(len(addresses), addresses)
+		fmt.Println(len(addresses), "addresses")
+		for k, v := range addresses {
+			fmt.Println(k, v)
+		}
 	}
 
 	fmt.Printf("[%v] [main] Initializing SalesForce.com connection.\n", time.Now().Format(time.RFC3339))
