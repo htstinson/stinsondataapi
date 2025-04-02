@@ -44,7 +44,13 @@ func main() {
 
 	mywaf.Block("Blocked", "", "", "us-west-2")
 
-	parser.ExtractUniqueIPsFromHandshakeErrors("/var/log/webserver.log")
+	fmt.Println("Parse the log")
+	addresses, err := parser.ExtractUniqueIPsFromHandshakeErrors("/var/log/webserver.log")
+	if err != nil {
+		fmt.Println("error", err.Error())
+	} else {
+		fmt.Println(len(addresses), addresses)
+	}
 
 	fmt.Printf("[%v] [main] Initializing SalesForce.com connection.\n", time.Now().Format(time.RFC3339))
 
