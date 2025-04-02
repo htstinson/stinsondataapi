@@ -132,6 +132,7 @@ func (h *Handler) DeleteBlocked(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(blocked.IP)
 	waf.Block("Blocked", "", blocked.IP, "us-west-2")
 
 	common.RespondJSON(w, http.StatusOK, blocked)
