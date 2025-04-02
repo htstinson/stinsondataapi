@@ -116,7 +116,7 @@ func (h *Handler) DeleteBlocked(w http.ResponseWriter, r *http.Request) {
 
 	blocked, err := h.db.GetBlocked(ctx, id)
 	if err != nil {
-		common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get blocked")
 		return
 	}
 	if blocked == nil {
@@ -126,9 +126,11 @@ func (h *Handler) DeleteBlocked(w http.ResponseWriter, r *http.Request) {
 
 	err = h.db.DeleteBlocked(ctx, id)
 	if err != nil {
-		common.RespondError(w, http.StatusNotFound, "Error deleting user")
+		common.RespondError(w, http.StatusNotFound, "Error deleting blocked")
 		return
 	}
+
+	waf.Block("Blocked", "", blocked.IP, "us=west=2")
 
 	common.RespondJSON(w, http.StatusOK, blocked)
 
