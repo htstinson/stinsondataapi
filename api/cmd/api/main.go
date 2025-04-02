@@ -9,6 +9,7 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/handler"
 	"github.com/htstinson/stinsondataapi/api/internal/middleware"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
+	"github.com/htstinson/stinsondataapi/api/internal/parser"
 	"github.com/htstinson/stinsondataapi/api/pkg/database"
 	"github.com/htstinson/stinsondataapi/api/salesforce"
 
@@ -42,6 +43,8 @@ func main() {
 	log.SetOutput(os.Stdout)
 
 	mywaf.Block("Blocked", "", "", "us-west-2")
+
+	parser.ExtractUniqueIPsFromHandshakeErrors("/var/log/webserver.log")
 
 	fmt.Printf("[%v] [main] Initializing SalesForce.com connection.\n", time.Now().Format(time.RFC3339))
 
