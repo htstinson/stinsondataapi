@@ -132,6 +132,7 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 		if err != nil {
 			log.Fatalf("failed to get updated IP set details: %v", err)
 		}
+		return err
 	}
 
 	// Output results
