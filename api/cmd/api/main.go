@@ -78,30 +78,28 @@ func main() {
 
 	fmt.Printf("[%v] [main] Connected to RDS database.\n", time.Now().Format(time.RFC3339))
 
-	fmt.Println("Parse the log")
+	// Create blocked IP addresses from entries in the log.
+	fmt.Printf(`[%v] [main] Parse the log.\n`, time.Now().Format(time.RFC3339))
 	addresses, err := parser.ExtractUniqueIPsFromHandshakeErrors("/var/log/webserver.log")
 	if err != nil {
 		fmt.Println("error", err.Error())
 	} else {
-		fmt.Println(len(addresses), "addresses")
 		ctx := context.Background()
-		blocked := &model.Blocked{
-			Notes:     "handshake error",
-			CreatedAt: time.Now(),
-		}
-		count := 0
+		fmt.Printf(`[%v] [main] Blocked IP addresses.\n`, time.Now().Format(time.RFC3339))
 		for k, v := range addresses {
-			fmt.Println(k, v)
+			blocked := &model.Blocked{
+				Notes:     "TLS handshake error",
+				CreatedAt: time.Now(),
+			}
 			ip := fmt.Sprintf("%s/32", v)
 			blocked.IP = ip
 			newblocked, err := db.CreateBlocked(ctx, *blocked)
 			if err != nil {
 				if err.Error() == "duplicate" {
-					fmt.Printf(`[%v] [main] %v blocked IP %s already exists.\n`, time.Now().Format(time.RFC3339), count, newblocked.IP)
+					fmt.Printf(`[%v] [main] %v blocked IP %s already exists.\n`, time.Now().Format(time.RFC3339), k, newblocked.IP)
 				}
 			} else {
-				count++
-				fmt.Printf(`[%v] [main] %v Created blocked IP %s.\n`, time.Now().Format(time.RFC3339), count, newblocked.IP)
+				fmt.Printf(`[%v] [main] %v Created blocked IP %s.\n`, time.Now().Format(time.RFC3339), k, newblocked.IP)
 			}
 			time.Sleep(100 * time.Millisecond)
 		}
