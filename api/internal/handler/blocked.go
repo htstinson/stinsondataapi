@@ -26,6 +26,14 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 	order := qp.Get("order")
 	sort := qp.Get("sort")
 
+	if sort == "" {
+		sort = "IP"
+	}
+
+	if order == "" {
+		order = "ASC"
+	}
+
 	fmt.Println("sort", sort, "order", order)
 
 	limit := 10
