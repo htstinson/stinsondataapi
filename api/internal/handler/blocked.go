@@ -21,6 +21,13 @@ import (
 func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
+
+	qp := r.URL.Query()
+	dir := qp.Get("dir")
+	fld := qp.Get("field")
+
+	fmt.Println(fld, dir)
+
 	items, err := h.db.SelectBlocked(ctx, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to list items")
