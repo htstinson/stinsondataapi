@@ -188,7 +188,7 @@ func (h *Handler) AddBlockedFromRDSToWAF(w http.ResponseWriter, r *http.Request)
 		fmt.Printf("[%v] [main] Add Blocked From RDS TO WAF.\n", time.Now().Format(time.RFC3339))
 		ctx := r.Context()
 
-		addresses, err := h.db.ListBlocked(ctx, 10000, 0)
+		addresses, err := h.db.ListBlocked(ctx, 1000, 0)
 
 		if err != nil {
 			fmt.Printf("[%v] [main] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
