@@ -308,13 +308,10 @@ func (d *Database) GetBlocked(ctx context.Context, id string) (*model.Blocked, e
 }
 
 func (d *Database) CreateBlocked(ctx context.Context, blocked model.Blocked) (*model.Blocked, error) {
-	fmt.Println("d CreateBlocked")
-
 	blocked.CreatedAt = time.Now()
 
 	_, err := d.GetBlockedByIP(ctx, blocked.IP)
 	if err == nil {
-		fmt.Printf("duplicate IP %s\n", blocked.IP)
 		return nil, errors.New("duplicate")
 	}
 
