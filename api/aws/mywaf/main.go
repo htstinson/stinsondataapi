@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/wafv2"
@@ -95,6 +96,7 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 		} else {
 			fmt.Printf("IP %s already exists in the set\n", addIP)
 		}
+		time.Sleep(500 * time.Millisecond)
 	}
 
 	// Remove IP address if specified
