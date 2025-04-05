@@ -216,7 +216,11 @@ func (d *Database) ListItems(ctx context.Context, limit, offset int) ([]model.It
 func (d *Database) RowCount(tablename string) (int, error) {
 	fmt.Println("d RowCount")
 
-	var count int = 0
+	type s struct {
+		Count int
+	}
+
+	var c = s{}
 
 	q := fmt.Sprintf("SELECT COUNT(*) FROM %s", tablename)
 	limit := 1
@@ -225,9 +229,9 @@ func (d *Database) RowCount(tablename string) (int, error) {
 
 	rows, err := d.db.QueryContext(ctx, q, limit, offset)
 
-	rows.Scan(&count)
+	rows.Scan(&c.Count)
 
-	return count, err
+	return c.Count, err
 
 }
 
