@@ -23,12 +23,15 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	qp := r.URL.Query()
-	dir := qp.Get("order")
-	fld := qp.Get("sort")
+	order := qp.Get("order")
+	sort := qp.Get("sort")
 
-	fmt.Println("sort", fld, "order", dir)
+	fmt.Println("sort", sort, "order", order)
 
-	items, err := h.db.SelectBlocked(ctx, 100, 0)
+	limit := 10
+	offset := 0
+
+	items, err := h.db.SelectBlocked(ctx, limit, offset, sort, order)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to list items")
 		return
@@ -209,7 +212,7 @@ func (h *Handler) AddBlockedFromRDSToWAF(w http.ResponseWriter, r *http.Request)
 		for offset <= (rowcount + limit) {
 			fmt.Printf("limit %v offset %v ", limit, offset)
 
-			addresses, err := h.db.SelectBlocked(ctx, limit, offset)
+			addresses, err := h.db.SelectBlocked(ctx, limit, offset, "ip", "asc")
 
 			if err != nil {
 				fmt.Printf("[%v] [main] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
