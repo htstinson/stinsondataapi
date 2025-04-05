@@ -217,7 +217,8 @@ func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.
 		limit, offset,
 	)
 	if err != nil {
-		return nil, fmt.Errorf("error listing blocked: %w", err)
+		fmt.Printf("[%v] [database][ListBlocked] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
+		return nil, fmt.Errorf("query error")
 	}
 	defer rows.Close()
 

@@ -178,3 +178,36 @@ func (h *Handler) AddBlockedFromLogs(w http.ResponseWriter, r *http.Request) {
 	}
 
 }
+
+func (h *Handler) AddBlockedFromRDSToWAF(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h AddBlockedFromRDSToWAF(w,r)")
+	go func() {
+
+		// Create blocked IP addresses from entries in RDS.
+		fmt.Printf("[%v] [main] Add Blocked From RDS TO WAF.\n", time.Now().Format(time.RFC3339))
+		ctx := r.Context()
+
+		addresses, err := h.db.ListBlocked(ctx, 10000, 0)
+
+		if err != nil {
+			fmt.Printf("[%v] [main] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
+		} else {
+
+			fmt.Printf("[%v] [main] Blocked %v IP addresses.\n", time.Now().Format(time.RFC3339), len(addresses))
+			for k, v := range addresses {
+				err = mywaf.Block("Blocked", v.IP, "", "us-west-2")
+				if err != nil {
+					fmt.Printf("[%v] [main] %v %s Error adding IP to WAF IP Set. %s\n", time.Now().Format(time.RFC3339), k, v.IP, err.Error())
+				} else {
+					fmt.Printf("[%v] [main] %v %s Added IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, v.IP)
+				}
+
+				time.Sleep(500 * time.Millisecond)
+			}
+		}
+
+	}()
+
+	common.RespondJSON(w, http.StatusOK, "udating WAF from RDS")
+
+}
