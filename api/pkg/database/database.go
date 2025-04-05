@@ -37,6 +37,8 @@ type Repository interface {
 	CreateBlocked(ctx context.Context, blocked model.Blocked) (*model.Blocked, error)
 	DeleteBlocked(ctx context.Context, id string) error
 
+	RowCount(tablename string) (int, error)
+
 	Close() error
 }
 
@@ -210,6 +212,25 @@ func (d *Database) ListItems(ctx context.Context, limit, offset int) ([]model.It
 }
 
 // Admin - Blocked
+
+func (d *Database) RowCount(tablename string) (int, error) {
+	fmt.Println("d RowCount")
+
+	var count int = 0
+
+	q := fmt.Sprintf("SELECT COUNT(*) FROM %s", tablename)
+	limit := 1
+	offset := 0
+	ctx := context.Background()
+
+	rows, err := d.db.QueryContext(ctx, q, limit, offset)
+
+	rows.Scan(&count)
+
+	return count, err
+
+}
+
 func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error) {
 	fmt.Println("d ListBlocked")
 

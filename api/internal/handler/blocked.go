@@ -171,8 +171,6 @@ func (h *Handler) AddBlockedFromLogs(w http.ResponseWriter, r *http.Request) {
 			err = mywaf.Block("Blocked", ip, "", "us-west-2")
 			if err != nil {
 				fmt.Printf("[%v] [main] %v %s Error adding IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, ip)
-			} else {
-				fmt.Printf("[%v] [main] %v %s Added IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, ip)
 			}
 
 			time.Sleep(100 * time.Millisecond)
@@ -182,14 +180,22 @@ func (h *Handler) AddBlockedFromLogs(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) AddBlockedFromRDSToWAF(w http.ResponseWriter, r *http.Request) {
+
 	fmt.Println("h AddBlockedFromRDSToWAF(w,r)")
 	go func() {
+
+		c, err := h.db.RowCount("blocked")
+		if err != nil {
+			fmt.Println(err.Error())
+		} else {
+			fmt.Println("row count=", c)
+		}
 
 		// Create blocked IP addresses from entries in RDS.
 		fmt.Printf("[%v] [main] Add Blocked From RDS TO WAF.\n", time.Now().Format(time.RFC3339))
 		ctx := context.Background()
 
-		addresses, err := h.db.ListBlocked(ctx, 1000, 0)
+		addresses, err := h.db.ListBlocked(ctx, 10, 0)
 
 		if err != nil {
 			fmt.Printf("[%v] [main] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
@@ -200,12 +206,11 @@ func (h *Handler) AddBlockedFromRDSToWAF(w http.ResponseWriter, r *http.Request)
 				err = mywaf.Block("Blocked", v.IP, "", "us-west-2")
 				if err != nil {
 					fmt.Printf("[%v] [main] %v %s Error adding IP to WAF IP Set. %s\n", time.Now().Format(time.RFC3339), k, v.IP, err.Error())
-				} else {
-					fmt.Printf("[%v] [main] %v %s Added IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, v.IP)
 				}
 
 				time.Sleep(500 * time.Millisecond)
 			}
+			return
 		}
 
 	}()

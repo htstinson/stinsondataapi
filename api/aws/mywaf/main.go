@@ -25,7 +25,6 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 	)
 	if err != nil {
 		fmt.Printf("failed to load AWS config: %v", err)
-
 		return err
 	}
 
@@ -94,8 +93,6 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 			addresses = append(addresses, addIP)
 			fmt.Printf("[%v] [waf][Block] %s Adding IP\n", time.Now().Format(time.RFC3339), addIP)
 			needsUpdate = true
-		} else {
-			fmt.Printf("[%v] [waf][Block] %s IP set updated successfully.\n", time.Now().Format(time.RFC3339), addIP)
 		}
 		time.Sleep(500 * time.Millisecond)
 	}
