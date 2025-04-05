@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/htstinson/stinsondataapi/api/internal/model"
@@ -243,7 +244,7 @@ func (d *Database) RowCount(tablename string) (int, error) {
 func (d *Database) SelectBlocked(ctx context.Context, limit, offset int, sort string, order string) ([]model.Blocked, error) {
 	q := "SELECT id, ip, notes, created_at FROM blocked ORDER BY $3 $4 LIMIT $1 OFFSET $2"
 
-	rows, err := d.db.QueryContext(ctx, q, limit, offset, sort, order)
+	rows, err := d.db.QueryContext(ctx, q, limit, offset, strings.ToUpper(sort), strings.ToUpper(order))
 
 	if err != nil {
 		fmt.Printf("[%v] [database][ListBlocked] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
