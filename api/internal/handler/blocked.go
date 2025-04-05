@@ -70,6 +70,7 @@ func (h *Handler) UpdateBlocked(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetBlocked(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h GetBlocked (w,r)")
 	vars := mux.Vars(r)
 	id := vars["id"]
 
