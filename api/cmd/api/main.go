@@ -44,17 +44,6 @@ func main() {
 
 	mywaf.Block("Blocked", "", "", "us-west-2")
 
-	fmt.Println("Parse the log")
-	addresses, err := parser.ExtractUniqueIPsFromHandshakeErrors("/var/log/webserver.log")
-	if err != nil {
-		fmt.Println("error", err.Error())
-	} else {
-		fmt.Println(len(addresses), "addresses")
-		for k, v := range addresses {
-			fmt.Println(k, v)
-		}
-	}
-
 	fmt.Printf("[%v] [main] Initializing SalesForce.com connection.\n", time.Now().Format(time.RFC3339))
 
 	sf, err := salesforce.New()
@@ -88,6 +77,39 @@ func main() {
 	defer db.Close()
 
 	fmt.Printf("[%v] [main] Connected to RDS database.\n", time.Now().Format(time.RFC3339))
+
+	fmt.Println("Parse the log")
+	addresses, err := parser.ExtractUniqueIPsFromHandshakeErrors("/var/log/webserver.log")
+	if err != nil {
+		fmt.Println("error", err.Error())
+	} else {
+		fmt.Println(len(addresses), "addresses")
+		ctx := context.Background()
+		blocked := &model.Blocked{
+			Notes:     "handshake error",
+			CreatedAt: time.Now(),
+		}
+		count := 0
+		for k, v := range addresses {
+			fmt.Println(k, v)
+			ip := fmt.Sprintf("%s/32", v)
+			blocked.IP = ip
+			newblocked, err := db.CreateBlocked(ctx, *blocked)
+			if err != nil {
+				fmt.Println("h create blocked ", err.Error())
+				if err.Error() == "duplicate" {
+					fmt.Println("h create blocked duplicate address")
+				}
+			} else {
+				count++
+				fmt.Printf(`[%v] [main] %v Created blocked IP %s with ID %s.\n`, time.Now().Format(time.RFC3339), count, newblocked.IP, newblocked.ID)
+			}
+			time.Sleep(100 * time.Millisecond)
+			if count > 9 {
+				break
+			}
+		}
+	}
 
 	// Initialize auth
 	authConfig := auth.Config{
