@@ -74,17 +74,17 @@ func (h *Handler) GetBlocked(w http.ResponseWriter, r *http.Request) {
 	id := vars["id"]
 
 	ctx := r.Context()
-	user, err := h.db.GetBlocked(ctx, id)
+	blocked, err := h.db.GetBlocked(ctx, id)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get blocked")
 		return
 	}
-	if user == nil {
-		common.RespondError(w, http.StatusNotFound, "Item not found")
+	if blocked == nil {
+		common.RespondError(w, http.StatusNotFound, "Item blocked not found")
 		return
 	}
 
-	common.RespondJSON(w, http.StatusOK, user)
+	common.RespondJSON(w, http.StatusOK, blocked)
 }
 
 func (h *Handler) CreateBlocked(w http.ResponseWriter, r *http.Request) {
