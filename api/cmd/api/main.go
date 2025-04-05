@@ -79,7 +79,7 @@ func main() {
 	fmt.Printf("[%v] [main] Parse the log.\n", time.Now().Format(time.RFC3339))
 	addresses, err := parser.ExtractUniqueIPsFromHandshakeErrors("/var/log/webserver.log")
 	if err != nil {
-		fmt.Println("error", err.Error())
+		fmt.Printf("[%v] [main] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 	} else {
 		ctx := context.Background()
 		fmt.Printf("[%v] [main] Blocked IP addresses.\n", time.Now().Format(time.RFC3339))
@@ -94,7 +94,7 @@ func main() {
 			if err == nil {
 				fmt.Printf("[%v] [main] %v %s Created blocked IP.\n", time.Now().Format(time.RFC3339), k, ip)
 			} else {
-				fmt.Println(err.Error())
+				fmt.Printf("[%v] [main] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 			}
 
 			err = mywaf.Block("Blocked", ip, "", "us-west-2")

@@ -227,7 +227,7 @@ func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.
 		var item model.Blocked
 		var notesNullable sql.NullString
 		if err := rows.Scan(&item.ID, &item.IP, &notesNullable, &item.CreatedAt); err != nil {
-			fmt.Println(err.Error())
+			fmt.Printf("[%v] [database][ListBlocked] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 			return nil, fmt.Errorf("error scanning blocked: %w", err)
 		}
 		if notesNullable.Valid {

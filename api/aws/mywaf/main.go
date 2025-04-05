@@ -129,7 +129,6 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 		if err != nil {
 			log.Fatalf("failed to update IP set: %v", err)
 		}
-		fmt.Printf("[%v] [waf][Blocked] IP set updated successfully.\n", time.Now().Format(time.RFC3339))
 
 		// Refresh IP set details after update
 		_, err = client.GetIPSet(context.TODO(), getInput)
