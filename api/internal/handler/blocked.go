@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -186,7 +187,7 @@ func (h *Handler) AddBlockedFromRDSToWAF(w http.ResponseWriter, r *http.Request)
 
 		// Create blocked IP addresses from entries in RDS.
 		fmt.Printf("[%v] [main] Add Blocked From RDS TO WAF.\n", time.Now().Format(time.RFC3339))
-		ctx := r.Context()
+		ctx := context.Background()
 
 		addresses, err := h.db.ListBlocked(ctx, 1000, 0)
 
