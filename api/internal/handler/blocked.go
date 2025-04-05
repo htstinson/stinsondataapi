@@ -26,7 +26,7 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 	dir := qp.Get("dir")
 	fld := qp.Get("field")
 
-	fmt.Println(fld, dir)
+	fmt.Println("field", fld, "direction", dir)
 
 	items, err := h.db.SelectBlocked(ctx, 100, 0)
 	if err != nil {
