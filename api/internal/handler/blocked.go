@@ -218,7 +218,6 @@ func (h *Handler) AddBlockedFromRDSToWAF(w http.ResponseWriter, r *http.Request)
 
 					time.Sleep(500 * time.Millisecond)
 				}
-				return
 			}
 
 			offset += limit
