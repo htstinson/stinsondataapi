@@ -200,7 +200,7 @@ func (h *Handler) AddBlockedFromRDSToWAF(w http.ResponseWriter, r *http.Request)
 		offset := 0
 
 		for offset <= (rowcount + limit) {
-			fmt.Println("limit", limit, "offset", offset)
+			fmt.Printf("limit %v offset %v ", limit, offset)
 
 			addresses, err := h.db.ListBlocked(ctx, limit, offset)
 
@@ -213,8 +213,8 @@ func (h *Handler) AddBlockedFromRDSToWAF(w http.ResponseWriter, r *http.Request)
 					if err != nil {
 						fmt.Printf("[%v] [main] %v %s Error adding IP to WAF IP Set. %s\n", time.Now().Format(time.RFC3339), k, v.IP, err.Error())
 					}
-
 					time.Sleep(500 * time.Millisecond)
+					fmt.Println()
 				}
 			}
 
