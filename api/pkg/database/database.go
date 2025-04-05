@@ -308,6 +308,7 @@ func (d *Database) GetBlocked(ctx context.Context, id string) (*model.Blocked, e
 }
 
 func (d *Database) CreateBlocked(ctx context.Context, blocked model.Blocked) (*model.Blocked, error) {
+	fmt.Println("d CreateBlocked(ctx, blocked)")
 	blocked.CreatedAt = time.Now()
 
 	_, err := d.GetBlockedByIP(ctx, blocked.IP)

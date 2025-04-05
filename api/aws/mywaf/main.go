@@ -3,7 +3,6 @@ package mywaf
 import (
 	"context"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -67,7 +66,7 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 
 	getResult, err := client.GetIPSet(context.TODO(), getInput)
 	if err != nil {
-		log.Fatalf("failed to get IP set details: %v", err)
+		fmt.Printf("failed to get IP set details: %v", err)
 	}
 
 	// Save the current lock token for updates
@@ -127,13 +126,13 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 
 		_, err = client.UpdateIPSet(context.TODO(), updateInput)
 		if err != nil {
-			log.Fatalf("failed to update IP set: %v", err)
+			fmt.Printf("failed to update IP set: %v\n", err)
 		}
 
 		// Refresh IP set details after update
 		_, err = client.GetIPSet(context.TODO(), getInput)
 		if err != nil {
-			log.Fatalf("failed to get updated IP set details: %v", err)
+			fmt.Printf("failed to get updated IP set details: %v\n", err)
 		}
 		return err
 	}
@@ -159,7 +158,7 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 	outputFile := ipSetName + "-ips.txt"
 	f, err := os.Create(outputFile)
 	if err != nil {
-		log.Fatalf("failed to create output file: %v", err)
+		fmt.Printf("failed to create output file: %v", err)
 	}
 	defer f.Close()
 

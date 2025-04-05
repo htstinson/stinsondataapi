@@ -88,6 +88,7 @@ func (h *Handler) GetBlocked(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateBlocked(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h CreateBlocked(w,r)")
 	var blocked *model.Blocked
 	if err := json.NewDecoder(r.Body).Decode(&blocked); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
