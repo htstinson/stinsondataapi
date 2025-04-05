@@ -256,7 +256,7 @@ func (d *Database) UpdateBlocked(ctx context.Context, blocked *model.Blocked) er
 func (d *Database) GetBlockedByIP(ctx context.Context, ip string) (*model.Blocked, error) {
 	var blocked model.Blocked
 	var notesNull sql.NullString // Use sql.NullString to handle NULL values
-	fmt.Println("etBlockedByIP")
+	fmt.Println("GetBlockedByIP")
 
 	query := fmt.Sprintf(`SELECT id, ip, notes, created_at FROM blocked WHERE ip ='%s'`, ip)
 
