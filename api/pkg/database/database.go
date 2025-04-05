@@ -247,8 +247,8 @@ func (d *Database) SelectBlocked(ctx context.Context, limit, offset int, sort st
 
 	rows, err := d.db.QueryContext(ctx,
 		q,
-		//strings.ToUpper(order),
-		//strings.ToUpper(sort),
+		"IP",
+		"ASC",
 		limit,
 		offset)
 
