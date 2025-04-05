@@ -262,7 +262,6 @@ func (d *Database) GetBlockedByIP(ctx context.Context, ip string) (*model.Blocke
 	err := d.db.QueryRowContext(ctx, query).Scan(&blocked.ID, &blocked.IP, &notesNull, &blocked.CreatedAt)
 
 	if err == sql.ErrNoRows {
-		fmt.Println(ip, "not found")
 		return nil, err
 	}
 
