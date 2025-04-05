@@ -211,13 +211,17 @@ func (d *Database) ListItems(ctx context.Context, limit, offset int) ([]model.It
 
 // Admin - Blocked
 func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error) {
+	fmt.Println("d ListBlocked")
+
+	q := "SELECT id, ip, notes, created_at FROM blocked ORDER BY ip DESC LIMIT $1 OFFSET $2"
 
 	rows, err := d.db.QueryContext(ctx,
-		"SELECT id, ip, notes, created_at FROM blocked ORDER BY ip DESC LIMIT $1 OFFSET $2",
+		q,
 		limit, offset,
 	)
 	if err != nil {
 		fmt.Printf("[%v] [database][ListBlocked] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
+		fmt.Printf("[%v] [database][ListBlocked] query: %s.\n", time.Now().Format(time.RFC3339), q)
 		return nil, fmt.Errorf("query error")
 	}
 	defer rows.Close()
