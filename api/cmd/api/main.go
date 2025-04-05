@@ -105,9 +105,6 @@ func main() {
 				fmt.Printf(`[%v] [main] %v Created blocked IP %s with ID %s.\n`, time.Now().Format(time.RFC3339), count, newblocked.IP, newblocked.ID)
 			}
 			time.Sleep(100 * time.Millisecond)
-			if count > 9 {
-				break
-			}
 		}
 	}
 
