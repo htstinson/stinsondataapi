@@ -26,6 +26,7 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 	)
 	if err != nil {
 		fmt.Printf("failed to load AWS config: %v", err)
+
 		return err
 	}
 
@@ -48,6 +49,7 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 	var ipSetId string
 	var ipSetARN string
 	var lockToken string
+
 	for _, ipSet := range listResult.IPSets {
 		if *ipSet.Name == ipSetName {
 			ipSetId = *ipSet.Id
@@ -127,7 +129,7 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 		if err != nil {
 			log.Fatalf("failed to update IP set: %v", err)
 		}
-		fmt.Println("IP set updated successfully")
+		fmt.Printf("[%v] [waf][Blocked] IP set updated successfully.\n", time.Now().Format(time.RFC3339))
 
 		// Refresh IP set details after update
 		_, err = client.GetIPSet(context.TODO(), getInput)
@@ -137,16 +139,22 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 		return err
 	}
 
-	// Output results
-	fmt.Printf("IP Set: %s\n", ipSetName)
-	fmt.Printf("ID: %s\n", ipSetId)
-	fmt.Printf("ARN: %s\n", ipSetARN)
-	fmt.Printf("Description: %s\n", *getResult.IPSet.Description)
-	fmt.Println("\nIP Addresses:")
-
-	for _, address := range getResult.IPSet.Addresses {
-		fmt.Println(address)
+	if false {
+		fmt.Printf("ARN: %s\n", ipSetARN)
 	}
+
+	// Output results
+	/*
+		fmt.Printf("IP Set: %s\n", ipSetName)
+		fmt.Printf("ID: %s\n", ipSetId)
+		fmt.Printf("ARN: %s\n", ipSetARN)
+		fmt.Printf("Description: %s\n", *getResult.IPSet.Description)
+		fmt.Println("\nIP Addresses:")
+
+		for _, address := range getResult.IPSet.Addresses {
+			fmt.Println(address)
+		}
+	*/
 
 	// Export to file if needed
 	outputFile := ipSetName + "-ips.txt"
