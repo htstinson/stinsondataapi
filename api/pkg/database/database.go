@@ -244,12 +244,16 @@ func (d *Database) RowCount(tablename string) (int, error) {
 func (d *Database) SelectBlocked(ctx context.Context, limit, offset int, sort string, order string) ([]model.Blocked, error) {
 	q := "SELECT id, ip, notes, created_at FROM blocked ORDER BY $1 $2 LIMIT $3 OFFSET $4"
 
-	rows, err := d.db.QueryContext(ctx, q, strings.ToUpper(order), strings.ToUpper(sort), limit, offset)
+	rows, err := d.db.QueryContext(ctx, q,
+		strings.ToUpper(order),
+		strings.ToUpper(sort),
+		limit,
+		offset)
 
 	if err != nil {
-		fmt.Printf("[%v] [database][ListBlocked] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
-		fmt.Printf("[%v] [database][ListBlocked] query: %s.\n", time.Now().Format(time.RFC3339), q)
-		fmt.Printf("[%v] [database][ListBlocked] limit %v offset %v sort %s order %s.\n", time.Now().Format(time.RFC3339), limit, offset, strings.ToUpper(sort), strings.ToUpper(order))
+		fmt.Printf("[%v] [database][SelectBlocked] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
+		fmt.Printf("[%v] [database][SelectBlocked] query: %s.\n", time.Now().Format(time.RFC3339), q)
+		fmt.Printf("[%v] [database][SelectBlocked] limit %v offset %v sort %s order %s.\n", time.Now().Format(time.RFC3339), limit, offset, strings.ToUpper(sort), strings.ToUpper(order))
 		return nil, fmt.Errorf("query error")
 	}
 	defer rows.Close()
