@@ -214,8 +214,8 @@ func (h *Handler) AddBlockedFromRDSToWAF(w http.ResponseWriter, r *http.Request)
 						fmt.Printf("[%v] [main] %v %s Error adding IP to WAF IP Set. %s\n", time.Now().Format(time.RFC3339), k, v.IP, err.Error())
 					}
 					time.Sleep(500 * time.Millisecond)
-					fmt.Println()
 				}
+				fmt.Println()
 			}
 
 			offset += limit
