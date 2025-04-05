@@ -93,10 +93,10 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 
 		if !exists {
 			addresses = append(addresses, addIP)
-			fmt.Printf("Adding IP: %s\n", addIP)
+			fmt.Printf("[%v] [waf][Block] %s Adding IP\n", time.Now().Format(time.RFC3339), addIP)
 			needsUpdate = true
 		} else {
-			fmt.Printf("[%v] [waf][Blocked] %s IP set updated successfully.\n", time.Now().Format(time.RFC3339), addIP)
+			fmt.Printf("[%v] [waf][Block] %s IP set updated successfully.\n", time.Now().Format(time.RFC3339), addIP)
 		}
 		time.Sleep(500 * time.Millisecond)
 	}
@@ -167,7 +167,7 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 		f.WriteString(address + "\n")
 	}
 
-	fmt.Printf("\nIP addresses exported to %s\n", outputFile)
+	//fmt.Printf("\nIP addresses exported to %s\n", outputFile)
 
 	return err
 }
