@@ -23,10 +23,10 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	qp := r.URL.Query()
-	dir := qp.Get("dir")
-	fld := qp.Get("field")
+	dir := qp.Get("order")
+	fld := qp.Get("sort")
 
-	fmt.Println("field", fld, "direction", dir)
+	fmt.Println("sort", fld, "order", dir)
 
 	items, err := h.db.SelectBlocked(ctx, 100, 0)
 	if err != nil {
