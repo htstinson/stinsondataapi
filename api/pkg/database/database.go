@@ -249,6 +249,7 @@ func (d *Database) SelectBlocked(ctx context.Context, limit, offset int, sort st
 	if err != nil {
 		fmt.Printf("[%v] [database][ListBlocked] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 		fmt.Printf("[%v] [database][ListBlocked] query: %s.\n", time.Now().Format(time.RFC3339), q)
+		fmt.Printf("[%v] [database][ListBlocked] limit %v offset %v sort %s order %s.\n", time.Now().Format(time.RFC3339), limit, offset, strings.ToUpper(sort), strings.ToUpper(order))
 		return nil, fmt.Errorf("query error")
 	}
 	defer rows.Close()
