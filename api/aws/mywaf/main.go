@@ -14,7 +14,7 @@ import (
 /*
 Block(ipSetName string, addIP string, removeIP string, region string)
 */
-func Block(ipSetName string, addIP string, removeIP string, region string) {
+func Block(ipSetName string, addIP string, removeIP string, region string) error {
 	// Convert string to proper Scope type
 	var scope types.Scope = types.ScopeRegional
 
@@ -24,7 +24,8 @@ func Block(ipSetName string, addIP string, removeIP string, region string) {
 		config.WithRegion(region),
 	)
 	if err != nil {
-		log.Fatalf("failed to load AWS config: %v", err)
+		fmt.Printf("failed to load AWS config: %v", err)
+		return err
 	}
 
 	// Create WAF client
@@ -39,7 +40,7 @@ func Block(ipSetName string, addIP string, removeIP string, region string) {
 
 	listResult, err := client.ListIPSets(context.TODO(), listInput)
 	if err != nil {
-		log.Fatalf("failed to list IP sets: %v", err)
+		fmt.Printf("failed to list IP sets: %v", err)
 	}
 
 	// Find the target IP set ID

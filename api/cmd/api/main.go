@@ -42,8 +42,6 @@ func main() {
 
 	log.SetOutput(os.Stdout)
 
-	mywaf.Block("Blocked", "", "", "us-west-2")
-
 	fmt.Printf("[%v] [main] Initializing SalesForce.com connection.\n", time.Now().Format(time.RFC3339))
 
 	sf, err := salesforce.New()
@@ -75,7 +73,6 @@ func main() {
 		return
 	}
 	defer db.Close()
-
 	fmt.Printf("[%v] [main] Connected to RDS database.\n", time.Now().Format(time.RFC3339))
 
 	// Create blocked IP addresses from entries in the log.
@@ -93,14 +90,20 @@ func main() {
 			}
 			ip := fmt.Sprintf("%s/32", v)
 			blocked.IP = ip
-			newblocked, err := db.CreateBlocked(ctx, *blocked)
-			if err != nil {
-				if err.Error() == "duplicate" {
-					fmt.Printf("[%v] [main] %v %s blocked IP already exists.\n", time.Now().Format(time.RFC3339), k, ip)
-				}
+			_, err := db.CreateBlocked(ctx, *blocked)
+			if err == nil {
+				fmt.Printf("[%v] [main] %v %s Created blocked IP.\n", time.Now().Format(time.RFC3339), k, ip)
 			} else {
-				fmt.Printf("[%v] [main] %v %s Created blocked IP.\n", time.Now().Format(time.RFC3339), k, newblocked.IP)
+				fmt.Println(err.Error())
 			}
+
+			err = mywaf.Block("Blocked", ip, "", "us-west-2")
+			if err != nil {
+				fmt.Printf("[%v] [main] %v %s Error adding IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, ip)
+			} else {
+				fmt.Printf("[%v] [main] %v %s Added IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, ip)
+			}
+
 			time.Sleep(100 * time.Millisecond)
 		}
 	}
