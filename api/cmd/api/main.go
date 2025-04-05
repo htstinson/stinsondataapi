@@ -3,13 +3,11 @@ package main
 import (
 	"fmt"
 
-	"github.com/htstinson/stinsondataapi/api/aws/mywaf"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/auth"
 	"github.com/htstinson/stinsondataapi/api/internal/handler"
 	"github.com/htstinson/stinsondataapi/api/internal/middleware"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
-	"github.com/htstinson/stinsondataapi/api/internal/parser"
 	"github.com/htstinson/stinsondataapi/api/pkg/database"
 	"github.com/htstinson/stinsondataapi/api/salesforce"
 
@@ -74,39 +72,6 @@ func main() {
 	}
 	defer db.Close()
 	fmt.Printf("[%v] [main] Connected to RDS database.\n", time.Now().Format(time.RFC3339))
-
-	// Create blocked IP addresses from entries in the log.
-	fmt.Printf("[%v] [main] Parse the log.\n", time.Now().Format(time.RFC3339))
-	addresses, err := parser.ExtractUniqueIPsFromHandshakeErrors("/var/log/webserver.log")
-	if err != nil {
-		fmt.Printf("[%v] [main] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
-	} else {
-		ctx := context.Background()
-		fmt.Printf("[%v] [main] Blocked IP addresses.\n", time.Now().Format(time.RFC3339))
-		for k, v := range addresses {
-			blocked := &model.Blocked{
-				Notes:     "TLS handshake error",
-				CreatedAt: time.Now(),
-			}
-			ip := fmt.Sprintf("%s/32", v)
-			blocked.IP = ip
-			_, err := db.CreateBlocked(ctx, *blocked)
-			if err == nil {
-				fmt.Printf("[%v] [main] %v %s Created blocked IP.\n", time.Now().Format(time.RFC3339), k, ip)
-			} else {
-				fmt.Printf("[%v] [main] %s error: %s.\n", time.Now().Format(time.RFC3339), ip, err.Error())
-			}
-
-			err = mywaf.Block("Blocked", ip, "", "us-west-2")
-			if err != nil {
-				fmt.Printf("[%v] [main] %v %s Error adding IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, ip)
-			} else {
-				fmt.Printf("[%v] [main] %v %s Added IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, ip)
-			}
-
-			time.Sleep(100 * time.Millisecond)
-		}
-	}
 
 	// Initialize auth
 	authConfig := auth.Config{

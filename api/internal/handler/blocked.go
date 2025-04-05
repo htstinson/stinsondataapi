@@ -1,14 +1,18 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/htstinson/stinsondataapi/api/aws/mywaf"
 	waf "github.com/htstinson/stinsondataapi/api/aws/mywaf"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
+	"github.com/htstinson/stinsondataapi/api/internal/parser"
 )
 
 // blocked
@@ -134,5 +138,42 @@ func (h *Handler) DeleteBlocked(w http.ResponseWriter, r *http.Request) {
 	waf.Block("Blocked", "", blocked.IP, "us-west-2")
 
 	common.RespondJSON(w, http.StatusOK, blocked)
+
+}
+
+func (h *Handler) AddBlockedFromLogs(w http.ResponseWriter, r *http.Request) {
+
+	// Create blocked IP addresses from entries in the log.
+	fmt.Printf("[%v] [main] Parse the log.\n", time.Now().Format(time.RFC3339))
+	addresses, err := parser.ExtractUniqueIPsFromHandshakeErrors("/var/log/webserver.log")
+	if err != nil {
+		fmt.Printf("[%v] [main] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
+	} else {
+		ctx := context.Background()
+		fmt.Printf("[%v] [main] Blocked IP addresses.\n", time.Now().Format(time.RFC3339))
+		for k, v := range addresses {
+			blocked := &model.Blocked{
+				Notes:     "TLS handshake error",
+				CreatedAt: time.Now(),
+			}
+			ip := fmt.Sprintf("%s/32", v)
+			blocked.IP = ip
+			_, err := db.CreateBlocked(ctx, *blocked)
+			if err == nil {
+				fmt.Printf("[%v] [main] %v %s Created blocked IP.\n", time.Now().Format(time.RFC3339), k, ip)
+			} else {
+				fmt.Printf("[%v] [main] %s error: %s.\n", time.Now().Format(time.RFC3339), ip, err.Error())
+			}
+
+			err = mywaf.Block("Blocked", ip, "", "us-west-2")
+			if err != nil {
+				fmt.Printf("[%v] [main] %v %s Error adding IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, ip)
+			} else {
+				fmt.Printf("[%v] [main] %v %s Added IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, ip)
+			}
+
+			time.Sleep(100 * time.Millisecond)
+		}
+	}
 
 }
