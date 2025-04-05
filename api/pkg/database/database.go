@@ -31,7 +31,7 @@ type Repository interface {
 	DeleteUser(ctx context.Context, id string) error
 
 	// Blocked
-	ListBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error)
+	SelectBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error)
 	GetBlocked(ctx context.Context, id string) (*model.Blocked, error)
 	UpdateBlocked(cts context.Context, item *model.Blocked) error
 	CreateBlocked(ctx context.Context, blocked model.Blocked) (*model.Blocked, error)
@@ -240,9 +240,7 @@ func (d *Database) RowCount(tablename string) (int, error) {
 }
 
 // Admin - Blocked
-func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error) {
-	fmt.Println("d ListBlocked")
-
+func (d *Database) SelectBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error) {
 	q := "SELECT id, ip, notes, created_at FROM blocked ORDER BY ip DESC LIMIT $1 OFFSET $2"
 
 	rows, err := d.db.QueryContext(ctx,
