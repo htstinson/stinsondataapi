@@ -1,15 +1,15 @@
 package handler
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/gorilla/mux"
+
 	"github.com/htstinson/stinsondataapi/api/aws/mywaf"
-	waf "github.com/htstinson/stinsondataapi/api/aws/mywaf"
+
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 	"github.com/htstinson/stinsondataapi/api/internal/parser"
@@ -26,7 +26,7 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	waf.Block("Blocked", "", "", "us-west-2")
+	mywaf.Block("Blocked", "", "", "us-west-2")
 
 	common.RespondJSON(w, http.StatusOK, items)
 }
@@ -107,7 +107,7 @@ func (h *Handler) CreateBlocked(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	waf.Block("Blocked", *&blocked.IP, "", "us-west-2")
+	mywaf.Block("Blocked", blocked.IP, "", "us-west-2")
 
 	common.RespondJSON(w, http.StatusCreated, newblocked)
 }
@@ -135,7 +135,7 @@ func (h *Handler) DeleteBlocked(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println(blocked.IP)
-	waf.Block("Blocked", "", blocked.IP, "us-west-2")
+	mywaf.Block("Blocked", "", blocked.IP, "us-west-2")
 
 	common.RespondJSON(w, http.StatusOK, blocked)
 
@@ -149,7 +149,7 @@ func (h *Handler) AddBlockedFromLogs(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("[%v] [main] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 	} else {
-		ctx := context.Background()
+		ctx := r.Context()
 		fmt.Printf("[%v] [main] Blocked IP addresses.\n", time.Now().Format(time.RFC3339))
 		for k, v := range addresses {
 			blocked := &model.Blocked{
@@ -158,7 +158,7 @@ func (h *Handler) AddBlockedFromLogs(w http.ResponseWriter, r *http.Request) {
 			}
 			ip := fmt.Sprintf("%s/32", v)
 			blocked.IP = ip
-			_, err := db.CreateBlocked(ctx, *blocked)
+			_, err := h.db.CreateBlocked(ctx, *blocked)
 			if err == nil {
 				fmt.Printf("[%v] [main] %v %s Created blocked IP.\n", time.Now().Format(time.RFC3339), k, ip)
 			} else {
