@@ -94,7 +94,7 @@ func main() {
 			if err == nil {
 				fmt.Printf("[%v] [main] %v %s Created blocked IP.\n", time.Now().Format(time.RFC3339), k, ip)
 			} else {
-				fmt.Printf("[%v] [main] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
+				fmt.Printf("[%v] [main] %s error: %s.\n", time.Now().Format(time.RFC3339), ip, err.Error())
 			}
 
 			err = mywaf.Block("Blocked", ip, "", "us-west-2")
