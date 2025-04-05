@@ -221,11 +221,9 @@ func (d *Database) RowCount(tablename string) (int, error) {
 	q := fmt.Sprintf("SELECT COUNT(*) FROM %s", tablename)
 	fmt.Println(q)
 
-	limit := 1
-	offset := 0
 	ctx := context.Background()
 
-	rows, err := d.db.QueryContext(ctx, q, limit, offset)
+	rows, err := d.db.QueryContext(ctx, q)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
