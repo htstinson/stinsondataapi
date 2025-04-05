@@ -96,13 +96,12 @@ func main() {
 			blocked.IP = ip
 			newblocked, err := db.CreateBlocked(ctx, *blocked)
 			if err != nil {
-				fmt.Println("h create blocked ", err.Error())
 				if err.Error() == "duplicate" {
-					fmt.Println("h create blocked duplicate address")
+					fmt.Printf(`[%v] [main] %v blocked IP %s already exists.\n`, time.Now().Format(time.RFC3339), count, newblocked.IP)
 				}
 			} else {
 				count++
-				fmt.Printf(`[%v] [main] %v Created blocked IP %s with ID %s.\n`, time.Now().Format(time.RFC3339), count, newblocked.IP, newblocked.ID)
+				fmt.Printf(`[%v] [main] %v Created blocked IP %s.\n`, time.Now().Format(time.RFC3339), count, newblocked.IP)
 			}
 			time.Sleep(100 * time.Millisecond)
 		}
