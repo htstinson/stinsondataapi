@@ -96,7 +96,7 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 			fmt.Printf("Adding IP: %s\n", addIP)
 			needsUpdate = true
 		} else {
-			fmt.Printf("IP %s already exists in the set\n", addIP)
+			fmt.Printf("[%v] [waf][Blocked] %s IP set updated successfully.\n", time.Now().Format(time.RFC3339), addIP)
 		}
 		time.Sleep(500 * time.Millisecond)
 	}
