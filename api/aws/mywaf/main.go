@@ -92,10 +92,8 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 
 		if !exists {
 			addresses = append(addresses, addIP)
-			fmt.Printf("[%v] [waf][Block] %s Adding IP\n", time.Now().Format(time.RFC3339), addIP)
 			needsUpdate = true
 		}
-		time.Sleep(500 * time.Millisecond)
 	}
 
 	// Remove IP address if specified
@@ -126,6 +124,8 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 		if err != nil {
 			fmt.Printf("failed to update IP set: %v\n", err)
 		}
+		time.Sleep(500 * time.Millisecond)
+		fmt.Printf("[%v] [waf][Block] %s Adding IP\n", time.Now().Format(time.RFC3339), addIP)
 
 		// Refresh IP set details after update
 		_, err = client.GetIPSet(context.TODO(), getInput)
