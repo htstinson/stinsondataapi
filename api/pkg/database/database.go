@@ -211,8 +211,7 @@ func (d *Database) ListItems(ctx context.Context, limit, offset int) ([]model.It
 	return items, nil
 }
 
-// Admin - Blocked
-
+// any table
 func (d *Database) RowCount(tablename string) (int, error) {
 	fmt.Println("d RowCount")
 
@@ -240,6 +239,7 @@ func (d *Database) RowCount(tablename string) (int, error) {
 
 }
 
+// Admin - Blocked
 func (d *Database) ListBlocked(ctx context.Context, limit, offset int) ([]model.Blocked, error) {
 	fmt.Println("d ListBlocked")
 
