@@ -16,6 +16,7 @@ Block(ipSetName string, addIP string, removeIP string, region string)
 */
 func Block(ipSetName string, addIP string, removeIP string, region string) error {
 	// Convert string to proper Scope type
+	fmt.Println("waf Block", ipSetName, addIP, removeIP, region)
 	var scope types.Scope = types.ScopeRegional
 
 	// Load AWS configuration - will use EC2 instance role credentials automatically
