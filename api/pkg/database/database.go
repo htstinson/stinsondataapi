@@ -243,14 +243,9 @@ func (d *Database) RowCount(tablename string) (int, error) {
 // Admin - Blocked
 func (d *Database) SelectBlocked(ctx context.Context, limit, offset int, sort string, order string) ([]model.Blocked, error) {
 
-	q := fmt.Sprintf("SELECT id, ip, notes, created_at FROM blocked ORDER BY $1 %s LIMIT $2 OFFSET $3", order)
-	//q := "SELECT id, ip, notes, created_at FROM blocked LIMIT $1 OFFSET $2"
+	q := fmt.Sprintf("SELECT id, ip, notes, created_at FROM blocked ORDER BY $1 %s LIMIT $2 OFFSET $3", strings.ToUpper(order))
 
-	rows, err := d.db.QueryContext(ctx,
-		q,
-		sort,
-		limit,
-		offset)
+	rows, err := d.db.QueryContext(ctx, q, sort, limit, offset)
 
 	if err != nil {
 		fmt.Printf("[%v] [database][SelectBlocked] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
