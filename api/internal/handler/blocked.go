@@ -18,7 +18,7 @@ import (
 
 // blocked
 
-func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) SelectBlocked(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 

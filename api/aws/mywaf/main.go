@@ -98,6 +98,7 @@ func Block(ipSetName string, addIP string, removeIP string, region string) error
 
 	// Remove IP address if specified
 	if removeIP != "" {
+		fmt.Println("mywaf main.go Block removeIP")
 		for i, addr := range addresses {
 			if addr == removeIP {
 				// Remove the IP by replacing it with the last element and truncating
