@@ -27,7 +27,7 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 	sort := qp.Get("sort")
 
 	if sort == "" {
-		sort = "IP"
+		sort = "ip"
 	}
 
 	if order == "" {

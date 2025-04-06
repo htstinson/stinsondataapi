@@ -270,6 +270,7 @@ func (d *Database) SelectBlocked(ctx context.Context, limit, offset int, sort st
 			item.Notes = ""
 		}
 
+		fmt.Println(item.IP)
 		items = append(items, item)
 	}
 
