@@ -395,6 +395,8 @@ func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning user: %w", err)
 		}
+		user.Roles = strings.Replace(user.Roles, "{", "", -1)
+		user.Roles = strings.Replace(user.Roles, "}", "", -1)
 		users = append(users, user)
 	}
 	return users, nil
