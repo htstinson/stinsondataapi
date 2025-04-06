@@ -108,10 +108,10 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	common.RespondJSON(w, http.StatusOK, user)
 }
 
-func (h *Handler) ListUsers(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) SelectUsers(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
-	items, err := h.db.ListUsers(ctx, 100, 0)
+	items, err := h.db.SelectUsers(ctx, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to list items")
 		return

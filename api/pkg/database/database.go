@@ -27,7 +27,7 @@ type Repository interface {
 	GetUser(ctx context.Context, id string) (*model.User, error)
 	GetUserByUsername(ctx context.Context, username string) (*model.User, error)
 	CreateUser(ctx context.Context, username string, password string) (*model.User, error)
-	ListUsers(ctx context.Context, limit, offset int) ([]model.User, error)
+	SelectUsers(ctx context.Context, limit, offset int) ([]model.User, error)
 	UpdateUser(cts context.Context, item *model.User) error
 	DeleteUser(ctx context.Context, id string) error
 
@@ -376,7 +376,7 @@ func (d *Database) DeleteBlocked(ctx context.Context, id string) error {
 
 //User
 
-func (d *Database) ListUsers(ctx context.Context, limit, offset int) ([]model.User, error) {
+func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.User, error) {
 	rows, err := d.db.QueryContext(ctx,
 		"SELECT id, username FROM users ORDER BY username ASC LIMIT $1 OFFSET $2",
 		limit, offset,
