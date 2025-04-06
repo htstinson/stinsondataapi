@@ -133,7 +133,7 @@ func main() {
 	protected.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/users/{id}", h.DeleteUser).Methods("DELETE")
 	protected.HandleFunc("/users/{id}", h.GetUser).Methods("GET")
-	protected.HandleFunc("/users", h.ListUsers).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/users", h.SelectUsers).Methods("GET", "OPTIONS")
 
 	// Add middleware
 	api.Use(middleware.Logger(&log.Logger{}))
