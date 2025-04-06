@@ -34,9 +34,7 @@ func (h *Handler) ListBlocked(w http.ResponseWriter, r *http.Request) {
 		order = "ASC"
 	}
 
-	fmt.Println("sort", sort, "order", order)
-
-	limit := 10
+	limit := 100
 	offset := 0
 
 	items, err := h.db.SelectBlocked(ctx, limit, offset, sort, order)
