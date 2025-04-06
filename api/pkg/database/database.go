@@ -377,6 +377,7 @@ func (d *Database) DeleteBlocked(ctx context.Context, id string) error {
 //User
 
 func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.User, error) {
+	fmt.Println("database.go SelectUsers()")
 	rows, err := d.db.QueryContext(ctx,
 		"SELECT id, username, roles FROM users_with_roles ORDER BY username ASC LIMIT $1 OFFSET $2",
 		limit, offset,
