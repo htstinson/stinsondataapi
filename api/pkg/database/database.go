@@ -391,7 +391,7 @@ func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.
 	var users []model.User
 	for rows.Next() {
 		var user model.User
-		if err := rows.Scan(&user.ID, &user.Username, &user.Roles); err != nil {
+		if err := rows.Scan(&user.ID, &user.Username, &user.CreatedAt, &user.Roles); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning user: %w", err)
 		}
