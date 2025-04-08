@@ -21,6 +21,7 @@ var (
 type Claims struct {
 	UserID   string `json:"user_id"`
 	Username string `json:"username"`
+	Roles    string `json:"roles"`
 	jwt.RegisteredClaims
 }
 
@@ -37,11 +38,13 @@ func New(config Config) *JWTAuth {
 	return &JWTAuth{Config: config}
 }
 
-func (a *JWTAuth) GenerateToken(userID, username string) (string, error) {
+func (a *JWTAuth) GenerateToken(userID string, username string, roles string) (string, error) {
 	now := time.Now()
+
 	claims := Claims{
 		UserID:   userID,
 		Username: username,
+		Roles:    roles,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(now.Add(a.Config.TokenDuration)),
 			IssuedAt:  jwt.NewNumericDate(now),

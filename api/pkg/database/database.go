@@ -40,6 +40,8 @@ type Repository interface {
 
 	RowCount(tablename string) (int, error)
 
+	SelectRoles(ctx context.Context, userID string) (string, error)
+
 	Close() error
 }
 
@@ -494,4 +496,32 @@ func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
 
 	return err
 
+}
+
+//Roles
+
+func (d *Database) SelectRoles(ctx context.Context, userId string) (string, error) {
+	fmt.Println("d SelectRoles")
+
+	type Roles struct {
+		names string
+	}
+
+	var roles = Roles{}
+
+	query := `
+        SELECT id, username, roles
+        FROM users_with_roles
+        WHERE id = $1
+    `
+
+	err := d.db.QueryRowContext(ctx, query, userId).Scan(
+		&roles.names,
+	)
+
+	if err != nil {
+		return "", err
+	}
+
+	return roles.names, nil
 }
