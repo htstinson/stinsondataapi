@@ -109,7 +109,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(roles)
+	fmt.Println(roles.Id, roles.Username, roles.Username)
 
 	token, err := h.auth.GenerateToken(user.ID, user.Username, roles.Names)
 	if err != nil {
