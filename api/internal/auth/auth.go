@@ -76,8 +76,6 @@ func (a *JWTAuth) ValidateToken(tokenString string) (*Claims, error) {
 		return nil, ErrInvalidToken
 	}
 
-	fmt.Println(claims.UserID, claims.Username, claims.Roles)
-
 	return claims, nil
 }
 
