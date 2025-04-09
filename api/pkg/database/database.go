@@ -510,7 +510,7 @@ func (d *Database) SelectRoles(ctx context.Context, userId string) (string, erro
 	var roles = Roles{}
 
 	query := `
-        SELECT id, username, roles
+        SELECT roles
         FROM users_with_roles
         WHERE id = $1
     `
