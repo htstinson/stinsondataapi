@@ -64,6 +64,8 @@ func (a *JWTAuth) ValidateToken(tokenString string) (*Claims, error) {
 		return []byte(a.Config.SecretKey), nil
 	})
 
+	fmt.Println(token)
+
 	if err != nil {
 		if errors.Is(err, jwt.ErrTokenExpired) {
 			return nil, ErrExpiredToken
