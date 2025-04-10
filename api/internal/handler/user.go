@@ -41,6 +41,7 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	var user model.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		fmt.Println(1, err.Error())
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
@@ -48,10 +49,12 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	currentuser, err := h.db.GetUser(ctx, id)
 	if err != nil {
+		fmt.Println(2, err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
 		return
 	}
 	if currentuser == nil {
+		fmt.Println(3, err.Error())
 		common.RespondError(w, http.StatusNotFound, "User not found")
 		return
 	}
@@ -59,9 +62,12 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	currentuser.Username = user.Username
 	err = h.db.UpdateUser(ctx, currentuser)
 	if err != nil {
+		fmt.Println(4, err.Error())
 		common.RespondError(w, http.StatusNotFound, "Error updating user")
 		return
 	}
+
+	fmt.Println(5)
 
 	common.RespondJSON(w, http.StatusOK, user)
 }
