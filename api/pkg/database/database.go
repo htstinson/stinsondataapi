@@ -493,6 +493,8 @@ func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
 
 	query := `UPDATE users SET username = $1, ip_address = $2 WHERE id = $3`
 
+	fmt.Println("user.Ip_address", user.IP_address)
+
 	var ipAddress string
 	if user.IP_address == "" {
 		ipAddress = "0.0.0.0" // or another default IP
