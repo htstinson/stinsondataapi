@@ -47,14 +47,14 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	fmt.Println("h UpdateUser", user.CreatedAt, user.Username, user.IP_address)
+
 	currentuser, err := h.db.GetUser(ctx, id)
 	if err != nil {
 		fmt.Println(2, err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
 		return
 	}
-
-	fmt.Println("h UpdateUser", currentuser.CreatedAt, currentuser.IP_address)
 
 	if currentuser == nil {
 		fmt.Println(3, err.Error())
@@ -63,6 +63,7 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	currentuser.Username = user.Username
+	currentuser.IP_address = user.IP_address
 	err = h.db.UpdateUser(ctx, currentuser)
 	if err != nil {
 		fmt.Println(4, err.Error())
