@@ -502,7 +502,7 @@ func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
 
 	fmt.Println(ipAddress)
 
-	_, err := d.db.ExecContext(ctx, query, user.Username, user.ID, ipAddress)
+	_, err := d.db.ExecContext(ctx, query, user.Username, ipAddress, user.ID)
 
 	return err
 }
