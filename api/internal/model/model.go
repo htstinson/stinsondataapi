@@ -34,6 +34,7 @@ type User struct {
 	PasswordHash string    `json:"-"` // Never send password hash in JSON
 	CreatedAt    time.Time `json:"created_at"`
 	Roles        string    `json:"roles"`
+	IP_address   string    `json:"ip_address"`
 }
 
 // All

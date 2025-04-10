@@ -381,7 +381,7 @@ func (d *Database) DeleteBlocked(ctx context.Context, id string) error {
 func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.User, error) {
 	fmt.Println("database.go SelectUsers()")
 	rows, err := d.db.QueryContext(ctx,
-		"SELECT id, username, created_at, roles FROM users_with_roles ORDER BY username ASC LIMIT $1 OFFSET $2",
+		"SELECT id, username, created_at, roles, ip_address FROM users_with_roles ORDER BY username ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)
 	if err != nil {
@@ -393,7 +393,7 @@ func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.
 	var users []model.User
 	for rows.Next() {
 		var user model.User
-		if err := rows.Scan(&user.ID, &user.Username, &user.CreatedAt, &user.Roles); err != nil {
+		if err := rows.Scan(&user.ID, &user.Username, &user.CreatedAt, &user.Roles, &user.IP_address); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning user: %w", err)
 		}
