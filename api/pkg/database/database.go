@@ -492,7 +492,14 @@ func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
 
 	query := `UPDATE users SET username = $1, ip_address = $2 WHERE id = $3`
 
-	_, err := d.db.ExecContext(ctx, query, user.Username, user.IP_address, user.ID)
+	var ipAddress string
+	if user.IP_address == "" {
+		ipAddress = "0.0.0.0" // or another default IP
+	} else {
+		ipAddress = user.IP_address
+	}
+
+	_, err := d.db.ExecContext(ctx, query, user.Username, user.ID, ipAddress)
 
 	return err
 }
