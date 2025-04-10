@@ -489,6 +489,7 @@ func (d *Database) DeleteUser(ctx context.Context, id string) error {
 }
 
 func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
+	fmt.Println("h UpdateUser")
 
 	query := `UPDATE users SET username = $1, ip_address = $2 WHERE id = $3`
 
@@ -498,6 +499,8 @@ func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
 	} else {
 		ipAddress = user.IP_address
 	}
+
+	fmt.Println(ipAddress)
 
 	_, err := d.db.ExecContext(ctx, query, user.Username, user.ID, ipAddress)
 
