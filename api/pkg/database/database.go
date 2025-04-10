@@ -490,9 +490,9 @@ func (d *Database) DeleteUser(ctx context.Context, id string) error {
 
 func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
 
-	query := `UPDATE users SET username = $1 WHERE id = $2`
+	query := `UPDATE users SET username = $1, ip_address = $3 WHERE id = $2`
 
-	_, err := d.db.ExecContext(ctx, query, user.Username, user.ID)
+	_, err := d.db.ExecContext(ctx, query, user.Username, user.IP_address, user.ID)
 
 	return err
 
