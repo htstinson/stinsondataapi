@@ -53,6 +53,9 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
 		return
 	}
+
+	fmt.Println("h UpdateUser", currentuser.CreatedAt, currentuser.IP_address)
+
 	if currentuser == nil {
 		fmt.Println(3, err.Error())
 		common.RespondError(w, http.StatusNotFound, "User not found")
