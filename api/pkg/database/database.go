@@ -41,6 +41,7 @@ type Repository interface {
 	RowCount(tablename string) (int, error)
 
 	SelectRoles(ctx context.Context, userID string) (model.Roles, error)
+	SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error)
 
 	Close() error
 }
@@ -404,6 +405,32 @@ func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.
 	return users, nil
 }
 
+func (d *Database) SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error) {
+	fmt.Println("database.go SelectUserRoles()")
+	rows, err := d.db.QueryContext(ctx,
+		"SELECT user_id, username, ip_address, role_name FROM user_roles_view ORDER BY username ASC LIMIT $1 OFFSET $2",
+		limit, offset,
+	)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, fmt.Errorf("error listing items: %w", err)
+	}
+	defer rows.Close()
+
+	var users []model.User
+	for rows.Next() {
+		var user model.User
+		if err := rows.Scan(&user.ID, &user.Username, &user.IP_address, &user.Roles); err != nil {
+			fmt.Println(err.Error())
+			return nil, fmt.Errorf("error scanning user: %w", err)
+		}
+		user.Roles = strings.Replace(user.Roles, "{", "", -1)
+		user.Roles = strings.Replace(user.Roles, "}", "", -1)
+		users = append(users, user)
+	}
+	return users, nil
+}
+
 func (d *Database) GetUser(ctx context.Context, id string) (*model.User, error) {
 	var user model.User
 
@@ -518,7 +545,7 @@ func (d *Database) SelectRoles(ctx context.Context, userId string) (model.Roles,
 
 	query := `
         SELECT id, username, roles
-        FROM users_with_roles
+        FROM user_roles_view
         WHERE id = $1
     `
 

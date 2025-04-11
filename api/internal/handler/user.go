@@ -57,7 +57,7 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if currentuser == nil {
-		fmt.Println(3, err.Error())
+		fmt.Println(3)
 		common.RespondError(w, http.StatusNotFound, "User not found")
 		return
 	}
@@ -124,6 +124,19 @@ func (h *Handler) SelectUsers(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 	items, err := h.db.SelectUsers(ctx, 100, 0)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to list items")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, items)
+
+}
+
+func (h *Handler) SelectUserRoles(w http.ResponseWriter, r *http.Request) {
+
+	ctx := r.Context()
+	items, err := h.db.SelectUserRoles(ctx, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to list items")
 		return
