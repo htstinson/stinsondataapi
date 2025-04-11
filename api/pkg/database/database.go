@@ -544,7 +544,7 @@ func (d *Database) SelectRoles(ctx context.Context, userId string) (model.Roles,
 	var roles = model.Roles{}
 
 	query := `
-        SELECT user_id, username, roles
+        SELECT user_id, username, role_name
         FROM user_roles_view
         WHERE id = $1
     `
