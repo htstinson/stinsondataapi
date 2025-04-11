@@ -546,7 +546,7 @@ func (d *Database) SelectRoles(ctx context.Context, userId string) (model.Roles,
 	query := `
         SELECT user_id, username, role_name
         FROM user_roles_view
-        WHERE id = $1
+        WHERE user_id = $1
     `
 
 	err := d.db.QueryRowContext(ctx, query, userId).Scan(
