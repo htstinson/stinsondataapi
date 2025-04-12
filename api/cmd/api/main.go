@@ -136,6 +136,12 @@ func main() {
 	protected.HandleFunc("/users", h.SelectUsers).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/users/roles", h.SelectUserRoles).Methods("GET", "OPTIONS")
 
+	protected.HandleFunc("/customers", h.CreateCustomer).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/customers/{id}", h.UpdateCustomer).Methods("PUT", "OPTIONS")
+	protected.HandleFunc("/customers/{id}", h.DeleteCustomer).Methods("DELETE")
+	protected.HandleFunc("/customers/{id}", h.GetCustomer).Methods("GET")
+	protected.HandleFunc("/customers", h.SelectCustomers).Methods("GET", "OPTIONS")
+
 	// Add middleware
 	api.Use(middleware.Logger(&log.Logger{}))
 	api.Use(middleware.RequestID)

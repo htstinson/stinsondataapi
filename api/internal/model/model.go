@@ -37,6 +37,13 @@ type User struct {
 	IP_address   string    `json:"ip_address"`
 }
 
+// Customer
+type Customer struct {
+	ID        string    `json:"id"`
+	Name      string    `json:"username"`
+	CreatedAt time.Time `json:"created_at"`
+}
+
 // All
 type LoginRequest struct {
 	Username string `json:"username"`
