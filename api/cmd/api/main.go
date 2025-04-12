@@ -142,6 +142,10 @@ func main() {
 	protected.HandleFunc("/customers/{id}", h.GetCustomer).Methods("GET")
 	protected.HandleFunc("/customers", h.SelectCustomers).Methods("GET", "OPTIONS")
 
+	protected.HandleFunc("/roles", h.CreateRole).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/roles{id}", h.UpdateRole).Methods("PUT", "OPTIONS")
+	protected.HandleFunc("/roles/{id}", h.DeleteRole).Methods("DELETE")
+	protected.HandleFunc("/roles/{id}", h.GetRole).Methods("GET")
 	protected.HandleFunc("/roles", h.SelectRoles).Methods("GET", "OPTIONS")
 
 	// Add middleware

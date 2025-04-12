@@ -25,7 +25,7 @@ func (h *Handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	user, err := h.db.CreateUser(ctx, user.Username, password)
 	if err != nil {
-		common.RespondError(w, http.StatusInternalServerError, "Failed to create item")
+		common.RespondError(w, http.StatusInternalServerError, "Failed to create user")
 		return
 	}
 
