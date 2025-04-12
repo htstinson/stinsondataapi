@@ -18,9 +18,3 @@ type LoginResponse struct {
 	Token     string `json:"token"`
 	ExpiresIn int64  `json:"expires_in"`
 }
-
-type Roles struct {
-	Id       string
-	Username string
-	Names    string
-}

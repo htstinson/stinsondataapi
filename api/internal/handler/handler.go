@@ -103,7 +103,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Generate token
-	roles, err := h.db.SelectRoles(r.Context(), user.ID)
+	roles, err := h.db.SelectRolesByUser(r.Context(), user.ID)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
