@@ -40,7 +40,7 @@ type User struct {
 // Customer
 type Customer struct {
 	ID        string    `json:"id"`
-	Name      string    `json:"username"`
+	Name      string    `json:"name"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
