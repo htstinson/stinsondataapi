@@ -12,40 +12,44 @@ import (
 )
 
 type Repository interface {
-	// Item Get, Create, List, Update, Delete
+	// Item
 	GetItem(ctx context.Context, id string) (*model.Item, error)
 	CreateItem(ctx context.Context, item *model.Item) error
-	ListItems(ctx context.Context, limit, offset int) ([]model.Item, error)
-	UpdateItem(cts context.Context, item *model.Item) error
+	SelectItems(ctx context.Context, limit, offset int) ([]model.Item, error)
+	UpdateItem(ctx context.Context, item *model.Item) error
 	DeleteItem(ctx context.Context, id string) error
 
-	// User Get(2), Create, List, Update, Delete
+	// User
 	GetUser(ctx context.Context, id string) (*model.User, error)
 	GetUserByUsername(ctx context.Context, username string) (*model.User, error)
 	CreateUser(ctx context.Context, username string, password string) (*model.User, error)
 	SelectUsers(ctx context.Context, limit, offset int) ([]model.User, error)
-	UpdateUser(cts context.Context, item *model.User) error
+	UpdateUser(ctx context.Context, item *model.User) error
 	DeleteUser(ctx context.Context, id string) error
 
-	// User Get(2), Create, List, Update, Delete
+	// Customer
 	GetCustomer(ctx context.Context, id string) (*model.Customer, error)
 	GetCustomerByName(ctx context.Context, name string) (*model.Customer, error)
 	CreateCustomer(ctx context.Context, name string) (*model.Customer, error)
 	SelectCustomers(ctx context.Context, limit, offset int) ([]model.Customer, error)
-	UpdateCustomer(cts context.Context, customer *model.Customer) error
+	UpdateCustomer(ctx context.Context, customer *model.Customer) error
 	DeleteCustomer(ctx context.Context, id string) error
 	SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error)
 
 	// Blocked
 	SelectBlocked(ctx context.Context, limit, offset int, sort string, order string) ([]model.Blocked, error)
 	GetBlocked(ctx context.Context, id string) (*model.Blocked, error)
-	UpdateBlocked(cts context.Context, item *model.Blocked) error
+	UpdateBlocked(ctx context.Context, item *model.Blocked) error
 	CreateBlocked(ctx context.Context, blocked model.Blocked) (*model.Blocked, error)
 	DeleteBlocked(ctx context.Context, id string) error
 
 	// Roles
 	SelectRolesByUser(ctx context.Context, userID string) (model.Roles, error)
 	SelectRoles(ctx context.Context, limit, offset int) ([]model.Role, error)
+	GetRole(ctx context.Context, id string) (*model.Role, error)
+	UpdateRole(ctx context.Context, role *model.Role) error
+	CreateRole(ctx context.Context, name string) (*model.Role, error)
+	DeleteRole(ctx context.Context, id string) error
 
 	RowCount(tablename string) (int, error)
 

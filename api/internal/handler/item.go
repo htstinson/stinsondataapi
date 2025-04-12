@@ -106,7 +106,7 @@ func (h *Handler) GetItem(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) ListItems(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
-	items, err := h.db.ListItems(ctx, 100, 0)
+	items, err := h.db.SelectItems(ctx, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to list items")
 		return

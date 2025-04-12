@@ -11,7 +11,6 @@ import (
 )
 
 // Item
-
 func (d *Database) GetItem(ctx context.Context, id string) (*model.Item, error) {
 	var item model.Item
 	err := d.db.QueryRowContext(ctx,
@@ -61,7 +60,7 @@ func (d *Database) CreateItem(ctx context.Context, item *model.Item) error {
 	return nil
 }
 
-func (d *Database) ListItems(ctx context.Context, limit, offset int) ([]model.Item, error) {
+func (d *Database) SelectItems(ctx context.Context, limit, offset int) ([]model.Item, error) {
 	rows, err := d.db.QueryContext(ctx,
 		"SELECT id, name, created_at FROM items ORDER BY created_at DESC LIMIT $1 OFFSET $2",
 		limit, offset,

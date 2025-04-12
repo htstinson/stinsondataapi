@@ -2,8 +2,11 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
@@ -52,4 +55,65 @@ func (d *Database) SelectRoles(ctx context.Context, limit, offset int) ([]model.
 	}
 
 	return roles, err
+}
+
+func (d *Database) GetRole(ctx context.Context, id string) (*model.Role, error) {
+	fmt.Println("d GetRole")
+
+	var role model.Role
+
+	err := d.db.QueryRowContext(ctx,
+		"SELECT id, name, created_at FROM roles WHERE id = $1",
+		id,
+	).Scan(&role.Id, &role.Name, &role.CreatedAt)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting customer: %w", err)
+	}
+
+	return &role, nil
+}
+
+func (d *Database) UpdateRole(ctx context.Context, role *model.Role) error {
+	fmt.Println("d UpdateRole")
+
+	query := `UPDATE roles SET name = $1 WHERE id = $2`
+
+	_, err := d.db.ExecContext(ctx, query, role.Name, role.Id)
+
+	return err
+}
+
+func (d *Database) CreateRole(ctx context.Context, name string) (*model.Role, error) {
+	fmt.Println("d CreateRole")
+
+	role := &model.Role{
+		Id:        uuid.New().String(),
+		Name:      name,
+		CreatedAt: time.Now(),
+	}
+
+	query := `
+        INSERT INTO roles (id, name, created_at) VALUES ($1, $2, $3)
+    `
+
+	_, err := d.db.ExecContext(ctx, query, role.Id, role.Name, role.CreatedAt)
+	if err != nil {
+		return nil, fmt.Errorf("error creating role: %w", err)
+	}
+
+	return role, nil
+}
+
+func (d *Database) DeleteRole(ctx context.Context, id string) error {
+	fmt.Println("d DeleteRole")
+
+	query := `DELETE FROM roles WHERE id = $1`
+
+	_, err := d.db.ExecContext(ctx, query, id)
+
+	return err
 }

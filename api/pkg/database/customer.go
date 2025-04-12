@@ -19,7 +19,7 @@ func (d *Database) GetCustomer(ctx context.Context, id string) (*model.Customer,
 	err := d.db.QueryRowContext(ctx,
 		"SELECT id, name, created_at FROM customers WHERE id = $1",
 		id,
-	).Scan(&customer.ID, &customer.Name, &customer.CreatedAt)
+	).Scan(&customer.Id, &customer.Name, &customer.CreatedAt)
 
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -40,7 +40,7 @@ func (d *Database) GetCustomerByName(ctx context.Context, name string) (*model.C
     `
 
 	err := d.db.QueryRowContext(ctx, query, name).Scan(
-		&customer.ID,
+		&customer.Id,
 		&customer.Name,
 		&customer.CreatedAt,
 	)
@@ -55,10 +55,10 @@ func (d *Database) GetCustomerByName(ctx context.Context, name string) (*model.C
 }
 
 func (d *Database) CreateCustomer(ctx context.Context, name string) (*model.Customer, error) {
-	fmt.Println("CreateCustomer")
+	fmt.Println("d CreateCustomer")
 
 	customer := &model.Customer{
-		ID:        uuid.New().String(),
+		Id:        uuid.New().String(),
 		Name:      name,
 		CreatedAt: time.Now(),
 	}
@@ -68,7 +68,7 @@ func (d *Database) CreateCustomer(ctx context.Context, name string) (*model.Cust
     `
 
 	_, err := d.db.ExecContext(ctx, query,
-		customer.ID,
+		customer.Id,
 		customer.Name,
 		customer.CreatedAt,
 	)
@@ -97,7 +97,7 @@ func (d *Database) SelectCustomers(ctx context.Context, limit, offset int) ([]mo
 	var customers []model.Customer
 	for rows.Next() {
 		var customer model.Customer
-		if err := rows.Scan(&customer.ID, &customer.Name, &customer.CreatedAt); err != nil {
+		if err := rows.Scan(&customer.Id, &customer.Name, &customer.CreatedAt); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning customer: %w", err)
 		}
@@ -108,16 +108,18 @@ func (d *Database) SelectCustomers(ctx context.Context, limit, offset int) ([]mo
 }
 
 func (d *Database) UpdateCustomer(ctx context.Context, customer *model.Customer) error {
-	fmt.Println("h UpdateCustomer")
+	fmt.Println("d UpdateCustomer")
 
 	query := `UPDATE customers SET name = $1 WHERE id = $2`
 
-	_, err := d.db.ExecContext(ctx, query, customer.Name, customer.ID)
+	_, err := d.db.ExecContext(ctx, query, customer.Name, customer.Id)
 
 	return err
 }
 
 func (d *Database) DeleteCustomer(ctx context.Context, id string) error {
+	fmt.Println("d DeleteCustomer")
+
 	query := `DELETE FROM customers WHERE id = $1`
 
 	_, err := d.db.ExecContext(ctx, query, id)
