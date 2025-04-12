@@ -121,7 +121,7 @@ func (h *Handler) GetCustomer(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
-	customers, err := h.db.SelectUsers(ctx, 100, 0)
+	customers, err := h.db.SelectCustomers(ctx, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to list customers")
 		return
