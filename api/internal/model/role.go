@@ -7,6 +7,6 @@ type Roles struct {
 }
 
 type Role struct {
-	Id   string
-	Name string
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
