@@ -89,7 +89,7 @@ func (d *Database) SelectPermissions(ctx context.Context, limit, offset int) ([]
 func (d *Database) UpdatePermission(ctx context.Context, permission *model.Permission) error {
 	fmt.Println("d UpdatePermission")
 
-	query := `UPDATE permissinos SET name = $1, description = $2 WHERE id = $3`
+	query := `UPDATE permissions SET name = $1, description = $2 WHERE id = $3`
 
 	_, err := d.db.ExecContext(ctx, query, permission.Name, permission.Description, permission.Id)
 
