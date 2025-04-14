@@ -106,7 +106,10 @@ func (h *Handler) SelectPermissions(w http.ResponseWriter, r *http.Request) {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select permissions")
 		return
 	}
-	fmt.Println(permissions)
+	for k, v := range permissions {
+		fmt.Println(k, v.Name, v.Description, v.Object_Id)
+	}
+
 	common.RespondJSON(w, http.StatusOK, permissions)
 
 }
