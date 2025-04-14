@@ -154,6 +154,8 @@ func main() {
 	protected.HandleFunc("/roles", h.SelectRoles).Methods("GET", "OPTIONS")
 
 	// Permission
+	protected.HandleFunc("/permissions", h.CreatePermission).Methods("POST", "OPTIONS")
+
 	protected.HandleFunc("/permissions", h.SelectPermissions).Methods("GET", "OPTIONS")
 
 	// User Permission

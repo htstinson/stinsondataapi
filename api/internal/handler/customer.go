@@ -21,13 +21,13 @@ func (h *Handler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	ctx := r.Context()
-	user, err := h.db.CreateCustomer(ctx, customer.Name)
+	newcustomer, err := h.db.CreateCustomer(ctx, customer.Name)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to create customer")
 		return
 	}
 
-	common.RespondJSON(w, http.StatusCreated, user)
+	common.RespondJSON(w, http.StatusCreated, newcustomer)
 }
 
 func (h *Handler) UpdateCustomer(w http.ResponseWriter, r *http.Request) {
