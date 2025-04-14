@@ -64,7 +64,7 @@ func (d *Database) SelectPermissions(ctx context.Context, limit, offset int) ([]
 	fmt.Println("database.go SelectPermissions()")
 
 	rows, err := d.db.QueryContext(ctx,
-		"SELECT id, name, description, created_at FROM permissions ORDER BY name ASC LIMIT $1 OFFSET $2",
+		"SELECT id, name, description, object_id, created_at FROM permissions ORDER BY name ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)
 	if err != nil {
@@ -76,7 +76,7 @@ func (d *Database) SelectPermissions(ctx context.Context, limit, offset int) ([]
 	var permissions []model.Permission
 	for rows.Next() {
 		var permission model.Permission
-		if err := rows.Scan(&permission.Id, &permission.Name, &permission.Description, &permission.CreatedAt); err != nil {
+		if err := rows.Scan(&permission.Id, &permission.Name, &permission.Description, &permission.Object_Id, &permission.CreatedAt); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning customer: %w", err)
 		}
