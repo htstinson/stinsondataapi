@@ -51,6 +51,19 @@ type Repository interface {
 	CreateRole(ctx context.Context, name string) (*model.Role, error)
 	DeleteRole(ctx context.Context, id string) error
 
+	// Permission
+	GetPermission(ctx context.Context, id string) (*model.Permission, error)
+	CreatePermission(ctx context.Context, name string, description string) (*model.Permission, error)
+	SelectPermissions(ctx context.Context, limit, offset int) ([]model.Permission, error)
+	UpdatePermission(ctx context.Context, permission *model.Permission) error
+	DeletePermission(ctx context.Context, id string) error
+
+	// User Permissions
+	SelectUserPermissions(ctx context.Context, limit, offset int) ([]model.User_Permission, error)
+
+	//Role Permissions
+	SelectRolePermissions(ctx context.Context, limit, offset int) ([]model.Role_Permission, error)
+
 	RowCount(tablename string) (int, error)
 
 	Close() error

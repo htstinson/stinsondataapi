@@ -106,8 +106,7 @@ func main() {
 	protected.Use(middleware.IpLoggingMiddleware)
 	protected.Use(jwtAuth.Middleware)
 
-	//protected.HandleFunc("/admin", h.ListBlocked).Methods("GET", "OPTIONS")
-
+	// Blocked
 	protected.HandleFunc("/blocked/update", h.AddBlockedFromRDSToWAF).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/blocked/{id}", h.UpdateBlocked).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/blocked/{id}", h.GetBlocked).Methods("GET", "OPTIONS")
@@ -115,20 +114,24 @@ func main() {
 	protected.HandleFunc("/blocked", h.CreateBlocked).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/blocked", h.SelectBlocked).Methods("GET", "OPTIONS")
 
+	// Item
 	protected.HandleFunc("/items", h.CreateItem).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.UpdateItem).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.GetItem).Methods("GET")
 	protected.HandleFunc("/items", h.ListItems).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.DeleteItem).Methods("DELETE")
 
+	// Account
 	protected.HandleFunc("/accounts", sf.Handler.CreateAccount).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/accounts/{id}", sf.Handler.UpdateAccount).Methods("PATCH", "OPTIONS")
 	protected.HandleFunc("/accounts", sf.Handler.ListAccounts).Methods("GET", "OPTIONS")
 
+	// Contact
 	protected.HandleFunc("/contacts", sf.Handler.ListContacts).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/contacts/{accountid}", sf.Handler.ListContacts).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/contact/{contactid}", sf.Handler.GetContactById).Methods("GET", "OPTIONS")
 
+	// User
 	protected.HandleFunc("/users", h.CreateUser).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/users/{id}", h.DeleteUser).Methods("DELETE")
@@ -136,17 +139,21 @@ func main() {
 	protected.HandleFunc("/users", h.SelectUsers).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/users/roles", h.SelectUserRoles).Methods("GET", "OPTIONS")
 
+	// Customer
 	protected.HandleFunc("/customers", h.CreateCustomer).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/customers/{id}", h.UpdateCustomer).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/customers/{id}", h.DeleteCustomer).Methods("DELETE")
 	protected.HandleFunc("/customers/{id}", h.GetCustomer).Methods("GET")
 	protected.HandleFunc("/customers", h.SelectCustomers).Methods("GET", "OPTIONS")
 
+	// Role
 	protected.HandleFunc("/roles", h.CreateRole).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/roles{id}", h.UpdateRole).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/roles/{id}", h.DeleteRole).Methods("DELETE")
 	protected.HandleFunc("/roles/{id}", h.GetRole).Methods("GET")
 	protected.HandleFunc("/roles", h.SelectRoles).Methods("GET", "OPTIONS")
+
+	// Permission
 
 	// Add middleware
 	api.Use(middleware.Logger(&log.Logger{}))
