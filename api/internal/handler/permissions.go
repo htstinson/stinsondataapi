@@ -72,6 +72,32 @@ func (h *Handler) UpdatePermission(w http.ResponseWriter, r *http.Request) {
 	common.RespondJSON(w, http.StatusOK, permission)
 }
 
+func (h *Handler) DeletePermission(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+
+	permission, err := h.db.GetPermission(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get permission")
+		return
+	}
+	if permission == nil {
+		common.RespondError(w, http.StatusNotFound, "Permissin not found")
+		return
+	}
+
+	err = h.db.DeletePermission(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error deleting permission")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, permission)
+
+}
+
 func (h *Handler) SelectPermissions(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()

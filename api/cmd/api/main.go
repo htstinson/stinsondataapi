@@ -156,7 +156,7 @@ func main() {
 	// Permission
 	protected.HandleFunc("/permissions", h.CreatePermission).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/permissions/{id}", h.UpdatePermission).Methods("PUT", "OPTIONS")
-
+	protected.HandleFunc("/permissions/{id}", h.DeletePermission).Methods("DELETE")
 	protected.HandleFunc("/permissions", h.SelectPermissions).Methods("GET", "OPTIONS")
 
 	// User Permission
