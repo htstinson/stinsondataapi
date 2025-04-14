@@ -148,7 +148,7 @@ func main() {
 
 	// Role
 	protected.HandleFunc("/roles", h.CreateRole).Methods("POST", "OPTIONS")
-	protected.HandleFunc("/roles{id}", h.UpdateRole).Methods("PUT", "OPTIONS")
+	protected.HandleFunc("/roles/{id}", h.UpdateRole).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/roles/{id}", h.DeleteRole).Methods("DELETE", "OPTIONS")
 	protected.HandleFunc("/roles/{id}", h.GetRole).Methods("GET")
 	protected.HandleFunc("/roles", h.SelectRoles).Methods("GET", "OPTIONS")
