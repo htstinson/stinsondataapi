@@ -101,7 +101,7 @@ func main() {
 	api.HandleFunc("/login", h.Login).Methods("POST", "OPTIONS")
 	api.HandleFunc("/", h.HealthCheck).Methods("GET")
 
-	// Protected rounts
+	// Protected routes
 	protected := api.PathPrefix("/").Subrouter()
 	protected.Use(middleware.IpLoggingMiddleware)
 	protected.Use(jwtAuth.Middleware)
@@ -154,6 +154,11 @@ func main() {
 	protected.HandleFunc("/roles", h.SelectRoles).Methods("GET", "OPTIONS")
 
 	// Permission
+	protected.HandleFunc("/permissions", h.SelectPermissions).Methods("GET", "OPTIONS")
+
+	// User Permission
+
+	// Role Permission
 
 	// Add middleware
 	api.Use(middleware.Logger(&log.Logger{}))
