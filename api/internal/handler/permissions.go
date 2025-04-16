@@ -101,15 +101,15 @@ func (h *Handler) DeletePermission(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) SelectPermissions(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
-	permissions, err := h.db.SelectPermissions(ctx, 100, 0)
+	permissions_view, err := h.db.SelectPermissions_View(ctx, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select permissions")
 		return
 	}
-	for k, v := range permissions {
-		fmt.Println(k, v.Name, v.Description, v.Object_Id)
+	for k, v := range permissions_view {
+		fmt.Println(k, v.Id, v.Name, v.Description, v.Object_Id, v.Object_Name, v.Object_Description, v.Object_Type)
 	}
 
-	common.RespondJSON(w, http.StatusOK, permissions)
+	common.RespondJSON(w, http.StatusOK, permissions_view)
 
 }
