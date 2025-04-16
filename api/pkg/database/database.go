@@ -55,6 +55,7 @@ type Repository interface {
 	GetPermission(ctx context.Context, id string) (*model.Permission, error)
 	CreatePermission(ctx context.Context, name string, description string) (*model.Permission, error)
 	SelectPermissions(ctx context.Context, limit, offset int) ([]model.Permission, error)
+	SelectPermissionsView(ctx context.Context, limit, offset int) ([]model.Permission_View, error)
 	UpdatePermission(ctx context.Context, permission *model.Permission) error
 	DeletePermission(ctx context.Context, id string) error
 
