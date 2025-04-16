@@ -107,7 +107,7 @@ func (h *Handler) SelectPermissions(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	for k, v := range permissions_view {
-		fmt.Println(k, v.Id, v.Name, v.Description, v.Object_Id, v.Object_Name, v.Object_Description, v.Object_Type)
+		fmt.Println(k, v.Id, v.Name, v.Description, v.Object_Id, v.V_Object_Name, v.V_Object_Description, v.V_Object_Type)
 	}
 
 	common.RespondJSON(w, http.StatusOK, permissions_view)

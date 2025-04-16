@@ -104,7 +104,7 @@ func (d *Database) SelectPermissions_View(ctx context.Context, limit, offset int
 	for rows.Next() {
 		var permission_view model.Permission_View
 		if err := rows.Scan(&permission_view.Id, &permission_view.Name, &permission_view.Description,
-			&permission_view.Object_Id, &permission_view.Object_Name, &permission_view.Object_Description, &permission_view.Object_Type); err != nil {
+			&permission_view.Object_Id, &permission_view.V_Object_Name, &permission_view.V_Object_Description, &permission_view.V_Object_Type); err != nil {
 
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning customer: %w", err)
