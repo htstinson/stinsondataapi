@@ -12,11 +12,11 @@ type Permission struct {
 }
 
 type Permission_View struct {
-	Id                 string `json:"id"`
-	Name               string `json:"name"`
-	Description        string `json:"description"`
-	Object_Id          string `json:"object_id"`
-	Object_Name        string `json:"object_name"`
-	Object_Description string `json:"object_description"`
-	Object_Type        string `json:"object_type"`
+	Id                   string `json:"id"`
+	Name                 string `json:"name"`
+	Description          string `json:"description"`
+	Object_Id            string `json:"object_id"`
+	V_Object_Name        string `json:"v_object_name"`
+	V_Object_Description string `json:"v_object_description"`
+	V_Object_Type        string `json:"v_object_type"`
 }
