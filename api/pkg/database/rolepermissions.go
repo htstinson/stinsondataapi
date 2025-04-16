@@ -23,9 +23,9 @@ func (d *Database) SelectRolePermissions(ctx context.Context, limit, offset int)
 	var role_permissions_view []model.Role_Permission_View
 	for rows.Next() {
 		var role_permission_view model.Role_Permission_View
-		if err := rows.Scan(&role_permission_view.Role_Id, &role_permission_view.Role_Name,
-			&role_permission_view.Permission_Id, &role_permission_view.Permission_Name,
-			&role_permission_view.Object_Id, &role_permission_view.Object_Name, &role_permission_view.Object_Type,
+		if err := rows.Scan(&role_permission_view.Role_Id, &role_permission_view.V_Role_Name,
+			&role_permission_view.Permission_Id, &role_permission_view.V_Permission_Name,
+			&role_permission_view.Object_Id, &role_permission_view.V_Object_Name, &role_permission_view.V_Object_Type,
 			&role_permission_view.CreatedAt); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning user_permission: %w", err)

@@ -16,7 +16,7 @@ func (h *Handler) SelectRolePermissions(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 	for k, v := range role_permissions {
-		fmt.Println(k, v.Role_Id, v.Role_Name, v.Permission_Id, v.Permission_Name, v.Object_Id, v.Object_Name, v.Object_Type)
+		fmt.Println(k, v.Role_Id, v.V_Role_Name, v.Permission_Id, v.V_Permission_Name, v.Object_Id, v.V_Object_Name, v.V_Object_Type)
 	}
 
 	common.RespondJSON(w, http.StatusOK, role_permissions)
