@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
+	"github.com/htstinson/stinsondataapi/api/internal/auth"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
@@ -114,7 +115,14 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	fmt.Println("user", ctx.Value("user"))
+	// And you want to cast it to type claims
+	claims, ok := ctx.Value("user").(auth.Claims)
+	if !ok {
+		fmt.Println("Type assertion failed: anyValue is not of type claims")
+		return
+	}
+	fmt.Println("userId", claims.UserID)
+	fmt.Println("username", claims.Username)
 
 	if id == "" {
 		user.ID = "id"
