@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
@@ -103,18 +104,31 @@ func (h *Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
+
+	var user = model.User{}
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 
 	ctx := r.Context()
-	user, err := h.db.GetUser(ctx, id)
-	if err != nil {
-		common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
-		return
-	}
-	if user == nil {
-		common.RespondError(w, http.StatusNotFound, "Item not found")
-		return
+
+	if id == "" {
+		user.ID = "id"
+		user.Username = "username"
+		user.CreatedAt = time.Now()
+		user.Roles = ""
+		user.IP_address = "0.0.0.0"
+	} else {
+
+		user, err := h.db.GetUser(ctx, id)
+		if err != nil {
+			common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
+			return
+		}
+		if user == nil {
+			common.RespondError(w, http.StatusNotFound, "Item not found")
+			return
+		}
 	}
 
 	common.RespondJSON(w, http.StatusOK, user)
