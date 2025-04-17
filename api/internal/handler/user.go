@@ -105,6 +105,8 @@ func (h *Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 
+	fmt.Println("GetUser")
+
 	var user = model.User{}
 
 	vars := mux.Vars(r)
