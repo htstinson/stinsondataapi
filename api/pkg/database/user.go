@@ -70,9 +70,9 @@ func (d *Database) GetUser(ctx context.Context, id string) (*model.User, error) 
 	var user model.User
 
 	err := d.db.QueryRowContext(ctx,
-		"SELECT id, username, created_at FROM users WHERE id = $1",
+		"SELECT id, username, ipaddress, created_at FROM users WHERE id = $1",
 		id,
-	).Scan(&user.ID, &user.Username, &user.CreatedAt)
+	).Scan(&user.ID, &user.Username, &user.IP_address, &user.CreatedAt)
 
 	if err == sql.ErrNoRows {
 		return nil, nil
