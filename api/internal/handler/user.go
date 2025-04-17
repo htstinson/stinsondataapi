@@ -117,7 +117,7 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	// And you want to cast it to type claims
 	fmt.Println(ctx.Value("user"))
-	claims, ok := ctx.Value("user").(auth.Claims)
+	claims, ok := ctx.Value("user").(*auth.Claims)
 	if !ok {
 		fmt.Println("Type assertion failed: anyValue is not of type auth.Claims")
 		return
