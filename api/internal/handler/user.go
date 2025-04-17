@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
@@ -108,40 +107,30 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("h GetUser (no parms)")
 
-	var user = model.User{}
-
 	vars := mux.Vars(r)
 	id := vars["id"]
 
 	ctx := r.Context()
 
-	// And you want to cast it to type claims
-	fmt.Println(ctx.Value("user"))
-	claims, ok := ctx.Value("user").(*auth.Claims)
-	if !ok {
-		fmt.Println("Type assertion failed: anyValue is not of type auth.Claims")
+	if id == "" {
+		claims, ok := ctx.Value("user").(*auth.Claims)
+		if !ok {
+			fmt.Println("Type assertion failed: anyValue is not of type auth.Claims")
+			return
+		}
+		id = claims.UserID
+	}
+
+	user, err := h.db.GetUser(ctx, id)
+	if err != nil {
+		fmt.Println(2, err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
 		return
 	}
-	fmt.Println("userId", claims.UserID)
-	fmt.Println("username", claims.Username)
 
-	if id == "" {
-		user.ID = "id"
-		user.Username = "username"
-		user.CreatedAt = time.Now()
-		user.Roles = ""
-		user.IP_address = "0.0.0.0"
-	} else {
-
-		user, err := h.db.GetUser(ctx, id)
-		if err != nil {
-			common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
-			return
-		}
-		if user == nil {
-			common.RespondError(w, http.StatusNotFound, "Item not found")
-			return
-		}
+	if user == nil {
+		common.RespondError(w, http.StatusNotFound, "Item not found")
+		return
 	}
 
 	common.RespondJSON(w, http.StatusOK, user)
