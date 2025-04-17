@@ -168,7 +168,8 @@ func (h *Handler) AddBlockedFromLogs(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Printf("[%v] [main] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 	} else {
-		ctx := r.Context()
+		//ctx := r.Context()
+		ctx := context.Background()
 		fmt.Printf("[%v] [main] Blocked IP addresses.\n", time.Now().Format(time.RFC3339))
 		for k, v := range addresses {
 			blocked := &model.Blocked{
