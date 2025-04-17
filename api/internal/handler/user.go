@@ -107,6 +107,10 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("h GetUser (no parms)")
 
+	for k, v := range r.Header {
+		fmt.Println(k, v)
+	}
+
 	var user = model.User{}
 
 	vars := mux.Vars(r)
