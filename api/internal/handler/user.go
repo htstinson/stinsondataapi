@@ -129,6 +129,7 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if user == nil {
+		fmt.Println(3)
 		common.RespondError(w, http.StatusNotFound, "Item not found")
 		return
 	}
