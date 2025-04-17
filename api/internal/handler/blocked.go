@@ -180,13 +180,14 @@ func (h *Handler) AddBlockedFromLogs(w http.ResponseWriter, r *http.Request) {
 			_, err := h.db.CreateBlocked(ctx, *blocked)
 			if err == nil {
 				fmt.Printf("[%v] [main] %v %s Created blocked IP.\n", time.Now().Format(time.RFC3339), k, ip)
+
+				err = mywaf.Block("Blocked", ip, "", "us-west-2")
+				if err != nil {
+					fmt.Printf("[%v] [main] %v %s Error adding IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, ip)
+				}
+
 			} else {
 				fmt.Printf("[%v] [main] %s error: %s.\n", time.Now().Format(time.RFC3339), ip, err.Error())
-			}
-
-			err = mywaf.Block("Blocked", ip, "", "us-west-2")
-			if err != nil {
-				fmt.Printf("[%v] [main] %v %s Error adding IP to WAF IP Set.\n", time.Now().Format(time.RFC3339), k, ip)
 			}
 
 			time.Sleep(100 * time.Millisecond)

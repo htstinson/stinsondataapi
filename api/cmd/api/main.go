@@ -108,6 +108,7 @@ func main() {
 
 	// Blocked
 	protected.HandleFunc("/blocked/update", h.AddBlockedFromRDSToWAF).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/blocked/parse", h.AddBlockedFromLogs).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/blocked/{id}", h.UpdateBlocked).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/blocked/{id}", h.GetBlocked).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/blocked/{id}", h.DeleteBlocked).Methods("DELETE")
