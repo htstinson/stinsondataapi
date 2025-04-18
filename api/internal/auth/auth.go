@@ -46,6 +46,7 @@ func (a *JWTAuth) GenerateToken(user model.User, roles model.Roles) (string, err
 	fmt.Println("GenerateToken")
 
 	fmt.Println(user.IP_address)
+	fmt.Println(user.ID)
 
 	claims := Claims{
 		UserID:     user.ID,
