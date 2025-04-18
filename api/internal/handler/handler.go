@@ -109,7 +109,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token, err := h.auth.GenerateToken(user.ID, user.Username, roles.Names)
+	token, err := h.auth.GenerateToken(*user, roles)
 	if err != nil {
 		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Error generating token")

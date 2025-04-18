@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v4"
+	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
 var (
@@ -19,9 +20,10 @@ var (
 )
 
 type Claims struct {
-	UserID   string `json:"user_id"`
-	Username string `json:"username"`
-	Roles    string `json:"roles"`
+	UserID     string `json:"user_id"`
+	Username   string `json:"username"`
+	Roles      string `json:"roles"`
+	IP_Address string `json:"ip_address"`
 	jwt.RegisteredClaims
 }
 
@@ -38,13 +40,14 @@ func New(config Config) *JWTAuth {
 	return &JWTAuth{Config: config}
 }
 
-func (a *JWTAuth) GenerateToken(userID string, username string, roles string) (string, error) {
+func (a *JWTAuth) GenerateToken(user model.User, roles model.Roles) (string, error) {
 	now := time.Now()
 
 	claims := Claims{
-		UserID:   userID,
-		Username: username,
-		Roles:    roles,
+		UserID:     user.ID,
+		Username:   user.Username,
+		Roles:      roles.Names,
+		IP_Address: user.IP_address,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(now.Add(a.Config.TokenDuration)),
 			IssuedAt:  jwt.NewNumericDate(now),
