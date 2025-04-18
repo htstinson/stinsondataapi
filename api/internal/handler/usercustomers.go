@@ -8,6 +8,7 @@ import (
 )
 
 func (h *Handler) SelectUserCustomerView(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("SelectUserCustomerView")
 
 	ctx := r.Context()
 	user_customer_views, err := h.db.SelectUserCustomerView(ctx, 100, 0)
