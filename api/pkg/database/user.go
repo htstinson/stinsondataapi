@@ -120,7 +120,7 @@ func (d *Database) GetUserByUsername(ctx context.Context, username string) (*mod
 
 	user := &model.User{}
 	query := `
-        SELECT id, username, password_hash, created_at
+        SELECT id, username, password_hash, ip_address, created_at
         FROM users
         WHERE username = $1
     `
@@ -129,6 +129,7 @@ func (d *Database) GetUserByUsername(ctx context.Context, username string) (*mod
 		&user.ID,
 		&user.Username,
 		&user.PasswordHash,
+		&user.IP_address,
 		&user.CreatedAt,
 	)
 	if err == sql.ErrNoRows {
