@@ -43,6 +43,8 @@ func New(config Config) *JWTAuth {
 func (a *JWTAuth) GenerateToken(user model.User, roles model.Roles) (string, error) {
 	now := time.Now()
 
+	fmt.Println("GenerateToken")
+
 	claims := Claims{
 		UserID:     user.ID,
 		Username:   user.Username,
