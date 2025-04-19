@@ -114,7 +114,7 @@ func (d *Database) DeleteUserCustomer(ctx context.Context, id string) error {
 func (d *Database) LookupUserCustomer(ctx context.Context, user_id string, customer_id string) (*model.User_Customer, error) {
 	fmt.Println("d LookupUserCustomer")
 
-	var user_customer model.User_Customer
+	var user_customer = model.User_Customer{}
 
 	if ctx == nil {
 		fmt.Println("nil ctx")
@@ -124,7 +124,7 @@ func (d *Database) LookupUserCustomer(ctx context.Context, user_id string, custo
 	err := d.db.QueryRowContext(ctx,
 		"SELECT id, user_id, customer_id FROM user_customer WHERE user_id = $1 and customer_id = $2",
 		user_id, customer_id,
-	).Scan(&user_customer.Id, &user_customer.Id, &user_customer.Id)
+	).Scan(&user_customer.Id, &user_customer.User_ID, &user_customer.Customer_Id)
 
 	if err == sql.ErrNoRows {
 		return nil, errors.New("not found")
