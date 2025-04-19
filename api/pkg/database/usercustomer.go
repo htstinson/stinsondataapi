@@ -34,9 +34,12 @@ func (d *Database) SelectUserCustomerView(ctx context.Context, limit, offset int
 }
 
 func (d *Database) UpdateUserCustomer(ctx context.Context, user_customer model.User_Customer) error {
-	fmt.Println("h UpdateUserCustomer")
+	fmt.Println("d UpdateUserCustomer")
 
 	query := `UPDATE user_customer SET user_id = $1, customer_id = $2 WHERE id = $3`
+	fmt.Println(user_customer.User_ID)
+	fmt.Println(user_customer.Customer_Id)
+	fmt.Println(user_customer.Id)
 
 	_, err := d.db.ExecContext(ctx, query, user_customer.User_ID, user_customer.Customer_Id, user_customer.Id)
 
