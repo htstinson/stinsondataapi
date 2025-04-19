@@ -116,6 +116,11 @@ func (d *Database) LookupUserCustomer(ctx context.Context, user_id string, custo
 
 	var user_customer model.User_Customer
 
+	if ctx == nil {
+		fmt.Println("nil ctx")
+		return nil, errors.New("nil ctx")
+	}
+
 	err := d.db.QueryRowContext(ctx,
 		"SELECT id, user_id, customer_id FROM user_customer WHERE user_id = $1 and customer_id = $2",
 		user_id, customer_id,
