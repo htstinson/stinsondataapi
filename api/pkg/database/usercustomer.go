@@ -27,7 +27,7 @@ func (d *Database) SelectUserCustomerView(ctx context.Context, limit, offset int
 		var user_customer_view model.User_Customer_View
 		if err := rows.Scan(&user_customer_view.Id, &user_customer_view.User_ID, &user_customer_view.Customer_Id, &user_customer_view.User_Username, &user_customer_view.Customer_Name); err != nil {
 			fmt.Println(err.Error())
-			return nil, fmt.Errorf("error scanning user_permission: %w", err)
+			return nil, fmt.Errorf("error scanning user_customer: %w", err)
 		}
 
 		user_customer_views = append(user_customer_views, user_customer_view)
