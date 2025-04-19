@@ -74,7 +74,7 @@ type Repository interface {
 	SelectUserPermissions(ctx context.Context, limit, offset int) ([]model.User_Permission, error)
 
 	//Role Permissions
-	SelectRolePermissions(ctx context.Context, limit, offset int) ([]model.Role_Permission_View, error)
+	SelectRolePermissionsView(ctx context.Context, limit, offset int) ([]model.Role_Permission_View, error)
 
 	RowCount(tablename string) (int, error)
 

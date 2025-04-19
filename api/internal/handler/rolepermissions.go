@@ -7,12 +7,12 @@ import (
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 )
 
-func (h *Handler) SelectRolePermissions(w http.ResponseWriter, r *http.Request) {
-
+func (h *Handler) SelectRolePermissionsView(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("SelectRolePermissionsView")
 	ctx := r.Context()
-	role_permissions, err := h.db.SelectRolePermissions(ctx, 100, 0)
+	role_permissions, err := h.db.SelectRolePermissionsView(ctx, 100, 0)
 	if err != nil {
-		common.RespondError(w, http.StatusInternalServerError, "Failed to select permissions")
+		common.RespondError(w, http.StatusInternalServerError, "Failed to select role_permissions")
 		return
 	}
 	for k, v := range role_permissions {

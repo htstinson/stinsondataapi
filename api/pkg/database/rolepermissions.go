@@ -7,7 +7,7 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (d *Database) SelectRolePermissions(ctx context.Context, limit, offset int) ([]model.Role_Permission_View, error) {
+func (d *Database) SelectRolePermissionsView(ctx context.Context, limit, offset int) ([]model.Role_Permission_View, error) {
 	fmt.Println("database.go SelectRolePermission()")
 
 	rows, err := d.db.QueryContext(ctx,
