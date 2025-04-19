@@ -123,3 +123,29 @@ func (h *Handler) CreateUserCustomer(w http.ResponseWriter, r *http.Request) {
 
 	common.RespondJSON(w, http.StatusCreated, new_user_customer)
 }
+
+func (h *Handler) DeleteUserCustomer(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+
+	user_customer, err := h.db.GetUserCustomer(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get customer")
+		return
+	}
+	if user_customer == nil {
+		common.RespondError(w, http.StatusNotFound, "Customer not found")
+		return
+	}
+
+	err = h.db.DeleteUserCustomer(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error deleting customer")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, user_customer)
+
+}

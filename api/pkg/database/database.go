@@ -33,6 +33,7 @@ type Repository interface {
 	GetUserCustomer(ctx context.Context, id string) (*model.User_Customer, error)
 	CreateUserCustomer(ctx context.Context, user_id string, customer_id string) (*model.User_Customer, error)
 	LookupUserCustomer(ctx context.Context, user_id string, customer_id string) (*model.User_Customer, error)
+	DeleteUserCustomer(ctx context.Context, id string) error
 
 	// Customer
 	GetCustomer(ctx context.Context, id string) (*model.Customer, error)
