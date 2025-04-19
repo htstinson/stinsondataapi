@@ -17,5 +17,5 @@ type User_Customer_View struct {
 	Customer_Id   string    `json:"customer_id"`
 	User_Username string    `json:"user_username"`
 	Customer_Name string    `json:"customer_name"`
-	Assignedd_At  time.Time `json:"assigned_at"`
+	Assigned_At   time.Time `json:"assigned_at"`
 }
