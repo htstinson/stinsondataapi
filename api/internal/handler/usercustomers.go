@@ -109,6 +109,7 @@ func (h *Handler) CreateUserCustomer(w http.ResponseWriter, r *http.Request) {
 		if err.Error() != "not found" {
 			return
 		} else {
+			fmt.Println(err.Error())
 			fmt.Println("duplicate user customer")
 			return
 		}
