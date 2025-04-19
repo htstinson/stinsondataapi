@@ -173,7 +173,7 @@ func main() {
 	// User Permission
 
 	// Role Permission
-	protected.HandleFunc("/role_permissions", h.SelectRolePermissionsView).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/rolepermissionsview", h.SelectRolePermissionsView).Methods("GET", "OPTIONS")
 
 	// Add middleware
 	api.Use(middleware.Logger(&log.Logger{}))

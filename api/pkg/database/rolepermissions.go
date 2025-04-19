@@ -8,7 +8,7 @@ import (
 )
 
 func (d *Database) SelectRolePermissionsView(ctx context.Context, limit, offset int) ([]model.Role_Permission_View, error) {
-	fmt.Println("database.go SelectRolePermission()")
+	fmt.Println("database.go SelectRolePermissionsView()")
 
 	rows, err := d.db.QueryContext(ctx,
 		"SELECT role_id, role_name, permission_id, permission_name, object_id, object_name, object_type, created_at FROM role_permissions_view ORDER BY Role_name, permission_name, object_name ASC LIMIT $1 OFFSET $2",
