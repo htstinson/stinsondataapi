@@ -5,7 +5,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/google/uuid"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
@@ -71,27 +70,20 @@ func (d *Database) GetUserCustomer(ctx context.Context, id string) (*model.User_
 
 func (d *Database) CreateUserCustomer(ctx context.Context, user_id string, customer_id string) (*model.User_Customer, error) {
 	fmt.Println("d CreateUserCustomer")
-	fmt.Println(ctx)
-	fmt.Println(user_id)
-	fmt.Println(customer_id)
 
 	user_customer := &model.User_Customer{
 		Id:          uuid.New().String(),
 		User_ID:     user_id,
 		Customer_Id: customer_id,
-		Assigned_At: time.Now(),
 	}
 
 	query := `
-        INSERT INTO user_customer (id, user_id, customer_id, created_at) VALUES ($1, $2, $3, $4)
+        INSERT INTO user_customer (user_id, customer_id) VALUES ($1, $2)
     `
-	fmt.Println(query)
 
 	_, err := d.db.ExecContext(ctx, query,
-		user_customer.Id,
 		user_customer.User_ID,
 		user_customer.Customer_Id,
-		user_customer.Assigned_At,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("error creating user_customer: %w", err)
@@ -115,11 +107,6 @@ func (d *Database) LookupUserCustomer(ctx context.Context, user_id string, custo
 	fmt.Println("d LookupUserCustomer")
 
 	var user_customer = model.User_Customer{}
-
-	if ctx == nil {
-		fmt.Println("nil ctx")
-		return nil, errors.New("nil ctx")
-	}
 
 	err := d.db.QueryRowContext(ctx,
 		"SELECT id, user_id, customer_id FROM user_customer WHERE user_id = $1 and customer_id = $2",
