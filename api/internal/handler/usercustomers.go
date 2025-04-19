@@ -20,7 +20,7 @@ func (h *Handler) SelectUserCustomerView(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	for k, v := range user_customer_views {
-		fmt.Println(k, v.Id, v.User_ID, v.Customer_Id, v.User_Username, v.Customer_Name, v.Assignedd_At)
+		fmt.Println(k, v.Id, v.User_ID, v.Customer_Id, v.User_Username, v.Customer_Name, v.Assigned_At)
 	}
 
 	common.RespondJSON(w, http.StatusOK, user_customer_views)
