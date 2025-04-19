@@ -114,6 +114,8 @@ func (h *Handler) CreateUserCustomer(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	fmt.Println("ok")
+
 	new_user_customer, err := h.db.CreateUserCustomer(ctx, user_customer.User_ID, user_customer.Customer_Id)
 	if err != nil {
 		fmt.Println("Could not create user_customer")
