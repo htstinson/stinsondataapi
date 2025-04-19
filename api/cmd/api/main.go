@@ -147,6 +147,9 @@ func main() {
 	protected.HandleFunc("/usercustomer", h.CreateUserCustomer).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/usercustomer/{id}", h.DeleteUserCustomer).Methods("DELETE")
 
+	// UserCustomerRoles
+	protected.HandleFunc("/usercustomerrolesview", h.SelectUserCustomerRolesView).Methods("GET", "OPTIONS")
+
 	// Customer
 	protected.HandleFunc("/customers", h.CreateCustomer).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/customers/{id}", h.UpdateCustomer).Methods("PUT", "OPTIONS")

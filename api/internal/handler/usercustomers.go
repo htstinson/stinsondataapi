@@ -16,7 +16,7 @@ func (h *Handler) SelectUserCustomerView(w http.ResponseWriter, r *http.Request)
 	ctx := r.Context()
 	user_customer_views, err := h.db.SelectUserCustomerView(ctx, 100, 0)
 	if err != nil {
-		common.RespondError(w, http.StatusInternalServerError, "Failed to select permissions")
+		common.RespondError(w, http.StatusInternalServerError, "Failed to select user_customer_view")
 		return
 	}
 

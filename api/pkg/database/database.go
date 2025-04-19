@@ -27,13 +27,16 @@ type Repository interface {
 	UpdateUser(ctx context.Context, item *model.User) error
 	DeleteUser(ctx context.Context, id string) error
 
-	//User_Customer
+	// User_Customer
 	SelectUserCustomerView(ctx context.Context, limit, offset int) ([]model.User_Customer_View, error)
 	UpdateUserCustomer(ctx context.Context, user_customer model.User_Customer) error
 	GetUserCustomer(ctx context.Context, id string) (*model.User_Customer, error)
 	CreateUserCustomer(ctx context.Context, user_id string, customer_id string) (*model.User_Customer, error)
 	LookupUserCustomer(ctx context.Context, user_id string, customer_id string) (*model.User_Customer, error)
 	DeleteUserCustomer(ctx context.Context, id string) error
+
+	// User_Customer_Roles
+	SelectUserCustomerRolesView(ctx context.Context, limit, offset int) ([]model.User_Customer_Roles_View, error)
 
 	// Customer
 	GetCustomer(ctx context.Context, id string) (*model.Customer, error)
