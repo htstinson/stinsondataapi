@@ -107,7 +107,7 @@ func (h *Handler) CreateUserCustomer(w http.ResponseWriter, r *http.Request) {
 	_, err := h.db.LookupUserCustomer(ctx, user_customer.User_ID, user_customer.Customer_Id)
 	if err != nil {
 		if err.Error() != "not found" {
-			return
+			// do nothing
 		} else {
 			fmt.Println(err.Error())
 			fmt.Println("duplicate user customer")
