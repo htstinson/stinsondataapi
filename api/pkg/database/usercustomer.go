@@ -37,9 +37,9 @@ func (d *Database) UpdateUserCustomer(ctx context.Context, user_customer model.U
 	fmt.Println("d UpdateUserCustomer")
 
 	query := `UPDATE user_customer SET user_id = $1, customer_id = $2 WHERE id = $3`
-	fmt.Println(user_customer.User_ID)
-	fmt.Println(user_customer.Customer_Id)
-	fmt.Println(user_customer.Id)
+	fmt.Println("id", user_customer.Id)
+	fmt.Println("user id", user_customer.User_ID)
+	fmt.Println("customer id", user_customer.Customer_Id)
 
 	_, err := d.db.ExecContext(ctx, query, user_customer.User_ID, user_customer.Customer_Id, user_customer.Id)
 
