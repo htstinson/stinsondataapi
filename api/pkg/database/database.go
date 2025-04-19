@@ -29,6 +29,8 @@ type Repository interface {
 
 	//User_Customer
 	SelectUserCustomerView(ctx context.Context, limit, offset int) ([]model.User_Customer_View, error)
+	UpdateUserCustomer(ctx context.Context, user_customer model.User_Customer) error
+	GetUserCustomer(ctx context.Context, id string) (*model.User_Customer, error)
 
 	// Customer
 	GetCustomer(ctx context.Context, id string) (*model.Customer, error)
