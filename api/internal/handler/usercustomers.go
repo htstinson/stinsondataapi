@@ -104,12 +104,12 @@ func (h *Handler) CreateUserCustomer(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	lookup, err := h.db.LookupUserCustomer(ctx, user_customer.User_ID, user_customer.Customer_Id)
+	_, err := h.db.LookupUserCustomer(ctx, user_customer.User_ID, user_customer.Customer_Id)
 	if err != nil {
 		if err.Error() != "not found" {
 			return
 		} else {
-			fmt.Println("duplicate user customer", lookup.Id)
+			fmt.Println("duplicate user customer")
 			return
 		}
 	}
