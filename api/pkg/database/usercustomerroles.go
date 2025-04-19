@@ -22,7 +22,7 @@ func (d *Database) SelectUserCustomerRolesView(ctx context.Context, limit, offse
 	var user_customer_roles_views []model.User_Customer_Roles_View
 	for rows.Next() {
 		var user_customer_roles_view model.User_Customer_Roles_View
-		if err := rows.Scan(&user_customer_roles_view.Id,
+		if err := rows.Scan(&user_customer_roles_view.Id, &user_customer_roles_view.User_Customer_ID,
 			&user_customer_roles_view.Role_Id, &user_customer_roles_view.Role_Name,
 			&user_customer_roles_view.User_ID, &user_customer_roles_view.User_Name,
 			&user_customer_roles_view.Customer_Id, &user_customer_roles_view.Customer_Name,
