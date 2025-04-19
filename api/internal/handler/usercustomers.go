@@ -106,7 +106,7 @@ func (h *Handler) CreateUserCustomer(w http.ResponseWriter, r *http.Request) {
 
 	_, err := h.db.LookupUserCustomer(ctx, user_customer.User_ID, user_customer.Customer_Id)
 	if err != nil {
-		if err.Error() != "not found" {
+		if err.Error() == "not found" {
 			// do nothing
 		} else {
 			fmt.Println(err.Error())
