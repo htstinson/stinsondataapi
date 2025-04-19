@@ -71,12 +71,15 @@ func (d *Database) GetUserCustomer(ctx context.Context, id string) (*model.User_
 
 func (d *Database) CreateUserCustomer(ctx context.Context, user_id string, customer_id string) (*model.User_Customer, error) {
 	fmt.Println("d CreateUserCustomer")
+	fmt.Println(ctx)
+	fmt.Println(user_id)
+	fmt.Println(customer_id)
 
 	user_customer := &model.User_Customer{
-		Id:           uuid.New().String(),
-		User_ID:      user_id,
-		Customer_Id:  customer_id,
-		Assignedd_At: time.Now(),
+		Id:          uuid.New().String(),
+		User_ID:     user_id,
+		Customer_Id: customer_id,
+		Assigned_At: time.Now(),
 	}
 
 	query := `
