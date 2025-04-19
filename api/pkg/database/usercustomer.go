@@ -3,8 +3,11 @@ package database
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
@@ -61,6 +64,64 @@ func (d *Database) GetUserCustomer(ctx context.Context, id string) (*model.User_
 	}
 	if err != nil {
 		return nil, fmt.Errorf("error getting customer: %w", err)
+	}
+
+	return &user_customer, nil
+}
+
+func (d *Database) CreateUserCustomer(ctx context.Context, user_id string, customer_id string) (*model.User_Customer, error) {
+	fmt.Println("d CreateUserCustomer")
+
+	user_customer := &model.User_Customer{
+		Id:           uuid.New().String(),
+		User_ID:      user_id,
+		Customer_Id:  customer_id,
+		Assignedd_At: time.Now(),
+	}
+
+	query := `
+        INSERT INTO user_customer (id, user_id, customer_id, created_at) VALUES ($1, $2, $3, $4)
+    `
+
+	_, err := d.db.ExecContext(ctx, query,
+		user_customer.Id,
+		user_customer.User_ID,
+		user_customer.Customer_Id,
+		user_customer.Assignedd_At,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("error creating user_customer: %w", err)
+	}
+
+	return user_customer, nil
+
+}
+
+func (d *Database) DeleteUserCustomer(ctx context.Context, id string) error {
+	fmt.Println("d DeleteUserCustomer")
+
+	query := `DELETE FROM user_customer WHERE id = $1`
+
+	_, err := d.db.ExecContext(ctx, query, id)
+
+	return err
+}
+
+func (d *Database) LookupUserCustomer(ctx context.Context, user_id string, customer_id string) (*model.User_Customer, error) {
+	fmt.Println("d LookupUserCustomer")
+
+	var user_customer model.User_Customer
+
+	err := d.db.QueryRowContext(ctx,
+		"SELECT id, user_id, customer_id FROM user_customer WHERE user_id = $1 and customer_id = $2",
+		user_id, customer_id,
+	).Scan(&user_customer.Id, &user_customer.Id, &user_customer.Id)
+
+	if err == sql.ErrNoRows {
+		return nil, errors.New("not found")
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting user_customer: %w", err)
 	}
 
 	return &user_customer, nil

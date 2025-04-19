@@ -91,3 +91,35 @@ func (h *Handler) UpdateUserCustomer(w http.ResponseWriter, r *http.Request) {
 
 	common.RespondJSON(w, http.StatusOK, user_customer)
 }
+
+func (h *Handler) CreateUserCustomer(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h CreateUserCustomer")
+
+	var user_customer *model.User_Customer
+	if err := json.NewDecoder(r.Body).Decode(&user_customer); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	ctx := r.Context()
+
+	lookup, err := h.db.LookupUserCustomer(ctx, user_customer.User_ID, user_customer.Customer_Id)
+	if err != nil {
+		if err.Error() != "not found" {
+			return
+		} else {
+			fmt.Println("duplicate user customer", lookup.Id)
+			return
+		}
+	}
+
+	new_user_customer, err := h.db.CreateUserCustomer(ctx, user_customer.User_ID, user_customer.Customer_Id)
+	if err != nil {
+		fmt.Println("Could not create user_customer")
+		common.RespondError(w, http.StatusInternalServerError, "Failed to create user_customer")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusCreated, new_user_customer)
+}
