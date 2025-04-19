@@ -90,7 +90,7 @@ func (d *Database) CreateUserCustomer(ctx context.Context, user_id string, custo
 		user_customer.Id,
 		user_customer.User_ID,
 		user_customer.Customer_Id,
-		user_customer.Assignedd_At,
+		user_customer.Assigned_At,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("error creating user_customer: %w", err)
