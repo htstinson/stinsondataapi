@@ -28,17 +28,20 @@ func (h *Handler) SelectUserCustomerView(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *Handler) GetUserCustomer(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("h GetUserCustomer")
+
 	vars := mux.Vars(r)
 	id := vars["id"]
 
 	ctx := r.Context()
 	user_customer, err := h.db.GetUserCustomer(ctx, id)
 	if err != nil {
-		common.RespondError(w, http.StatusInternalServerError, "Failed to get customer")
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get user_customer")
 		return
 	}
 	if user_customer == nil {
-		common.RespondError(w, http.StatusNotFound, "Customer not found")
+		common.RespondError(w, http.StatusNotFound, "User_Customer not found")
 		return
 	}
 

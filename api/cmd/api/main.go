@@ -143,7 +143,7 @@ func main() {
 
 	// UserCustomer
 	protected.HandleFunc("/usercustomerview", h.SelectUserCustomerView).Methods("GET", "OPTIONS")
-	protected.HandleFunc("/usercustomer", h.UpdateUserCustomer).Methods("PUT", "OPTIONS")
+	protected.HandleFunc("/usercustomer/{id}", h.UpdateUserCustomer).Methods("PUT", "OPTIONS")
 
 	// Customer
 	protected.HandleFunc("/customers", h.CreateCustomer).Methods("POST", "OPTIONS")
