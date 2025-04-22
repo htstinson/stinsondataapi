@@ -130,3 +130,23 @@ func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
 	common.RespondJSON(w, http.StatusOK, customers)
 
 }
+
+func (h *Handler) Create_Schema(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h Create_Schema")
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+
+	customer, err := h.db.GetCustomer(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get customer")
+		return
+	}
+	if customer == nil {
+		common.RespondError(w, http.StatusNotFound, "Customer not found")
+		return
+	}
+
+	h.db.Create_Schema(ctx, customer.Id)
+}

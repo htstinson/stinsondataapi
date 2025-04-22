@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -125,4 +126,18 @@ func (d *Database) DeleteCustomer(ctx context.Context, id string) error {
 	_, err := d.db.ExecContext(ctx, query, id)
 
 	return err
+}
+
+func (d *Database) Create_Schema(ctx context.Context, new_schema_name string) error {
+	fmt.Println("d Create_Schema")
+
+	err := errors.New("temporary stop")
+
+	return err
+
+	// err := Copy_Schema(d.db, d.Config, false, new_schema_name)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// return err
 }

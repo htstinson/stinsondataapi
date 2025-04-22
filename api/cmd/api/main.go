@@ -159,6 +159,8 @@ func main() {
 	protected.HandleFunc("/customers/{id}", h.GetCustomer).Methods("GET")
 	protected.HandleFunc("/customers", h.SelectCustomers).Methods("GET", "OPTIONS")
 
+	protected.HandleFunc("/customers/create_schema/{id}", h.Create_Schema).Methods("POST", "OPTIONS")
+
 	// Role
 	protected.HandleFunc("/roles", h.CreateRole).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/roles/{id}", h.UpdateRole).Methods("PUT", "OPTIONS")

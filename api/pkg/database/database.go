@@ -47,6 +47,8 @@ type Repository interface {
 	DeleteCustomer(ctx context.Context, id string) error
 	SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error)
 
+	Create_Schema(ctx context.Context, new_schema_name string) error
+
 	// Blocked
 	SelectBlocked(ctx context.Context, limit, offset int, sort string, order string) ([]model.Blocked, error)
 	GetBlocked(ctx context.Context, id string) (*model.Blocked, error)
@@ -82,7 +84,8 @@ type Repository interface {
 }
 
 type Database struct {
-	db *sql.DB
+	db     *sql.DB
+	Config Config
 }
 
 type Config struct {
@@ -120,7 +123,7 @@ func New(cfg Config) (Repository, error) {
 		return nil, fmt.Errorf("error initializing schema: %w", err)
 	}
 
-	return &Database{db: db}, nil
+	return &Database{db: db, Config: cfg}, nil
 }
 
 func initializeSchema(db *sql.DB) error {

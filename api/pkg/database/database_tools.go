@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"strconv"
@@ -13,15 +12,14 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func copy_schema(repository Repository, config Config, useIAM bool, NewSchema string) {
-
-	db := repository.(*Database)
+func Copy_Schema(db *sql.DB, config Config, useIAM bool, NewSchema string) error {
 
 	// Step 1: Dump the public schema structure
 	dumpFile := "schema_dump.sql"
 	err := dumpSchemaStructure(config, dumpFile, useIAM)
 	if err != nil {
-		log.Fatalf("Failed to dump schema structure: %v", err)
+		fmt.Printf("Failed to dump schema structure: %v", err)
+		return err
 	}
 
 	// Step 2: Create new schema and modify the dump file
@@ -29,24 +27,29 @@ func copy_schema(repository Repository, config Config, useIAM bool, NewSchema st
 	modifiedDump := "modified_schema.sql"
 	err = createAndModifyDump(dumpFile, modifiedDump, NewSchema)
 	if err != nil {
-		log.Fatalf("Failed to create and modify dump: %v", err)
+		fmt.Printf("Failed to create and modify dump: %v", err)
+		return err
 	}
 
 	// Step 3: Apply the modified structure
 	fmt.Println("Applying modified schema structure...")
 	err = applyModifiedStructure(config, modifiedDump, useIAM)
 	if err != nil {
-		log.Fatalf("Failed to apply modified structure: %v", err)
+		fmt.Printf("Failed to apply modified structure: %v", err)
+		return err
 	}
 
 	// Step 4: Copy data from public to new schema
 	fmt.Println("Copying data to new schema...")
-	err = copyData(db.db, NewSchema)
+	err = copyData(db, NewSchema)
 	if err != nil {
-		log.Fatalf("Failed to copy data: %v", err)
+		fmt.Printf("Failed to copy data: %v", err)
+		return err
 	}
 
 	fmt.Println("Schema copying completed successfully!")
+
+	return err
 }
 
 // Get IAM authentication token
