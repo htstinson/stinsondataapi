@@ -58,14 +58,16 @@ func main() {
 	json.Unmarshal(rdsLogin, RDSLogin)
 
 	// Initialize database
-	db, err := database.New(database.Config{
+	config := database.Config{
 		Host:     RDSLogin.Host,
 		Port:     RDSLogin.Port,
 		User:     RDSLogin.Username,
 		Password: RDSLogin.Password,
 		DBName:   "apidb",
 		SSLMode:  "require",
-	})
+	}
+
+	db, err := database.New(config)
 	if err != nil {
 		fmt.Printf("[%v] [main] Failed to connect to RDS database: %s.\n", time.Now().Format(time.RFC3339), err.Error())
 		return
