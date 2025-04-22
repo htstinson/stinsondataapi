@@ -7,12 +7,15 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	_ "github.com/lib/pq"
 )
 
-func copy_schema(db *sql.DB, config Config, useIAM bool, NewSchema string) {
+func copy_schema(repository Repository, config Config, useIAM bool, NewSchema string) {
+
+	db := repository.(*Database)
 
 	// Step 1: Dump the public schema structure
 	dumpFile := "schema_dump.sql"
@@ -38,7 +41,7 @@ func copy_schema(db *sql.DB, config Config, useIAM bool, NewSchema string) {
 
 	// Step 4: Copy data from public to new schema
 	fmt.Println("Copying data to new schema...")
-	err = copyData(db, NewSchema)
+	err = copyData(db.db, NewSchema)
 	if err != nil {
 		log.Fatalf("Failed to copy data: %v", err)
 	}
@@ -53,7 +56,7 @@ func getIAMToken(config Config) (string, error) {
 		region = "us-east-1" // Default region
 	}
 
-	port := string(config.Port)
+	port := strconv.Itoa(config.Port)
 
 	cmd := exec.Command("aws", "rds", "generate-db-auth-token",
 		"--hostname", config.Host,
@@ -75,7 +78,7 @@ func dumpSchemaStructure(config Config, dumpFile string, useIAM bool) error {
 
 	var cmd *exec.Cmd
 
-	port := string(config.Port)
+	port := strconv.Itoa(config.Port)
 
 	pgDumpArgs := []string{
 		"-h", config.Host,
@@ -136,7 +139,7 @@ func createAndModifyDump(dumpFile, modifiedDump, newSchema string) error {
 func applyModifiedStructure(config Config, modifiedDump string, useIAM bool) error {
 	var cmd *exec.Cmd
 
-	port := string(config.Port)
+	port := strconv.Itoa(config.Port)
 
 	psqlArgs := []string{
 		"-h", config.Host,
