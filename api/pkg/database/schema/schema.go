@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"log"
+
 	"strings"
 )
 
@@ -24,7 +24,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 	}
 
 	// Step 2: Get list of all tables in public schema
-	log.Println("Getting list of tables in public schema")
+	fmt.Println("Getting list of tables in public schema")
 	rows, err := schema.DB.QueryContext(ctx, "SELECT tablename FROM pg_tables WHERE schemaname = 'public'")
 	if err != nil {
 		return fmt.Errorf("failed to get tables: %w", err)
@@ -44,7 +44,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 	}
 
 	// Step 3: Get sequences
-	log.Println("Getting list of sequences in public schema")
+	fmt.Println("Getting list of sequences in public schema")
 	seqRows, err := schema.DB.QueryContext(ctx, "SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = 'public'")
 	if err != nil {
 		return fmt.Errorf("failed to get sequences: %w", err)
@@ -64,7 +64,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 	}
 
 	// Step 4: Get views
-	log.Println("Getting list of views in public schema")
+	fmt.Println("Getting list of views in public schema")
 	viewRows, err := schema.DB.QueryContext(ctx, "SELECT table_name FROM information_schema.views WHERE table_schema = 'public'")
 	if err != nil {
 		return fmt.Errorf("failed to get views: %w", err)
@@ -84,7 +84,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 	}
 
 	// Step 5: Get table structures (DDL) and create them in the new schema
-	log.Println("Creating tables in new schema")
+	fmt.Println("Creating tables in new schema")
 
 	// Start a transaction for schema creation
 	tx, err := schema.DB.BeginTx(ctx, nil)
@@ -220,7 +220,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 	}
 
 	// Step 6: Now copy data table by table
-	log.Println("Copying data to new schema")
+	fmt.Println("Copying data to new schema")
 	for _, tableName := range tables {
 		fmt.Printf("Copying data for table: %s", tableName)
 
@@ -263,7 +263,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 	}
 
 	// Step 7: Create foreign key constraints
-	log.Println("Creating foreign key constraints")
+	fmt.Println("Creating foreign key constraints")
 	fkRows, err := schema.DB.QueryContext(ctx, `
 		SELECT
 			'ALTER TABLE ' || $1 || '.' || tc.table_name || 
@@ -305,7 +305,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 	}
 
 	// Step 8: Create indexes
-	log.Println("Creating indexes")
+	fmt.Println("Creating indexes")
 	idxRows, err := schema.DB.QueryContext(ctx, `
 		SELECT
 			'CREATE INDEX ' || indexname || ' ON ' || $1 || '.' || tablename || ' USING ' || 
@@ -343,7 +343,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 	}
 
 	// Step 9: Create views
-	log.Println("Creating views")
+	fmt.Println("Creating views")
 	for _, viewName := range views {
 		// Get view definition
 		var viewDef string
