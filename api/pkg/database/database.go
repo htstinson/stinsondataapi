@@ -84,7 +84,7 @@ type Repository interface {
 }
 
 type Database struct {
-	db     *sql.DB
+	DB     *sql.DB
 	Config Config
 }
 
@@ -123,7 +123,7 @@ func New(cfg Config) (Repository, error) {
 		return nil, fmt.Errorf("error initializing schema: %w", err)
 	}
 
-	return &Database{db: db, Config: cfg}, nil
+	return &Database{DB: db, Config: cfg}, nil
 }
 
 func initializeSchema(db *sql.DB) error {
@@ -178,7 +178,7 @@ func initializeSchema(db *sql.DB) error {
 }
 
 func (d *Database) Close() error {
-	return d.db.Close()
+	return d.DB.Close()
 }
 
 // any table
@@ -192,7 +192,7 @@ func (d *Database) RowCount(tablename string) (int, error) {
 
 	ctx := context.Background()
 
-	rows, err := d.db.QueryContext(ctx, q)
+	rows, err := d.DB.QueryContext(ctx, q)
 	if err != nil {
 		fmt.Println(err.Error())
 	}

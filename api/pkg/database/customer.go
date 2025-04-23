@@ -17,7 +17,7 @@ func (d *Database) GetCustomer(ctx context.Context, id string) (*model.Customer,
 
 	var customer model.Customer
 
-	err := d.db.QueryRowContext(ctx,
+	err := d.DB.QueryRowContext(ctx,
 		"SELECT id, name, created_at FROM customers WHERE id = $1",
 		id,
 	).Scan(&customer.Id, &customer.Name, &customer.CreatedAt)
@@ -40,7 +40,7 @@ func (d *Database) GetCustomerByName(ctx context.Context, name string) (*model.C
         SELECT id, name, created_at FROM customers WHERE username = $1
     `
 
-	err := d.db.QueryRowContext(ctx, query, name).Scan(
+	err := d.DB.QueryRowContext(ctx, query, name).Scan(
 		&customer.Id,
 		&customer.Name,
 		&customer.CreatedAt,
@@ -68,7 +68,7 @@ func (d *Database) CreateCustomer(ctx context.Context, name string) (*model.Cust
         INSERT INTO customers (id, name, created_at) VALUES ($1, $2, $3)
     `
 
-	_, err := d.db.ExecContext(ctx, query,
+	_, err := d.DB.ExecContext(ctx, query,
 		customer.Id,
 		customer.Name,
 		customer.CreatedAt,
@@ -85,7 +85,7 @@ func (d *Database) SelectCustomers(ctx context.Context, limit, offset int) ([]mo
 
 	fmt.Println("database.go SelectCustomers()")
 
-	rows, err := d.db.QueryContext(ctx,
+	rows, err := d.DB.QueryContext(ctx,
 		"SELECT id, name, created_at FROM customers ORDER BY name ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)
@@ -113,7 +113,7 @@ func (d *Database) UpdateCustomer(ctx context.Context, customer *model.Customer)
 
 	query := `UPDATE customers SET name = $1 WHERE id = $2`
 
-	_, err := d.db.ExecContext(ctx, query, customer.Name, customer.Id)
+	_, err := d.DB.ExecContext(ctx, query, customer.Name, customer.Id)
 
 	return err
 }
@@ -123,7 +123,7 @@ func (d *Database) DeleteCustomer(ctx context.Context, id string) error {
 
 	query := `DELETE FROM customers WHERE id = $1`
 
-	_, err := d.db.ExecContext(ctx, query, id)
+	_, err := d.DB.ExecContext(ctx, query, id)
 
 	return err
 }

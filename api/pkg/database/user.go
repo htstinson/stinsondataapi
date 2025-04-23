@@ -16,7 +16,7 @@ import (
 
 func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.User, error) {
 	fmt.Println("database.go SelectUsers()")
-	rows, err := d.db.QueryContext(ctx,
+	rows, err := d.DB.QueryContext(ctx,
 		"SELECT id, username, ip_address FROM users ORDER BY username ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)
@@ -42,7 +42,7 @@ func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.
 
 func (d *Database) SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error) {
 	fmt.Println("database.go SelectUserRoles()")
-	rows, err := d.db.QueryContext(ctx,
+	rows, err := d.DB.QueryContext(ctx,
 		"SELECT user_id, username, ip_address, role_name FROM user_roles_view ORDER BY username ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)
@@ -69,7 +69,7 @@ func (d *Database) SelectUserRoles(ctx context.Context, limit, offset int) ([]mo
 func (d *Database) GetUser(ctx context.Context, id string) (*model.User, error) {
 	var user model.User
 
-	err := d.db.QueryRowContext(ctx,
+	err := d.DB.QueryRowContext(ctx,
 		"SELECT id, username, ip_address, created_at FROM users WHERE id = $1",
 		id,
 	).Scan(&user.ID, &user.Username, &user.IP_address, &user.CreatedAt)
@@ -102,7 +102,7 @@ func (d *Database) CreateUser(ctx context.Context, username, password string) (*
         VALUES ($1, $2, $3, $4)
     `
 
-	_, err = d.db.ExecContext(ctx, query,
+	_, err = d.DB.ExecContext(ctx, query,
 		user.ID,
 		user.Username,
 		user.PasswordHash,
@@ -125,7 +125,7 @@ func (d *Database) GetUserByUsername(ctx context.Context, username string) (*mod
         WHERE username = $1
     `
 
-	err := d.db.QueryRowContext(ctx, query, username).Scan(
+	err := d.DB.QueryRowContext(ctx, query, username).Scan(
 		&user.ID,
 		&user.Username,
 		&user.PasswordHash,
@@ -146,7 +146,7 @@ func (d *Database) DeleteUser(ctx context.Context, id string) error {
 
 	query := `DELETE FROM users WHERE id = $1`
 
-	_, err := d.db.ExecContext(ctx, query, id)
+	_, err := d.DB.ExecContext(ctx, query, id)
 
 	return err
 }
@@ -167,7 +167,7 @@ func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
 
 	fmt.Println(ipAddress)
 
-	_, err := d.db.ExecContext(ctx, query, user.Username, ipAddress, user.ID)
+	_, err := d.DB.ExecContext(ctx, query, user.Username, ipAddress, user.ID)
 
 	return err
 }

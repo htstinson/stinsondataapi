@@ -8,6 +8,8 @@ import (
 	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
+	"github.com/htstinson/stinsondataapi/api/pkg/database"
+	"github.com/htstinson/stinsondataapi/api/pkg/database/schema"
 )
 
 // Customer - Create, Update, Delete, Get, List
@@ -148,5 +150,9 @@ func (h *Handler) Create_Schema(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	h.db.Create_Schema(ctx, customer.Id)
+	//h.db.Create_Schema(ctx, customer.Id)
+
+	db := h.db.(*database.Database)
+
+	schema.CopySchema(ctx, db.DB, customer.Id)
 }

@@ -12,7 +12,7 @@ import (
 
 func (d *Database) SelectUserCustomerView(ctx context.Context, limit, offset int) ([]model.User_Customer_View, error) {
 	fmt.Println("database.go SelectUserCustomerView()")
-	rows, err := d.db.QueryContext(ctx,
+	rows, err := d.DB.QueryContext(ctx,
 		"SELECT id, user_id, customer_id, user_username, customer_name FROM user_customer_view ORDER BY user_username, customer_name ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)
@@ -43,7 +43,7 @@ func (d *Database) UpdateUserCustomer(ctx context.Context, user_customer model.U
 	fmt.Println("user id", user_customer.User_ID)
 	fmt.Println("customer id", user_customer.Customer_Id)
 
-	_, err := d.db.ExecContext(ctx, query, user_customer.User_ID, user_customer.Customer_Id, user_customer.Id)
+	_, err := d.DB.ExecContext(ctx, query, user_customer.User_ID, user_customer.Customer_Id, user_customer.Id)
 
 	return err
 }
@@ -53,7 +53,7 @@ func (d *Database) GetUserCustomer(ctx context.Context, id string) (*model.User_
 
 	var user_customer model.User_Customer
 
-	err := d.db.QueryRowContext(ctx,
+	err := d.DB.QueryRowContext(ctx,
 		"SELECT id, user_id, customer_id FROM user_customer WHERE id = $1",
 		id,
 	).Scan(&user_customer.Id, &user_customer.Id, &user_customer.Id)
@@ -81,7 +81,7 @@ func (d *Database) CreateUserCustomer(ctx context.Context, user_id string, custo
         INSERT INTO user_customer (user_id, customer_id) VALUES ($1, $2)
     `
 
-	_, err := d.db.ExecContext(ctx, query,
+	_, err := d.DB.ExecContext(ctx, query,
 		user_customer.User_ID,
 		user_customer.Customer_Id,
 	)
@@ -98,7 +98,7 @@ func (d *Database) DeleteUserCustomer(ctx context.Context, id string) error {
 
 	query := `DELETE FROM user_customer WHERE id = $1`
 
-	_, err := d.db.ExecContext(ctx, query, id)
+	_, err := d.DB.ExecContext(ctx, query, id)
 
 	return err
 }
@@ -108,7 +108,7 @@ func (d *Database) LookupUserCustomer(ctx context.Context, user_id string, custo
 
 	var user_customer = model.User_Customer{}
 
-	err := d.db.QueryRowContext(ctx,
+	err := d.DB.QueryRowContext(ctx,
 		"SELECT id, user_id, customer_id FROM user_customer WHERE user_id = $1 and customer_id = $2",
 		user_id, customer_id,
 	).Scan(&user_customer.Id, &user_customer.User_ID, &user_customer.Customer_Id)

@@ -9,7 +9,7 @@ import (
 
 func (d *Database) SelectUserCustomerRolesView(ctx context.Context, limit, offset int) ([]model.User_Customer_Roles_View, error) {
 	fmt.Println("database.go SelectUserCustomerRolesView()")
-	rows, err := d.db.QueryContext(ctx,
+	rows, err := d.DB.QueryContext(ctx,
 		"SELECT id, user_customer_id, role_id, role_name, user_id, username, customer_id, customer_name, created_at, updated_at FROM user_customer_roles_view ORDER BY username, customer_name, role_name ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)

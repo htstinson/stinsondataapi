@@ -16,7 +16,7 @@ func (d *Database) SelectBlocked(ctx context.Context, limit int, offset int, sor
 
 	q := fmt.Sprintf("SELECT id, ip, notes, created_at FROM blocked ORDER BY %s %s LIMIT $1 OFFSET $2", sort, strings.ToUpper(order))
 
-	rows, err := d.db.QueryContext(ctx, q, limit, offset)
+	rows, err := d.DB.QueryContext(ctx, q, limit, offset)
 
 	if err != nil {
 		fmt.Printf("[%v] [database][SelectBlocked] error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
@@ -52,7 +52,7 @@ func (d *Database) UpdateBlocked(ctx context.Context, blocked *model.Blocked) er
 
 	query := `UPDATE blocked SET ip=$1, notes=$2 WHERE id = $3`
 
-	_, err := d.db.ExecContext(ctx, query, blocked.IP, blocked.Notes, blocked.ID)
+	_, err := d.DB.ExecContext(ctx, query, blocked.IP, blocked.Notes, blocked.ID)
 
 	return err
 
@@ -64,7 +64,7 @@ func (d *Database) GetBlockedByIP(ctx context.Context, ip string) (*model.Blocke
 
 	query := fmt.Sprintf(`SELECT id, ip, notes, created_at FROM blocked WHERE ip ='%s'`, ip)
 
-	err := d.db.QueryRowContext(ctx, query).Scan(&blocked.ID, &blocked.IP, &notesNull, &blocked.CreatedAt)
+	err := d.DB.QueryRowContext(ctx, query).Scan(&blocked.ID, &blocked.IP, &notesNull, &blocked.CreatedAt)
 
 	if err == sql.ErrNoRows {
 		return nil, err
@@ -91,7 +91,7 @@ func (d *Database) GetBlocked(ctx context.Context, id string) (*model.Blocked, e
 
 	query := "SELECT id, ip, notes, created_at FROM blocked WHERE id = $1"
 
-	err := d.db.QueryRowContext(ctx, query, id).Scan(&blocked.ID, &blocked.IP, &notesNull, &blocked.CreatedAt)
+	err := d.DB.QueryRowContext(ctx, query, id).Scan(&blocked.ID, &blocked.IP, &notesNull, &blocked.CreatedAt)
 
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -126,7 +126,7 @@ func (d *Database) CreateBlocked(ctx context.Context, blocked model.Blocked) (*m
         VALUES ($1, $2, $3)
     `
 
-	_, err = d.db.ExecContext(ctx, query, blocked.IP, blocked.Notes, blocked.CreatedAt)
+	_, err = d.DB.ExecContext(ctx, query, blocked.IP, blocked.Notes, blocked.CreatedAt)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, fmt.Errorf("error creating blocked: %w", err)
@@ -140,7 +140,7 @@ func (d *Database) DeleteBlocked(ctx context.Context, id string) error {
 
 	query := `DELETE FROM blocked WHERE id = $1`
 
-	_, err := d.db.ExecContext(ctx, query, id)
+	_, err := d.DB.ExecContext(ctx, query, id)
 
 	return err
 }

@@ -13,7 +13,7 @@ import (
 // Item
 func (d *Database) GetItem(ctx context.Context, id string) (*model.Item, error) {
 	var item model.Item
-	err := d.db.QueryRowContext(ctx,
+	err := d.DB.QueryRowContext(ctx,
 		"SELECT id, name, created_at FROM items WHERE id = $1",
 		id,
 	).Scan(&item.ID, &item.Name, &item.CreatedAt)
@@ -31,7 +31,7 @@ func (d *Database) UpdateItem(ctx context.Context, item *model.Item) error {
 
 	query := `UPDATE items SET name = $1 WHERE id = $2`
 
-	_, err := d.db.ExecContext(ctx, query, item.Name, item.ID)
+	_, err := d.DB.ExecContext(ctx, query, item.Name, item.ID)
 
 	return err
 
@@ -41,7 +41,7 @@ func (d *Database) DeleteItem(ctx context.Context, id string) error {
 
 	query := `DELETE FROM items WHERE id = $1`
 
-	_, err := d.db.ExecContext(ctx, query, id)
+	_, err := d.DB.ExecContext(ctx, query, id)
 
 	return err
 }
@@ -50,7 +50,7 @@ func (d *Database) CreateItem(ctx context.Context, item *model.Item) error {
 	item.ID = uuid.New().String()
 	item.CreatedAt = time.Now()
 
-	_, err := d.db.ExecContext(ctx,
+	_, err := d.DB.ExecContext(ctx,
 		"INSERT INTO items (id, name, created_at) VALUES ($1, $2, $3)",
 		item.ID, item.Name, item.CreatedAt,
 	)
@@ -61,7 +61,7 @@ func (d *Database) CreateItem(ctx context.Context, item *model.Item) error {
 }
 
 func (d *Database) SelectItems(ctx context.Context, limit, offset int) ([]model.Item, error) {
-	rows, err := d.db.QueryContext(ctx,
+	rows, err := d.DB.QueryContext(ctx,
 		"SELECT id, name, created_at FROM items ORDER BY created_at DESC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)

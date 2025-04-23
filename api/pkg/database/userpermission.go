@@ -9,7 +9,7 @@ import (
 
 func (d *Database) SelectUserPermissions(ctx context.Context, limit, offset int) ([]model.User_Permission, error) {
 	fmt.Println("database.go SelectUserPermission()")
-	rows, err := d.db.QueryContext(ctx,
+	rows, err := d.DB.QueryContext(ctx,
 		"SELECT user_id, permission_id, created_at FROM user_permissions ORDER BY user_id ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)

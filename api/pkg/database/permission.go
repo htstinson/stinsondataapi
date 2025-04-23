@@ -16,7 +16,7 @@ func (d *Database) GetPermission(ctx context.Context, id string) (*model.Permiss
 
 	var permission model.Permission
 
-	err := d.db.QueryRowContext(ctx,
+	err := d.DB.QueryRowContext(ctx,
 		"SELECT id, name, description, created_at FROM permissions WHERE id = $1",
 		id,
 	).Scan(&permission.Id, &permission.Name, &permission.Description, &permission.CreatedAt)
@@ -45,7 +45,7 @@ func (d *Database) CreatePermission(ctx context.Context, name string, descriptio
         INSERT INTO permissions (id, name, description, created_at) VALUES ($1, $2, $3, $4)
     `
 
-	_, err := d.db.ExecContext(ctx, query,
+	_, err := d.DB.ExecContext(ctx, query,
 		permission.Id,
 		permission.Name,
 		permission.Description,
@@ -63,7 +63,7 @@ func (d *Database) SelectPermissions(ctx context.Context, limit, offset int) ([]
 
 	fmt.Println("database.go SelectPermissions()")
 
-	rows, err := d.db.QueryContext(ctx,
+	rows, err := d.DB.QueryContext(ctx,
 		"SELECT id, name, description, object_id, created_at FROM permissions ORDER BY name ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)
@@ -90,7 +90,7 @@ func (d *Database) SelectPermissions_View(ctx context.Context, limit, offset int
 
 	fmt.Println("database.go SelectPermissions_View")
 
-	rows, err := d.db.QueryContext(ctx,
+	rows, err := d.DB.QueryContext(ctx,
 		"SELECT id, name, description, object_id, object_name, object_description, object_type FROM permissions_view ORDER BY name ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)
@@ -120,7 +120,7 @@ func (d *Database) UpdatePermission(ctx context.Context, permission *model.Permi
 
 	query := `UPDATE permissions SET name = $1, description = $2 WHERE id = $3`
 
-	_, err := d.db.ExecContext(ctx, query, permission.Name, permission.Description, permission.Id)
+	_, err := d.DB.ExecContext(ctx, query, permission.Name, permission.Description, permission.Id)
 
 	return err
 }
@@ -130,7 +130,7 @@ func (d *Database) DeletePermission(ctx context.Context, id string) error {
 
 	query := `DELETE FROM permissions WHERE id = $1`
 
-	_, err := d.db.ExecContext(ctx, query, id)
+	_, err := d.DB.ExecContext(ctx, query, id)
 
 	return err
 }

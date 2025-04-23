@@ -23,7 +23,7 @@ func (d *Database) SelectRolesByUser(ctx context.Context, userId string) (model.
         WHERE user_id = $1
     `
 
-	err := d.db.QueryRowContext(ctx, query, userId).Scan(
+	err := d.DB.QueryRowContext(ctx, query, userId).Scan(
 		&roles.Id, &roles.Username, &roles.Names,
 	)
 
@@ -33,7 +33,7 @@ func (d *Database) SelectRolesByUser(ctx context.Context, userId string) (model.
 func (d *Database) SelectRoles(ctx context.Context, limit, offset int) ([]model.Role, error) {
 	fmt.Println("d SelectRoles")
 
-	rows, err := d.db.QueryContext(ctx,
+	rows, err := d.DB.QueryContext(ctx,
 		"SELECT id, name FROM roles ORDER BY name ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)
@@ -62,7 +62,7 @@ func (d *Database) GetRole(ctx context.Context, id string) (*model.Role, error) 
 
 	var role model.Role
 
-	err := d.db.QueryRowContext(ctx,
+	err := d.DB.QueryRowContext(ctx,
 		"SELECT id, name, created_at FROM roles WHERE id = $1",
 		id,
 	).Scan(&role.Id, &role.Name, &role.CreatedAt)
@@ -82,7 +82,7 @@ func (d *Database) UpdateRole(ctx context.Context, role *model.Role) error {
 
 	query := `UPDATE roles SET name = $1 WHERE id = $2`
 
-	_, err := d.db.ExecContext(ctx, query, role.Name, role.Id)
+	_, err := d.DB.ExecContext(ctx, query, role.Name, role.Id)
 
 	return err
 }
@@ -100,7 +100,7 @@ func (d *Database) CreateRole(ctx context.Context, name string) (*model.Role, er
         INSERT INTO roles (id, name, created_at) VALUES ($1, $2, $3)
     `
 
-	_, err := d.db.ExecContext(ctx, query, role.Id, role.Name, role.CreatedAt)
+	_, err := d.DB.ExecContext(ctx, query, role.Id, role.Name, role.CreatedAt)
 	if err != nil {
 		return nil, fmt.Errorf("error creating role: %w", err)
 	}
@@ -113,7 +113,7 @@ func (d *Database) DeleteRole(ctx context.Context, id string) error {
 
 	query := `DELETE FROM roles WHERE id = $1`
 
-	_, err := d.db.ExecContext(ctx, query, id)
+	_, err := d.DB.ExecContext(ctx, query, id)
 
 	return err
 }
