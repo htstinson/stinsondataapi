@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
@@ -153,11 +152,12 @@ func (h *Handler) Create_Schema(w http.ResponseWriter, r *http.Request) {
 
 	db := h.db.(*database.Database).DB
 
-	schema_name := strings.ReplaceAll(customer.Id, "-", "_")
+	//schema_name := strings.ReplaceAll(customer.Id, "-", "_")
 
 	schema := schema.Schema{
-		DB:         db,
-		SchemaName: schema_name,
+		DB:             db,
+		FromSchemaName: "public",
+		ToSchemaName:   "common",
 	}
 
 	err = schema.CopySchema(ctx)
