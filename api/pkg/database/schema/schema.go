@@ -167,7 +167,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 			JOIN 
 				pg_namespace n ON n.oid = c.relnamespace AND n.nspname = table_schema
 			WHERE 
-				table_schema = '$2' AND table_name = $3
+				table_schema = $2 AND table_name = $3
 			GROUP BY 
 				c.relname;
 		`, schema.FromSchemaName, schema.FromSchemaName, tableName).Scan(&tableSQL)
@@ -195,7 +195,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 				AND kcu.table_schema = tc.table_schema
 				AND kcu.table_name = tc.table_name
 			WHERE
-				tc.constraint_type = 'PRIMARY KEY' AND tc.table_schema = '$2' AND tc.table_name = $3
+				tc.constraint_type = 'PRIMARY KEY' AND tc.table_schema = $2 AND tc.table_name = $3
 			GROUP BY
 				tc.table_name, tc.constraint_name;
 		`, schema.FromSchemaName, schema.FromSchemaName, tableName)
@@ -235,7 +235,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 		colRows, err := schema.DB.QueryContext(ctx, `
 			SELECT column_name
 			FROM information_schema.columns
-			WHERE table_schema = '$1' AND table_name = $2
+			WHERE table_schema = $1 AND table_name = $2
 			ORDER BY ordinal_position
 		`, schema.FromSchemaName, tableName)
 
@@ -287,7 +287,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 			information_schema.constraint_column_usage ccu ON ccu.constraint_name = tc.constraint_name
 			AND ccu.table_schema = tc.table_schema
 		WHERE
-			tc.constraint_type = 'FOREIGN KEY' AND tc.table_schema = '$2'
+			tc.constraint_type = 'FOREIGN KEY' AND tc.table_schema = $2
 		GROUP BY
 			tc.table_name, tc.constraint_name, ccu.table_name;
 	`, schema.FromSchemaName, schema.FromSchemaName)
@@ -320,7 +320,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
     FROM
         pg_indexes
     WHERE
-        schemaname = '$2' AND indexname NOT IN (
+        schemaname = $2 AND indexname NOT IN (
             SELECT conname FROM pg_constraint WHERE contype = 'p'
         );
 `, schema.FromSchemaName, schema.FromSchemaName)
@@ -352,7 +352,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 		err := schema.DB.QueryRowContext(ctx, `
 			SELECT 'CREATE VIEW ' || $1 || '.' || table_name || ' AS ' || view_definition
 			FROM information_schema.views
-			WHERE table_schema = '$2' AND table_name = $3
+			WHERE table_schema = $2 AND table_name = $3
 		`, schema.FromSchemaName, schema.FromSchemaName, viewName).Scan(&viewDef)
 
 		if err != nil {
