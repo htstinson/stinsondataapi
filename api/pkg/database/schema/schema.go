@@ -143,7 +143,7 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 		var tableSQL string
 		err := schema.DB.QueryRowContext(ctx, `
 			SELECT 
-				'CREATE TABLE ' || $1 || '.' || c.relname || ' (' || 
+				'CREATE TABLE IF NOT EXISTS ' || $1 || '.' || c.relname || ' (' || 
 				string_agg(
 					column_name || ' ' || data_type || 
 					CASE 
