@@ -150,8 +150,6 @@ func (h *Handler) Create_Schema(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//h.db.Create_Schema(ctx, customer.Id)
-
 	db := h.db.(*database.Database).DB
 
 	schema := schema.Schema{

@@ -3,6 +3,7 @@ package schema
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 
 	"strings"
@@ -16,6 +17,10 @@ type Schema struct {
 // CopySchema creates a new schema with the specified name and copies all tables,
 // sequences, functions, and data from the public schema to the new schema.
 func (schema *Schema) CopySchema(ctx context.Context) error {
+	fmt.Println("schema CopySchema")
+
+	return errors.New("temp stop")
+
 	// Step 1: Create the new schema
 	fmt.Printf("Creating schema: %s", schema.SchemaName)
 	_, err := schema.DB.ExecContext(ctx, fmt.Sprintf("CREATE SCHEMA IF NOT EXISTS %s", schema.SchemaName))
