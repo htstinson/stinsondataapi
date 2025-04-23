@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"log"
 
 	"strings"
 )
@@ -307,23 +308,18 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 	}
 
 	// Step 8: Create indexes
-	fmt.Println("Creating indexes")
+	log.Println("Creating indexes")
 	idxRows, err := schema.DB.QueryContext(ctx, `
-		SELECT
-			'CREATE INDEX ' || indexname || ' ON ' || $1 || '.' || tablename || ' USING ' || 
-			indexdef.substring(indexdef.position(' USING ') + 7)
-		FROM
-			pg_indexes
-		JOIN
-			(SELECT indexname, position(' USING ' IN indexdef) as position, 
-			substring(indexdef from position(' USING ' in indexdef) for 100) as indexdef
-			FROM pg_indexes WHERE schemaname = 'public') as indexdef
-		USING (indexname)
-		WHERE
-			schemaname = 'public' AND indexname NOT IN (
-				SELECT conname FROM pg_constraint WHERE contype = 'p'
-			);
-	`, schema.SchemaName)
+    SELECT
+        'CREATE INDEX ' || indexname || ' ON ' || $1 || '.' || tablename || ' USING ' || 
+        substring(indexdef from position(' USING ' in indexdef) for 999)
+    FROM
+        pg_indexes
+    WHERE
+        schemaname = 'public' AND indexname NOT IN (
+            SELECT conname FROM pg_constraint WHERE contype = 'p'
+        );
+`, schema.SchemaName)
 
 	if err != nil {
 		return fmt.Errorf("failed to get indexes: %w", err)
