@@ -3,7 +3,6 @@ package schema
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 
 	"strings"
@@ -25,8 +24,6 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 	if err != nil {
 		return fmt.Errorf("failed to create schema: %w", err)
 	}
-
-	return errors.New("temp stop")
 
 	// Step 2: Get list of all tables in public schema
 	fmt.Println("Getting list of tables in public schema")
