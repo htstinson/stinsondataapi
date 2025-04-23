@@ -152,7 +152,15 @@ func (h *Handler) Create_Schema(w http.ResponseWriter, r *http.Request) {
 
 	//h.db.Create_Schema(ctx, customer.Id)
 
-	db := h.db.(*database.Database)
+	db := h.db.(*database.Database).DB
 
-	schema.CopySchema(ctx, db.DB, customer.Id)
+	schema := schema.Schema{
+		DB:         db,
+		SchemaName: customer.Id,
+	}
+
+	err = schema.CopySchema(ctx)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }

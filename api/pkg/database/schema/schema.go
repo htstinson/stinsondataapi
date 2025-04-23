@@ -15,17 +15,17 @@ type Schema struct {
 
 // CopySchema creates a new schema with the specified name and copies all tables,
 // sequences, functions, and data from the public schema to the new schema.
-func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
+func (schema *Schema) CopySchema(ctx context.Context) error {
 	// Step 1: Create the new schema
-	fmt.Printf("Creating schema: %s", SchemaName)
-	_, err := db.ExecContext(ctx, fmt.Sprintf("CREATE SCHEMA IF NOT EXISTS %s", SchemaName))
+	fmt.Printf("Creating schema: %s", schema.SchemaName)
+	_, err := schema.DB.ExecContext(ctx, fmt.Sprintf("CREATE SCHEMA IF NOT EXISTS %s", schema.SchemaName))
 	if err != nil {
 		return fmt.Errorf("failed to create schema: %w", err)
 	}
 
 	// Step 2: Get list of all tables in public schema
 	log.Println("Getting list of tables in public schema")
-	rows, err := db.QueryContext(ctx, "SELECT tablename FROM pg_tables WHERE schemaname = 'public'")
+	rows, err := schema.DB.QueryContext(ctx, "SELECT tablename FROM pg_tables WHERE schemaname = 'public'")
 	if err != nil {
 		return fmt.Errorf("failed to get tables: %w", err)
 	}
@@ -45,7 +45,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 
 	// Step 3: Get sequences
 	log.Println("Getting list of sequences in public schema")
-	seqRows, err := db.QueryContext(ctx, "SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = 'public'")
+	seqRows, err := schema.DB.QueryContext(ctx, "SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = 'public'")
 	if err != nil {
 		return fmt.Errorf("failed to get sequences: %w", err)
 	}
@@ -65,7 +65,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 
 	// Step 4: Get views
 	log.Println("Getting list of views in public schema")
-	viewRows, err := db.QueryContext(ctx, "SELECT table_name FROM information_schema.views WHERE table_schema = 'public'")
+	viewRows, err := schema.DB.QueryContext(ctx, "SELECT table_name FROM information_schema.views WHERE table_schema = 'public'")
 	if err != nil {
 		return fmt.Errorf("failed to get views: %w", err)
 	}
@@ -87,7 +87,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 	log.Println("Creating tables in new schema")
 
 	// Start a transaction for schema creation
-	tx, err := db.BeginTx(ctx, nil)
+	tx, err := schema.DB.BeginTx(ctx, nil)
 	if err != nil {
 		return fmt.Errorf("failed to begin transaction: %w", err)
 	}
@@ -106,22 +106,22 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 		// Get the current value of the sequence
 		var lastVal int64
 		var isCalled bool
-		err := db.QueryRowContext(ctx, fmt.Sprintf("SELECT last_value, is_called FROM public.%s", seqName)).Scan(&lastVal, &isCalled)
+		err := schema.DB.QueryRowContext(ctx, fmt.Sprintf("SELECT last_value, is_called FROM public.%s", seqName)).Scan(&lastVal, &isCalled)
 		if err != nil {
 			return fmt.Errorf("failed to get sequence value: %w", err)
 		}
 
 		// Create the sequence in the new schema
-		_, err = tx.ExecContext(ctx, fmt.Sprintf("CREATE SEQUENCE %s.%s", SchemaName, seqName))
+		_, err = tx.ExecContext(ctx, fmt.Sprintf("CREATE SEQUENCE %s.%s", schema.SchemaName, seqName))
 		if err != nil {
 			return fmt.Errorf("failed to create sequence: %w", err)
 		}
 
 		// Set the sequence to match the original
 		if isCalled {
-			_, err = tx.ExecContext(ctx, fmt.Sprintf("SELECT setval('%s.%s', %d, true)", SchemaName, seqName, lastVal))
+			_, err = tx.ExecContext(ctx, fmt.Sprintf("SELECT setval('%s.%s', %d, true)", schema.SchemaName, seqName, lastVal))
 		} else {
-			_, err = tx.ExecContext(ctx, fmt.Sprintf("SELECT setval('%s.%s', %d, false)", SchemaName, seqName, lastVal))
+			_, err = tx.ExecContext(ctx, fmt.Sprintf("SELECT setval('%s.%s', %d, false)", schema.SchemaName, seqName, lastVal))
 		}
 		if err != nil {
 			return fmt.Errorf("failed to set sequence value: %w", err)
@@ -134,7 +134,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 
 		// Get table creation SQL
 		var tableSQL string
-		err := db.QueryRowContext(ctx, `
+		err := schema.DB.QueryRowContext(ctx, `
 			SELECT 
 				'CREATE TABLE ' || $1 || '.' || c.relname || ' (' || 
 				string_agg(
@@ -163,7 +163,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 				table_schema = 'public' AND table_name = $2
 			GROUP BY 
 				c.relname;
-		`, SchemaName, tableName).Scan(&tableSQL)
+		`, schema.SchemaName, tableName).Scan(&tableSQL)
 
 		if err != nil {
 			return fmt.Errorf("failed to get table definition for %s: %w", tableName, err)
@@ -176,7 +176,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 		}
 
 		// Get primary key constraints
-		rows, err := db.QueryContext(ctx, `
+		rows, err := schema.DB.QueryContext(ctx, `
 			SELECT
 				'ALTER TABLE ' || $1 || '.' || tc.table_name || 
 				' ADD CONSTRAINT ' || tc.constraint_name || ' PRIMARY KEY (' ||
@@ -191,7 +191,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 				tc.constraint_type = 'PRIMARY KEY' AND tc.table_schema = 'public' AND tc.table_name = $2
 			GROUP BY
 				tc.table_name, tc.constraint_name;
-		`, SchemaName, tableName)
+		`, schema.SchemaName, tableName)
 
 		if err != nil {
 			return fmt.Errorf("failed to get primary key constraints: %w", err)
@@ -225,7 +225,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 		fmt.Printf("Copying data for table: %s", tableName)
 
 		// Get columns for this table
-		colRows, err := db.QueryContext(ctx, `
+		colRows, err := schema.DB.QueryContext(ctx, `
 			SELECT column_name
 			FROM information_schema.columns
 			WHERE table_schema = 'public' AND table_name = $1
@@ -251,10 +251,10 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 		columnList := strings.Join(columns, ", ")
 
 		// Copy data using INSERT INTO ... SELECT
-		_, err = db.ExecContext(ctx, fmt.Sprintf(`
+		_, err = schema.DB.ExecContext(ctx, fmt.Sprintf(`
 			INSERT INTO %s.%s (%s)
 			SELECT %s FROM public.%s
-		`, SchemaName, tableName, columnList, columnList, tableName))
+		`, schema.SchemaName, tableName, columnList, columnList, tableName))
 
 		if err != nil {
 			// Log error but continue with other tables
@@ -264,7 +264,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 
 	// Step 7: Create foreign key constraints
 	log.Println("Creating foreign key constraints")
-	fkRows, err := db.QueryContext(ctx, `
+	fkRows, err := schema.DB.QueryContext(ctx, `
 		SELECT
 			'ALTER TABLE ' || $1 || '.' || tc.table_name || 
 			' ADD CONSTRAINT ' || tc.constraint_name || ' FOREIGN KEY (' ||
@@ -283,7 +283,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 			tc.constraint_type = 'FOREIGN KEY' AND tc.table_schema = 'public'
 		GROUP BY
 			tc.table_name, tc.constraint_name, ccu.table_name;
-	`, SchemaName)
+	`, schema.SchemaName)
 
 	if err != nil {
 		return fmt.Errorf("failed to get foreign key constraints: %w", err)
@@ -297,7 +297,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 			return fmt.Errorf("failed to scan foreign key SQL: %w", err)
 		}
 
-		_, err = db.ExecContext(ctx, fkSQL)
+		_, err = schema.DB.ExecContext(ctx, fkSQL)
 		if err != nil {
 			// Log error but continue with other constraints
 			fmt.Printf("Warning: Failed to apply foreign key constraint: %v", err)
@@ -306,7 +306,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 
 	// Step 8: Create indexes
 	log.Println("Creating indexes")
-	idxRows, err := db.QueryContext(ctx, `
+	idxRows, err := schema.DB.QueryContext(ctx, `
 		SELECT
 			'CREATE INDEX ' || indexname || ' ON ' || $1 || '.' || tablename || ' USING ' || 
 			indexdef.substring(indexdef.position(' USING ') + 7)
@@ -321,7 +321,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 			schemaname = 'public' AND indexname NOT IN (
 				SELECT conname FROM pg_constraint WHERE contype = 'p'
 			);
-	`, SchemaName)
+	`, schema.SchemaName)
 
 	if err != nil {
 		return fmt.Errorf("failed to get indexes: %w", err)
@@ -335,7 +335,7 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 			return fmt.Errorf("failed to scan index SQL: %w", err)
 		}
 
-		_, err = db.ExecContext(ctx, idxSQL)
+		_, err = schema.DB.ExecContext(ctx, idxSQL)
 		if err != nil {
 			// Log error but continue with other indexes
 			fmt.Printf("Warning: Failed to create index: %v", err)
@@ -347,26 +347,26 @@ func CopySchema(ctx context.Context, db *sql.DB, SchemaName string) error {
 	for _, viewName := range views {
 		// Get view definition
 		var viewDef string
-		err := db.QueryRowContext(ctx, `
+		err := schema.DB.QueryRowContext(ctx, `
 			SELECT 'CREATE VIEW ' || $1 || '.' || table_name || ' AS ' || view_definition
 			FROM information_schema.views
 			WHERE table_schema = 'public' AND table_name = $2
-		`, SchemaName, viewName).Scan(&viewDef)
+		`, schema.SchemaName, viewName).Scan(&viewDef)
 
 		if err != nil {
 			return fmt.Errorf("failed to get view definition for %s: %w", viewName, err)
 		}
 
 		// Rewrite the view definition to reference the new schema
-		viewDef = strings.Replace(viewDef, "public.", SchemaName+".", -1)
+		viewDef = strings.Replace(viewDef, "public.", schema.SchemaName+".", -1)
 
 		// Create the view
-		_, err = db.ExecContext(ctx, viewDef)
+		_, err = schema.DB.ExecContext(ctx, viewDef)
 		if err != nil {
 			fmt.Printf("Warning: Failed to create view %s: %v", viewName, err)
 		}
 	}
 
-	fmt.Printf("Schema '%s' successfully created and populated", SchemaName)
+	fmt.Printf("Schema '%s' successfully created and populated", schema.SchemaName)
 	return nil
 }
