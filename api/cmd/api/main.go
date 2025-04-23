@@ -59,12 +59,13 @@ func main() {
 
 	// Initialize database
 	config := database.Config{
-		Host:     RDSLogin.Host,
-		Port:     RDSLogin.Port,
-		User:     RDSLogin.Username,
-		Password: RDSLogin.Password,
-		DBName:   "apidb",
-		SSLMode:  "require",
+		Host:        RDSLogin.Host,
+		Port:        RDSLogin.Port,
+		User:        RDSLogin.Username,
+		Password:    RDSLogin.Password,
+		Search_Path: "common",
+		DBName:      "apidb",
+		SSLMode:     "require",
 	}
 
 	db, err := database.New(config)

@@ -89,18 +89,19 @@ type Database struct {
 }
 
 type Config struct {
-	Host     string
-	Port     int
-	User     string
-	Password string
-	DBName   string
-	SSLMode  string
+	Host        string
+	Port        int
+	User        string
+	Password    string
+	DBName      string
+	Search_Path string
+	SSLMode     string
 }
 
 func New(cfg Config) (Repository, error) {
 	connStr := fmt.Sprintf(
-		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s\n",
-		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName, cfg.SSLMode,
+		"host=%s port=%d user=%s password=%s dbname=%s search_path=%s sslmode=%s\n",
+		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName, cfg.Search_Path, cfg.SSLMode,
 	)
 
 	db, err := sql.Open("postgres", connStr)
