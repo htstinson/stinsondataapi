@@ -535,12 +535,12 @@ func (schema *Schema) createIndexes(ctx context.Context) error {
 	// Check if source schema has any indexes
 	var idxCount int
 	err := schema.DB.QueryRowContext(ctx, `
-		SELECT COUNT(*)
-		FROM pg_indexes
-		WHERE schemaname = $1 AND indexname NOT IN (
-			SELECT conname FROM pg_constraint WHERE contype = 'p'
-		)
-	`, schema.FromSchemaName).Scan(&idxCount)
+        SELECT COUNT(*)
+        FROM pg_indexes
+        WHERE schemaname = $1 AND indexname NOT IN (
+            SELECT conname FROM pg_constraint WHERE contype = 'p'
+        ) AND indexname NOT LIKE '%_key' AND indexname NOT LIKE 'pg_%'
+    `, schema.FromSchemaName).Scan(&idxCount)
 
 	if err != nil {
 		return fmt.Errorf("failed to check for indexes: %w", err)
@@ -551,20 +551,7 @@ func (schema *Schema) createIndexes(ctx context.Context) error {
 		return nil
 	}
 
-	// Start a transaction for creating indexes
-	tx, err := schema.DB.BeginTx(ctx, nil)
-	if err != nil {
-		return fmt.Errorf("failed to begin transaction: %w", err)
-	}
-
-	// Defer a rollback in case anything fails
-	defer func() {
-		if err != nil {
-			tx.Rollback()
-		}
-	}()
-
-	// This query extracts the index definition and modifies it to use the target schema
+	// Get indexes that are NOT from unique constraints (filter out names ending with _key)
 	idxRows, err := schema.DB.QueryContext(ctx, `
         SELECT 
             regexp_replace(
@@ -579,6 +566,7 @@ func (schema *Schema) createIndexes(ctx context.Context) error {
             indexname NOT IN (
                 SELECT conname FROM pg_constraint WHERE contype = 'p'
             ) AND
+            indexname NOT LIKE '%_key' AND
             indexname NOT LIKE 'pg_%';
     `, schema.ToSchemaName, schema.FromSchemaName)
 
@@ -587,7 +575,7 @@ func (schema *Schema) createIndexes(ctx context.Context) error {
 	}
 	defer idxRows.Close()
 
-	// Create indexes
+	// Create indexes - handle each in a separate transaction
 	var appliedCount int
 	for idxRows.Next() {
 		var idxSQL string
@@ -595,22 +583,25 @@ func (schema *Schema) createIndexes(ctx context.Context) error {
 			return fmt.Errorf("failed to scan index SQL: %w", err)
 		}
 
+		// Use a separate transaction for each index
+		tx, err := schema.DB.BeginTx(ctx, nil)
+		if err != nil {
+			fmt.Printf("Warning: Failed to begin transaction for index: %v\n", err)
+			continue
+		}
+
 		_, err = tx.ExecContext(ctx, idxSQL)
 		if err != nil {
+			tx.Rollback()
 			fmt.Printf("Warning: Failed to create index: %v\n", err)
-			// Continue with other indexes instead of failing completely
 		} else {
-			appliedCount++
+			err = tx.Commit()
+			if err != nil {
+				fmt.Printf("Warning: Failed to commit index transaction: %v\n", err)
+			} else {
+				appliedCount++
+			}
 		}
-	}
-
-	if err = idxRows.Err(); err != nil {
-		return fmt.Errorf("error iterating indexes: %w", err)
-	}
-
-	// Commit the transaction
-	if err = tx.Commit(); err != nil {
-		return fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
 	fmt.Printf("Successfully created %d indexes\n", appliedCount)
