@@ -19,14 +19,14 @@ type Schema struct {
 func (schema *Schema) CopySchema(ctx context.Context) error {
 	fmt.Println("schema CopySchema")
 
-	return errors.New("temp stop")
-
 	// Step 1: Create the new schema
 	fmt.Printf("Creating schema: %s", schema.SchemaName)
 	_, err := schema.DB.ExecContext(ctx, fmt.Sprintf("CREATE SCHEMA IF NOT EXISTS %s", schema.SchemaName))
 	if err != nil {
 		return fmt.Errorf("failed to create schema: %w", err)
 	}
+
+	return errors.New("temp stop")
 
 	// Step 2: Get list of all tables in public schema
 	fmt.Println("Getting list of tables in public schema")
