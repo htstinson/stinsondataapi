@@ -157,7 +157,7 @@ func (h *Handler) Create_Schema(w http.ResponseWriter, r *http.Request) {
 
 	schema := schema.Schema{
 		DB:             db,
-		FromSchemaName: "common",
+		FromSchemaName: "customer_template",
 		ToSchemaName:   schema_name,
 	}
 
