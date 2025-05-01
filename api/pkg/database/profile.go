@@ -79,6 +79,15 @@ func (d *Database) CreateProfile(ctx context.Context, schema_name string, parent
 		return nil, fmt.Errorf("error updating parent: %w", err)
 	}
 
+	query = fmt.Sprintf(`INSERT INTO %s.customers (name, parent_id) VALUES ($1, $2)`, schema_name)
+
+	fmt.Println(query)
+
+	_, err = d.DB.ExecContext(ctx, query, "Individual Contacts", profile.Id)
+	if err != nil {
+		return nil, fmt.Errorf("error updating customers: %w", err)
+	}
+
 	return profile, nil
 
 }
