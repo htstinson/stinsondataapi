@@ -154,6 +154,7 @@ func (h *Handler) Create_Schema(w http.ResponseWriter, r *http.Request) {
 	db := h.db.(*database.Database).DB
 
 	schema_name := strings.ReplaceAll(customer.Id, "-", "_")
+	schema_name = strings.ReplaceAll(schema_name, " ", "")
 
 	schema := schema.Schema{
 		DB:             db,
