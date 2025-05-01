@@ -111,6 +111,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(user.ID, roles)
+
 	token, err := h.auth.GenerateToken(*user, roles)
 	if err != nil {
 		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
