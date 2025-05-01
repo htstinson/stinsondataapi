@@ -70,11 +70,11 @@ func (d *Database) CreateProfile(ctx context.Context, schema_name string, parent
 		return nil, fmt.Errorf("error creating profile: %w", err)
 	}
 
-	query = fmt.Sprintf(`UPDATE public.customers SET schema_name = '%s' WHERE id = '%s')`, schema_name, parent_id)
+	query = `UPDATE public.customers SET schema_name = $1 WHERE id = $2)`
 
 	fmt.Println(query)
 
-	_, err = d.DB.ExecContext(ctx, query)
+	_, err = d.DB.ExecContext(ctx, query, schema_name, parent_id)
 	if err != nil {
 		return nil, fmt.Errorf("error updating parent: %w", err)
 	}
