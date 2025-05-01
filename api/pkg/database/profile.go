@@ -70,7 +70,7 @@ func (d *Database) CreateProfile(ctx context.Context, schema_name string, parent
 		return nil, fmt.Errorf("error creating profile: %w", err)
 	}
 
-	query = `UPDATE public.customers SET schema_name = $1 WHERE id = $2)`
+	query = `UPDATE public.customers SET schema_name = $1 WHERE id = $2`
 
 	fmt.Println(query)
 
