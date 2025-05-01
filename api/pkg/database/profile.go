@@ -51,7 +51,7 @@ func (d *Database) GetProfileByParent(ctx context.Context, id string) (*model.Pr
 	return &profile, nil
 }
 
-func (d *Database) CreateProfile(ctx context.Context, parent_id string) (*model.Profile, error) {
+func (d *Database) CreateProfile(ctx context.Context, schema_name string, parent_id string) (*model.Profile, error) {
 	fmt.Println("d CreateProfile")
 
 	profile := &model.Profile{
@@ -61,18 +61,11 @@ func (d *Database) CreateProfile(ctx context.Context, parent_id string) (*model.
 		ModifiedAt: time.Now(),
 	}
 
-	query := `
-        INSERT INTO profiles (id, parent_id, created_at, modified_at) VALUES ($1, $2, &3, $4)
-    `
+	query := fmt.Sprintf(`INSERT INTO profiles (id, parent_id, created_at, modified_at) VALUES (%s, %s, %v, %v)`, profile.Id, profile.ParentId, profile.CreatedAt, profile.ModifiedAt)
 
-	_, err := d.DB.ExecContext(ctx, query,
-		profile.Id,
-		profile.ParentId,
-		profile.CreatedAt,
-		profile.ModifiedAt,
-	)
+	_, err := d.DB.ExecContext(ctx, query)
 	if err != nil {
-		return nil, fmt.Errorf("error creating customer: %w", err)
+		return nil, fmt.Errorf("error creating profile: %w", err)
 	}
 
 	return profile, nil

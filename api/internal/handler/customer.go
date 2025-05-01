@@ -168,7 +168,7 @@ func (h *Handler) Create_Schema(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	_, err = h.db.CreateProfile(ctx, schema_name)
+	_, err = h.db.CreateProfile(ctx, schema_name, customer.Id)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
