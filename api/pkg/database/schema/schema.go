@@ -344,6 +344,7 @@ func (schema *Schema) createStructures(ctx context.Context, sequences []string, 
 		}
 		pkRows.Close()
 
+		fmt.Println("adding triggers")
 		triggerSQL := fmt.Sprintf(`		
 		CREATE TRIGGER update_profile_modified 
 		BEFORE UPDATE ON %s.%s 
