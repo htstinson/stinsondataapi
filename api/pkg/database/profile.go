@@ -62,7 +62,7 @@ func (d *Database) CreateProfile(ctx context.Context, parent_id string) (*model.
 	}
 
 	query := `
-        INSERT INTO profile (id, parent_id, created_at, modified_at) VALUES ($1, $2, &3, $4)
+        INSERT INTO profiles (id, parent_id, created_at, modified_at) VALUES ($1, $2, &3, $4)
     `
 
 	_, err := d.DB.ExecContext(ctx, query,
