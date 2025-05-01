@@ -61,11 +61,11 @@ func (d *Database) CreateProfile(ctx context.Context, schema_name string, parent
 		ModifiedAt: time.Now(),
 	}
 
-	query := fmt.Sprintf(`INSERT INTO %s.profile (id, parent_id, created_at, modified_at) VALUES ('%s', '%s', '%v', '%v')`, schema_name, profile.Id, profile.ParentId, profile.CreatedAt, profile.ModifiedAt)
+	query := fmt.Sprintf(`INSERT INTO %s.profile (id, parent_id, created_at, modified_at) VALUES ($1, $2, $3, $4)`, schema_name)
 
 	fmt.Println(query)
 
-	_, err := d.DB.ExecContext(ctx, query)
+	_, err := d.DB.ExecContext(ctx, query, profile.Id, profile.ParentId, profile.CreatedAt, profile.ModifiedAt)
 	if err != nil {
 		return nil, fmt.Errorf("error creating profile: %w", err)
 	}
