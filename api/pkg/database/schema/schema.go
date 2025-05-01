@@ -344,7 +344,12 @@ func (schema *Schema) createStructures(ctx context.Context, sequences []string, 
 		}
 		pkRows.Close()
 
-		triggerSQL := fmt.Sprintf("CREATE TRIGGER update_profile_modified BEFORE UPDATE ON %s.%s FOR EACH ROW EXECUTE FUNCTION update_modified_column();", schema.ToSchemaName, tableName)
+		triggerSQL := fmt.Sprintf(`		
+		CREATE TRIGGER update_profile_modified 
+		BEFORE UPDATE ON %s.%s 
+		FOR EACH ROW 
+		EXECUTE FUNCTION public.update_modified_column();
+		`, schema.ToSchemaName, tableName)
 
 		// Apply trigger
 		_, err = tx.ExecContext(ctx, triggerSQL)
