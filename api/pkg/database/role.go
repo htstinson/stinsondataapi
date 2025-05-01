@@ -13,13 +13,13 @@ import (
 //Roles
 
 func (d *Database) SelectRolesByUser(ctx context.Context, userId string) (model.Roles, error) {
-	fmt.Println("d SelectRoles")
+	fmt.Println("d SelectRolesByUser")
 
 	var roles = model.Roles{}
 
 	query := `
         SELECT user_id, username, role_name
-        FROM user_roles_view
+        FROM user_customer_roles_view
         WHERE user_id = $1
     `
 
