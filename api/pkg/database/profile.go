@@ -61,7 +61,7 @@ func (d *Database) CreateProfile(ctx context.Context, schema_name string, parent
 		ModifiedAt: time.Now(),
 	}
 
-	query := fmt.Sprintf(`INSERT INTO profiles (id, parent_id, created_at, modified_at) VALUES ('%s', '%s', %v, %v)`, profile.Id, profile.ParentId, profile.CreatedAt, profile.ModifiedAt)
+	query := fmt.Sprintf(`INSERT INTO profiles (id, parent_id, created_at, modified_at) VALUES ('%s', '%s', '%v', '%v')`, profile.Id, profile.ParentId, profile.CreatedAt, profile.ModifiedAt)
 
 	fmt.Println(query)
 
