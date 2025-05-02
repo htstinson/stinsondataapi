@@ -145,13 +145,13 @@ func main() {
 	protected.HandleFunc("/profile", h.GetUser).Methods("GET", "OPTIONS")
 
 	// UserSubscriber
-	protected.HandleFunc("/usercustomerview", h.SelectUserSubscriberView).Methods("GET", "OPTIONS")
-	protected.HandleFunc("/usercustomer/{id}", h.UpdateUserSubscriber).Methods("PUT", "OPTIONS")
-	protected.HandleFunc("/usercustomer", h.CreateUserSubscriber).Methods("POST", "OPTIONS")
-	protected.HandleFunc("/usercustomer/{id}", h.DeleteUserSubscriber).Methods("DELETE")
+	protected.HandleFunc("/usersubscriberview", h.SelectUserSubscriberView).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/usersubscriber/{id}", h.UpdateUserSubscriber).Methods("PUT", "OPTIONS")
+	protected.HandleFunc("/usersubscriber", h.CreateUserSubscriber).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/usersubscriber/{id}", h.DeleteUserSubscriber).Methods("DELETE")
 
 	// UserSubscriberRoles
-	protected.HandleFunc("/usercustomerrolesview", h.SelectUserSubscriberRolesView).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/usersubscriberrolesview", h.SelectUserSubscriberRolesView).Methods("GET", "OPTIONS")
 
 	// Customer
 
