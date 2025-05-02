@@ -13,7 +13,7 @@ import (
 func (d *Database) SelectUserSubscriberView(ctx context.Context, user_id string, limit int, offset int) ([]model.User_Subscriber_View, error) {
 	fmt.Println("database.go SelectUserSubscriberView()")
 
-	where_clause := ""
+	where_clause := " "
 
 	if user_id != "" {
 		_, err := ValidateUUID(user_id)
