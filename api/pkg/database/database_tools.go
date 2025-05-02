@@ -2,10 +2,12 @@ package database
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -209,4 +211,27 @@ func copyData(db *sql.DB, newSchema string) error {
 	}
 
 	return nil
+}
+
+// ValidateUUID checks if the provided string is a valid UUID
+// Returns the validated UUID string and nil if valid
+// Returns empty string and error if invalid
+func ValidateUUID(uuid string) (string, error) {
+	// Remove any whitespace
+	uuid = strings.TrimSpace(uuid)
+
+	// Check if empty
+	if uuid == "" {
+		return "", errors.New("uuid cannot be empty")
+	}
+
+	// Standard UUID format: 8-4-4-4-12 hexadecimal digits
+	// Example: 550e8400-e29b-41d4-a716-446655440000
+	uuidPattern := regexp.MustCompile(`^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$`)
+
+	if !uuidPattern.MatchString(uuid) {
+		return "", fmt.Errorf("invalid UUID format: %s", uuid)
+	}
+
+	return uuid, nil
 }

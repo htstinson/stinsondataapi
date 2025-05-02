@@ -14,9 +14,27 @@ func (h *Handler) SelectUserSubscriberView(w http.ResponseWriter, r *http.Reques
 	fmt.Println("SelectUserSubscriberView")
 
 	ctx := r.Context()
-	user_subscriber_views, err := h.db.SelectUserSubscriberView(ctx, 100, 0)
+	user_subscriber_views, err := h.db.SelectUserSubscriberView(ctx, "", 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select user_subscriber_view")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, user_subscriber_views)
+
+}
+
+func (h *Handler) SelectUserSubscriberViewByUserId(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("SelectUserSubscriberViewByUserId")
+
+	ctx := r.Context()
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	user_subscriber_views, err := h.db.SelectUserSubscriberView(ctx, id, 100, 0)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to select user_subscriber_view by userid")
 		return
 	}
 

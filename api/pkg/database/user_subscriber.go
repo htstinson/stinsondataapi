@@ -10,12 +10,25 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (d *Database) SelectUserSubscriberView(ctx context.Context, limit int, offset int) ([]model.User_Subscriber_View, error) {
+func (d *Database) SelectUserSubscriberView(ctx context.Context, user_id string, limit int, offset int) ([]model.User_Subscriber_View, error) {
 	fmt.Println("database.go SelectUserSubscriberView()")
-	rows, err := d.DB.QueryContext(ctx,
-		"SELECT id, user_id, subscriber_id, user_username, subscriber_name FROM user_subscriber_view ORDER BY user_username, subscriber_name ASC LIMIT $1 OFFSET $2",
-		limit, offset,
-	)
+
+	where_clause := ""
+
+	if user_id != "" {
+		_, err := ValidateUUID(user_id)
+		if err != nil {
+			fmt.Printf("Invalid UUID error: %v\n", err)
+			return nil, err
+		} else {
+			fmt.Println(user_id, "validated.")
+			where_clause = fmt.Sprintf(` where user_id = '%s' `, user_id)
+		}
+	}
+
+	query := fmt.Sprintf("SELECT id, user_id, subscriber_id, user_username, subscriber_name FROM user_subscriber_view%sORDER BY user_username, subscriber_name ASC LIMIT $1 OFFSET $2", where_clause)
+
+	rows, err := d.DB.QueryContext(ctx, query, limit, offset)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, fmt.Errorf("error listing rows: %w", err)

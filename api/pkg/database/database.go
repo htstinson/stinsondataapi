@@ -28,7 +28,7 @@ type Repository interface {
 	DeleteUser(ctx context.Context, id string) error
 
 	// User_Subscriber
-	SelectUserSubscriberView(ctx context.Context, limit, offset int) ([]model.User_Subscriber_View, error)
+	SelectUserSubscriberView(ctx context.Context, user_id string, limit, offset int) ([]model.User_Subscriber_View, error)
 	LookupUserSubscribersByUserId(ctx context.Context, user_id string) ([]model.User_Subscriber_View, error)
 	UpdateUserSubscriber(ctx context.Context, user_subscriber model.User_Subscriber) error
 	GetUserSubscriber(ctx context.Context, id string) (*model.User_Subscriber, error)
