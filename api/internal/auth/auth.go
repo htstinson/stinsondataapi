@@ -20,10 +20,11 @@ var (
 )
 
 type Claims struct {
-	UserID     string `json:"user_id"`
-	Username   string `json:"username"`
-	Roles      string `json:"roles"`
-	IP_Address string `json:"ip_address"`
+	UserID     string                       `json:"user_id"`
+	Username   string                       `json:"username"`
+	Roles      string                       `json:"roles"`
+	IP_Address string                       `json:"ip_address"`
+	Subscribed []model.User_Subscriber_View `json:"subscribed"`
 	jwt.RegisteredClaims
 }
 
@@ -40,7 +41,7 @@ func New(config Config) *JWTAuth {
 	return &JWTAuth{Config: config}
 }
 
-func (a *JWTAuth) GenerateToken(user model.User, roles model.Roles) (string, error) {
+func (a *JWTAuth) GenerateToken(user model.User, roles model.Roles, subscribed []model.User_Subscriber_View) (string, error) {
 	now := time.Now()
 
 	fmt.Println("GenerateToken")
@@ -53,6 +54,7 @@ func (a *JWTAuth) GenerateToken(user model.User, roles model.Roles) (string, err
 		Username:   user.Username,
 		Roles:      roles.Names,
 		IP_Address: user.IP_address,
+		Subscribed: subscribed,
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(now.Add(a.Config.TokenDuration)),
 			IssuedAt:  jwt.NewNumericDate(now),
