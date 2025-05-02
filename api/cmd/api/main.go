@@ -151,7 +151,7 @@ func main() {
 	protected.HandleFunc("/usersubscriber/{id}", h.DeleteUserSubscriber).Methods("DELETE")
 
 	// UserSubscriberRoles
-	protected.HandleFunc("/usersubscriberrolesview", h.SelectUserSubscriberRolesView).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/usersubscriberroleview", h.SelectUserSubscriberRolesView).Methods("GET", "OPTIONS")
 
 	// Customer
 
