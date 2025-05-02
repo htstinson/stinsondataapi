@@ -27,24 +27,28 @@ type Repository interface {
 	UpdateUser(ctx context.Context, item *model.User) error
 	DeleteUser(ctx context.Context, id string) error
 
-	// User_Customer
-	SelectUserCustomerView(ctx context.Context, limit, offset int) ([]model.User_Customer_View, error)
-	UpdateUserCustomer(ctx context.Context, user_customer model.User_Customer) error
-	GetUserCustomer(ctx context.Context, id string) (*model.User_Customer, error)
-	CreateUserCustomer(ctx context.Context, user_id string, customer_id string) (*model.User_Customer, error)
-	LookupUserCustomer(ctx context.Context, user_id string, customer_id string) (*model.User_Customer, error)
-	DeleteUserCustomer(ctx context.Context, id string) error
+	// User_Subscriber
+	SelectUserSubscriberView(ctx context.Context, limit, offset int) ([]model.User_Subscriber_View, error)
+	LookupUserSubscribersByUserId(ctx context.Context, user_id string) ([]model.User_Subscriber_View, error)
+	UpdateUserSubscriber(ctx context.Context, user_subscriber model.User_Subscriber) error
+	GetUserSubscriber(ctx context.Context, id string) (*model.User_Subscriber, error)
+	CreateUserSubscriber(ctx context.Context, user_id string, subscriber_id string) (*model.User_Subscriber, error)
+	LookupUserSubscriber(ctx context.Context, user_id string, subscriber_id string) (*model.User_Subscriber, error)
+	DeleteUserSubscriber(ctx context.Context, id string) error
 
-	// User_Customer_Roles
-	SelectUserCustomerRolesView(ctx context.Context, limit, offset int) ([]model.User_Customer_Roles_View, error)
+	// User_Subscriber_Roles
+	SelectUserSubscriberRolesView(ctx context.Context, limit, offset int) ([]model.User_Subscriber_Roles_View, error)
 
 	// Customer
-	GetCustomer(ctx context.Context, id string) (*model.Customer, error)
-	GetCustomerByName(ctx context.Context, name string) (*model.Customer, error)
-	CreateCustomer(ctx context.Context, name string) (*model.Customer, error)
-	SelectCustomers(ctx context.Context, limit, offset int) ([]model.Customer, error)
-	UpdateCustomer(ctx context.Context, customer *model.Customer) error
-	DeleteCustomer(ctx context.Context, id string) error
+
+	//Subscriber
+	GetSubscriber(ctx context.Context, id string) (*model.Subscriber, error)
+	GetSubscriberByName(ctx context.Context, name string) (*model.Subscriber, error)
+	CreateSubscriber(ctx context.Context, name string) (*model.Subscriber, error)
+	SelectSubscribers(ctx context.Context, limit, offset int) ([]model.Subscriber, error)
+	UpdateSubscriber(ctx context.Context, subscriber *model.Subscriber) error
+	DeleteSubscriber(ctx context.Context, id string) error
+
 	SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error)
 
 	Create_Schema(ctx context.Context, new_schema_name string) error

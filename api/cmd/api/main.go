@@ -144,23 +144,26 @@ func main() {
 	protected.HandleFunc("/users/roles", h.SelectUserRoles).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/profile", h.GetUser).Methods("GET", "OPTIONS")
 
-	// UserCustomer
-	protected.HandleFunc("/usercustomerview", h.SelectUserCustomerView).Methods("GET", "OPTIONS")
-	protected.HandleFunc("/usercustomer/{id}", h.UpdateUserCustomer).Methods("PUT", "OPTIONS")
-	protected.HandleFunc("/usercustomer", h.CreateUserCustomer).Methods("POST", "OPTIONS")
-	protected.HandleFunc("/usercustomer/{id}", h.DeleteUserCustomer).Methods("DELETE")
+	// UserSubscriber
+	protected.HandleFunc("/usercustomerview", h.SelectUserSubscriberView).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/usercustomer/{id}", h.UpdateUserSubscriber).Methods("PUT", "OPTIONS")
+	protected.HandleFunc("/usercustomer", h.CreateUserSubscriber).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/usercustomer/{id}", h.DeleteUserSubscriber).Methods("DELETE")
 
-	// UserCustomerRoles
-	protected.HandleFunc("/usercustomerrolesview", h.SelectUserCustomerRolesView).Methods("GET", "OPTIONS")
+	// UserSubscriberRoles
+	protected.HandleFunc("/usercustomerrolesview", h.SelectUserSubscriberRolesView).Methods("GET", "OPTIONS")
 
 	// Customer
-	protected.HandleFunc("/customers", h.CreateCustomer).Methods("POST", "OPTIONS")
-	protected.HandleFunc("/customers/{id}", h.UpdateCustomer).Methods("PUT", "OPTIONS")
-	protected.HandleFunc("/customers/{id}", h.DeleteCustomer).Methods("DELETE")
-	protected.HandleFunc("/customers/{id}", h.GetCustomer).Methods("GET")
-	protected.HandleFunc("/customers", h.SelectCustomers).Methods("GET", "OPTIONS")
 
-	protected.HandleFunc("/customers/create_schema/{id}", h.Create_Schema).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/subscribers/list/{schema_name}", h.SelectCustomers).Methods("GET", "OPTIONS")
+
+	// Subsribers
+	protected.HandleFunc("/subscribers", h.CreateSubscriber).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/subscribers/{id}", h.UpdateSubscriber).Methods("PUT", "OPTIONS")
+	protected.HandleFunc("/subscribers/{id}", h.DeleteSubscriber).Methods("DELETE")
+	protected.HandleFunc("/subscibers/{id}", h.GetSubscriber).Methods("GET")
+	protected.HandleFunc("/subscribers", h.SelectSubscribers).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/subscribers/create_schema/{id}", h.Create_Schema).Methods("POST", "OPTIONS")
 
 	// Role
 	protected.HandleFunc("/roles", h.CreateRole).Methods("POST", "OPTIONS")
