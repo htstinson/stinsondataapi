@@ -19,7 +19,7 @@ func (d *Database) SelectRolesByUser(ctx context.Context, userId string) (model.
 
 	query := `
         SELECT user_id, username, role_name
-        FROM user_customer_roles_view
+        FROM user_subscriber_role_view
         WHERE user_id = $1
     `
 
