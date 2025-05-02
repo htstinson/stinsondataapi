@@ -26,6 +26,8 @@ func (d *Database) SelectUserSubscriberView(ctx context.Context, user_id string,
 		}
 	}
 
+	fmt.Println("new query")
+
 	query := fmt.Sprintf("SELECT id, user_id, subscriber_id, user_username, subscriber_name FROM user_subscriber_view%sORDER BY user_username, subscriber_name ASC LIMIT $1 OFFSET $2", where_clause)
 
 	rows, err := d.DB.QueryContext(ctx, query, limit, offset)
