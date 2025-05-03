@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) SelectUserSubscriberRolesView(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("SelectUserSubscriberRolesView")
+	fmt.Println("h SelectUserSubscriberRolesView")
 
 	ctx := r.Context()
 	user_customer_roles_views, err := h.db.SelectUserSubscriberRolesView(ctx, 100, 0)
@@ -24,7 +24,7 @@ func (h *Handler) SelectUserSubscriberRolesView(w http.ResponseWriter, r *http.R
 }
 
 func (h *Handler) CreateUserSubscriberRole(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h CreateUserSubscriber")
+	fmt.Println("h CreateUserSubscriberRole")
 
 	var user_subscriber_role *model.User_Subscriber_Role
 	if err := json.NewDecoder(r.Body).Decode(&user_subscriber_role); err != nil {
@@ -35,7 +35,7 @@ func (h *Handler) CreateUserSubscriberRole(w http.ResponseWriter, r *http.Reques
 
 	ctx := r.Context()
 
-	_, err := h.db.LookupUserSubscriber(ctx, user_subscriber_role.User_Subscriber_ID, user_subscriber_role.Role_Id)
+	_, err := h.db.LookupUserSubscriberRole(ctx, user_subscriber_role.User_Subscriber_ID, user_subscriber_role.Role_Id)
 	if err != nil {
 		if err.Error() == "not found" {
 			// do nothing

@@ -2,6 +2,8 @@ package database
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/google/uuid"
@@ -38,7 +40,7 @@ func (d *Database) SelectUserSubscriberRolesView(ctx context.Context, limit, off
 }
 
 func (d *Database) CreateUserSubscriberRole(ctx context.Context, user_subscriber_id string, role_id string) (*model.User_Subscriber_Role, error) {
-	fmt.Println("d CreateUserSubscriber")
+	fmt.Println("d CreateUserSubscriberRole")
 
 	user_subscriber_role := &model.User_Subscriber_Role{
 		Id:                 uuid.New().String(),
@@ -49,6 +51,9 @@ func (d *Database) CreateUserSubscriberRole(ctx context.Context, user_subscriber
 	query := `
         INSERT INTO user_subscriber_role (id, user_subscriber_id, role_id) VALUES ($1, $2, $3)
     `
+
+	fmt.Println(query)
+	fmt.Println(user_subscriber_role)
 
 	_, err := d.DB.ExecContext(ctx, query,
 		user_subscriber_role.Id,
@@ -61,4 +66,24 @@ func (d *Database) CreateUserSubscriberRole(ctx context.Context, user_subscriber
 
 	return user_subscriber_role, nil
 
+}
+
+func (d *Database) LookupUserSubscriberRole(ctx context.Context, user_subscriber_id string, role_id string) (*model.User_Subscriber_Role, error) {
+	fmt.Println("d LookupUserSubscriberRole")
+
+	var user_subscriber_role = model.User_Subscriber_Role{}
+
+	err := d.DB.QueryRowContext(ctx,
+		"SELECT id, user_subscriber_id, role_id FROM user_subscriber_role WHERE user_subscriber_id = $1 and role__id = $2",
+		user_subscriber_id, role_id,
+	).Scan(&user_subscriber_role.Id, &user_subscriber_role.User_Subscriber_ID, &user_subscriber_role.Role_Id)
+
+	if err == sql.ErrNoRows {
+		return nil, errors.New("not found")
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting user_subscriber_role: %w", err)
+	}
+
+	return &user_subscriber_role, nil
 }
