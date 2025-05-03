@@ -144,7 +144,7 @@ func main() {
 	protected.HandleFunc("/users/roles", h.SelectUserRoles).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/profile", h.GetUser).Methods("GET", "OPTIONS")
 
-	// UserSubscriber
+	// User_Subscriber
 	protected.HandleFunc("/usersubscriberview/user/{id}", h.SelectUserSubscriberViewByUserId).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/usersubscriberview", h.SelectUserSubscriberView).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/usersubscriber/{id}", h.UpdateUserSubscriber).Methods("PUT", "OPTIONS")
