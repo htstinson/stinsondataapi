@@ -6,7 +6,7 @@ import "time"
 type User_Subscriber_Role struct {
 	Id                 string    `json:"id"`
 	User_Subscriber_ID string    `json:"user_subscriber_id"`
-	Role_Id            string    `json:"subscriber_id"`
+	Role_Id            string    `json:"role_id"`
 	Created_At         time.Time `json:"assigned_at"`
 	Updated_At         time.Time `json:"updated_at"`
 }
