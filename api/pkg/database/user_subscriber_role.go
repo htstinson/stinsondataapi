@@ -74,7 +74,7 @@ func (d *Database) LookupUserSubscriberRole(ctx context.Context, user_subscriber
 	var user_subscriber_role = model.User_Subscriber_Role{}
 
 	err := d.DB.QueryRowContext(ctx,
-		"SELECT id, user_subscriber_id, role_id FROM user_subscriber_role WHERE user_subscriber_id = $1 and role__id = $2",
+		"SELECT id, user_subscriber_id, role_id FROM user_subscriber_role WHERE user_subscriber_id = $1 and role_id = $2",
 		user_subscriber_id, role_id,
 	).Scan(&user_subscriber_role.Id, &user_subscriber_role.User_Subscriber_ID, &user_subscriber_role.Role_Id)
 
