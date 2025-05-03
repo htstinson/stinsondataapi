@@ -9,12 +9,12 @@ import (
 )
 
 func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h ListCustomers")
+	fmt.Println("h SelectCustomers")
 	ctx := r.Context()
 	vars := mux.Vars(r)
-	id := vars["id"]
+	id := vars["schema_id"]
 
-	customers, err := h.db.LookupUserSubscribersByUserId(ctx, id)
+	customers, err := h.db.SelectCustomers(ctx, id, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to list customers")
 		return

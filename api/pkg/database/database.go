@@ -40,6 +40,7 @@ type Repository interface {
 	SelectUserSubscriberRolesView(ctx context.Context, limit, offset int) ([]model.User_Subscriber_Roles_View, error)
 
 	// Customer
+	SelectCustomers(ctx context.Context, schema_id string, limit, offset int) ([]model.Customer, error)
 
 	//Subscriber
 	GetSubscriber(ctx context.Context, id string) (*model.Subscriber, error)

@@ -46,6 +46,7 @@ func (d *Database) SelectUserSubscriberView(ctx context.Context, user_id string,
 		}
 
 		user_subscriber_views = append(user_subscriber_views, user_subscriber_view)
+
 	}
 	return user_subscriber_views, nil
 }
