@@ -28,9 +28,6 @@ func (h *Handler) CreateUserSubscriberRole(w http.ResponseWriter, r *http.Reques
 
 	var user_subscriber_role *model.User_Subscriber_Role
 
-	fmt.Println(r.Body)
-	return
-
 	if err := json.NewDecoder(r.Body).Decode(&user_subscriber_role); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
 		return
