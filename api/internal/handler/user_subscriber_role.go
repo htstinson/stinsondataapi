@@ -37,6 +37,7 @@ func (h *Handler) CreateUserSubscriberRole(w http.ResponseWriter, r *http.Reques
 
 	fmt.Println("user_subscriber_id", user_subscriber_role.User_Subscriber_ID)
 	fmt.Println("role_id", user_subscriber_role.Role_Id)
+	fmt.Println(user_subscriber_role)
 
 	_, err := h.db.LookupUserSubscriberRole(ctx, user_subscriber_role.User_Subscriber_ID, user_subscriber_role.Role_Id)
 	if err != nil {
