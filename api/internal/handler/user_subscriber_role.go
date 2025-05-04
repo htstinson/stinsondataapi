@@ -115,7 +115,7 @@ func (h *Handler) DeleteUserSubscriberRole(w http.ResponseWriter, r *http.Reques
 
 	ctx := r.Context()
 
-	user_subscriber_role, err := h.db.GetUserSubscriber(ctx, id)
+	user_subscriber_role, err := h.db.GetUserSubscriberRole(ctx, id)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get user_subscriber_role")
 		return
