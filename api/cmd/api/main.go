@@ -151,7 +151,7 @@ func main() {
 	protected.HandleFunc("/usersubscriber", h.CreateUserSubscriber).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/usersubscriber/{id}", h.DeleteUserSubscriber).Methods("DELETE")
 
-	// UserSubscriberRoles
+	// UserSubscriberRole
 	protected.HandleFunc("/usersubscriberroleview", h.SelectUserSubscriberRolesView).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/usersubscriberrole", h.CreateUserSubscriberRole).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/usersubscriberrole/{id}", h.UpdateUserSubscriberRole).Methods("PUT", "OPTIONS")
