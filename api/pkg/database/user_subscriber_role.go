@@ -92,6 +92,9 @@ func (d *Database) UpdateUserSubscriberRole(ctx context.Context, user_subscriber
 	fmt.Println("d UpdateUserSubscriberRole")
 
 	query := `UPDATE user_subscriber_role SET user_subscriber_id = $1, role_id = $2 WHERE id = $3`
+	fmt.Println("id", user_subscriber_role.Id)
+	fmt.Println("user_subscriber_id", user_subscriber_role.User_Subscriber_ID)
+	fmt.Println("role id", user_subscriber_role.Role_Id)
 
 	_, err := d.DB.ExecContext(ctx, query, user_subscriber_role.User_Subscriber_ID, user_subscriber_role.Role_Id, user_subscriber_role.Id)
 
