@@ -108,3 +108,29 @@ func (h *Handler) UpdateUserSubscriberRole(w http.ResponseWriter, r *http.Reques
 
 	common.RespondJSON(w, http.StatusOK, user_subscriber_role)
 }
+
+func (h *Handler) DeleteUserSubscriberRole(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+
+	user_subscriber_role, err := h.db.GetUserSubscriber(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get user_subscriber_role")
+		return
+	}
+	if user_subscriber_role == nil {
+		common.RespondError(w, http.StatusNotFound, "User_Subscriber_Role not found")
+		return
+	}
+
+	err = h.db.DeleteUserSubscriberRole(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error deleting user_subscriber_role")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, user_subscriber_role)
+
+}

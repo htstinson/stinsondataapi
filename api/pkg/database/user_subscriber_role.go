@@ -120,3 +120,13 @@ func (d *Database) GetUserSubscriberRole(ctx context.Context, id string) (*model
 
 	return &user_subscriber_role, nil
 }
+
+func (d *Database) DeleteUserSubscriberRole(ctx context.Context, id string) error {
+	fmt.Println("d DeleteUserSubscriberRole")
+
+	query := `DELETE FROM user_subscriber_role WHERE id = $1`
+
+	_, err := d.DB.ExecContext(ctx, query, id)
+
+	return err
+}
