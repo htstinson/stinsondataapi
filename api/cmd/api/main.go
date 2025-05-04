@@ -154,6 +154,7 @@ func main() {
 	// UserSubscriberRoles
 	protected.HandleFunc("/usersubscriberroleview", h.SelectUserSubscriberRolesView).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/usersubscriberrole", h.CreateUserSubscriberRole).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/usersubscriberrole/{id}", h.UpdateUserSubscriberRole).Methods("PUT", "OPTIONS")
 
 	// Customer
 

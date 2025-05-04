@@ -87,3 +87,33 @@ func (d *Database) LookupUserSubscriberRole(ctx context.Context, user_subscriber
 
 	return &user_subscriber_role, nil
 }
+
+func (d *Database) UpdateUserSubscriberRole(ctx context.Context, user_subscriber_role model.User_Subscriber_Role) error {
+	fmt.Println("d UpdateUserSubscriberRole")
+
+	query := `UPDATE user_subscriber_role SET user_subscriber_id = $1, role_id = $2 WHERE id = $3`
+
+	_, err := d.DB.ExecContext(ctx, query, user_subscriber_role.User_Subscriber_ID, user_subscriber_role.Role_Id, user_subscriber_role.Id)
+
+	return err
+}
+
+func (d *Database) GetUserSubscriberRole(ctx context.Context, id string) (*model.User_Subscriber_Role, error) {
+	fmt.Println("d GetUserSubscriberRole")
+
+	var user_subscriber_role model.User_Subscriber_Role
+
+	err := d.DB.QueryRowContext(ctx,
+		"SELECT id, user_subscriber_id, role_id FROM user_subscriber_role WHERE id = $1",
+		id,
+	).Scan(&user_subscriber_role.Id, &user_subscriber_role.User_Subscriber_ID, &user_subscriber_role.Role_Id)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting subscriber: %w", err)
+	}
+
+	return &user_subscriber_role, nil
+}

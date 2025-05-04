@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
@@ -60,4 +61,46 @@ func (h *Handler) CreateUserSubscriberRole(w http.ResponseWriter, r *http.Reques
 	}
 
 	common.RespondJSON(w, http.StatusCreated, new_user_subscriber_role)
+}
+
+func (h *Handler) UpdateUserSubscriberRole(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h UpdateUserSubscriberRole")
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+
+	var user_subscriber_role = model.User_Subscriber_Role{}
+
+	if err := json.NewDecoder(r.Body).Decode(&user_subscriber_role); err != nil {
+		fmt.Println(1, err.Error())
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	current_user_subscriber_role, err := h.db.GetUserSubscriberRole(ctx, id)
+	if err != nil {
+		fmt.Println(2, err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get user_subscriber_role")
+		return
+	}
+
+	if current_user_subscriber_role == nil {
+		fmt.Println(3)
+		common.RespondError(w, http.StatusNotFound, "User_Subscriber not found")
+		return
+	}
+
+	err = h.db.UpdateUserSubscriberRole(ctx, user_subscriber_role)
+	if err != nil {
+		fmt.Println(4, err.Error())
+		common.RespondError(w, http.StatusNotFound, "Error updating user subscriber role")
+		return
+	}
+
+	fmt.Println(5)
+
+	common.RespondJSON(w, http.StatusOK, user_subscriber_role)
 }
