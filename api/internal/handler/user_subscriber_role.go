@@ -80,6 +80,10 @@ func (h *Handler) UpdateUserSubscriberRole(w http.ResponseWriter, r *http.Reques
 	}
 	defer r.Body.Close()
 
+	fmt.Println("id", user_subscriber_role.Id)
+	fmt.Println("role id", user_subscriber_role.Role_Id)
+	fmt.Println("user_subscriber_id", user_subscriber_role.User_Subscriber_ID)
+
 	current_user_subscriber_role, err := h.db.GetUserSubscriberRole(ctx, id)
 	if err != nil {
 		fmt.Println(2, err.Error())
