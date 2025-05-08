@@ -66,10 +66,6 @@ func CORS(next http.Handler) http.Handler {
 
 		w.WriteHeader(http.StatusOK)
 
-		for k, v := range w.Header() {
-			fmt.Println(k, v)
-		}
-
 		next.ServeHTTP(w, r)
 	})
 }
