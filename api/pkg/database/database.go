@@ -122,8 +122,6 @@ func New(cfg Config) (Repository, error) {
 		cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.DBName, cfg.Search_Path, cfg.SSLMode,
 	)
 
-	fmt.Println("connStr", connStr)
-
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		return nil, fmt.Errorf("error opening database: %w", err)
