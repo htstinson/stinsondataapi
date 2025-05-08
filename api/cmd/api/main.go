@@ -93,9 +93,9 @@ func main() {
 	// Create router and handler
 	router := mux.NewRouter()
 
-	router.Use(middleware.CORS)                // First: Set CORS headers
-	router.Use(middleware.IpLoggingMiddleware) // Then: Log
-	router.Use(jwtAuth.Middleware)
+	//router.Use(middleware.CORS)                // First: Set CORS headers
+	//router.Use(middleware.IpLoggingMiddleware) // Then: Log
+	//router.Use(jwtAuth.Middleware)
 
 	// Setup routes
 	api := router.PathPrefix("/api/v1").Subrouter()
