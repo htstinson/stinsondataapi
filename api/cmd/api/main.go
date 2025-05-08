@@ -162,12 +162,12 @@ func main() {
 	protected.HandleFunc("/customers/subscriber/{schema_id}", h.SelectCustomers).Methods("GET", "OPTIONS")
 
 	// Subscribers
+	protected.HandleFunc("/subscribers/schema", h.Create_Schema).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscribers", h.CreateSubscriber).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscribers/{id}", h.UpdateSubscriber).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/subscribers/{id}", h.DeleteSubscriber).Methods("DELETE")
 	protected.HandleFunc("/subscibers/{id}", h.GetSubscriber).Methods("GET")
 	protected.HandleFunc("/subscribers", h.SelectSubscribers).Methods("GET", "OPTIONS")
-	protected.HandleFunc("/subscribers/schema", h.Create_Schema).Methods("POST", "OPTIONS")
 
 	// Role
 	protected.HandleFunc("/roles", h.CreateRole).Methods("POST", "OPTIONS")
