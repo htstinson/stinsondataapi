@@ -57,6 +57,7 @@ func SecurityHeaders(next http.Handler) http.Handler {
 }
 
 func CORS(next http.Handler) http.Handler {
+	fmt.Println("h CORS middleware")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS")
