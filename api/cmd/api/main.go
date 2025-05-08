@@ -167,7 +167,7 @@ func main() {
 	protected.HandleFunc("/customers/subscriber/{schema_id}", h.SelectCustomers).Methods("GET", "OPTIONS")
 
 	// Subscribers
-	protected.HandleFunc("/subscribers/schema", h.Create_Schema).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/schema", h.Create_Schema).Methods("POST", "OPTIONS")
 
 	protected.HandleFunc("/subscribers", h.CreateSubscriber).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscribers/{id}", h.UpdateSubscriber).Methods("PUT", "OPTIONS")
