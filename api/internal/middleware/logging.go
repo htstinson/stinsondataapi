@@ -29,7 +29,7 @@ func getTCPAddr(r *http.Request) string {
 
 // Log middleware that captures the TCP address
 func IpLoggingMiddleware(next http.Handler) http.Handler {
-	//fmt.Printf("[%v] ipLoggingMiddleware.\n", time.Now().Format(time.RFC3339))
+	fmt.Printf("[%v] ipLoggingMiddleware.\n", time.Now().Format(time.RFC3339))
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Get the TCP address
 		//ipAddr := getTCPAddr(r)
