@@ -111,6 +111,7 @@ func main() {
 	// Protected routes
 	protected := api.PathPrefix("/").Subrouter()
 	//protected.Use(middleware.IpLoggingMiddleware)
+	protected.Use(middleware.CORS) // First: Set CORS headers
 	protected.Use(jwtAuth.Middleware)
 
 	// Blocked
@@ -167,6 +168,7 @@ func main() {
 
 	// Subscribers
 	protected.HandleFunc("/subscribers/schema", h.Create_Schema).Methods("POST", "OPTIONS")
+
 	protected.HandleFunc("/subscribers", h.CreateSubscriber).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscribers/{id}", h.UpdateSubscriber).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/subscribers/{id}", h.DeleteSubscriber).Methods("DELETE")
