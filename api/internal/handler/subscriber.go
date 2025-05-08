@@ -136,8 +136,21 @@ func (h *Handler) SelectSubscribers(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) Create_Schema(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h Create_Schema")
-	vars := mux.Vars(r)
-	id := vars["id"]
+
+	var subscriber *model.Subscriber
+	if err := json.NewDecoder(r.Body).Decode(&subscriber); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	id := subscriber.Id
+	if id == "" {
+		common.RespondError(w, http.StatusBadRequest, "No Id")
+		return
+	}
+
+	fmt.Println(id)
 
 	ctx := r.Context()
 
