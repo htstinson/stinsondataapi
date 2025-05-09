@@ -39,11 +39,12 @@ func (d *Database) SelectCustomers(ctx context.Context, schema_name string, limi
 func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error) {
 	fmt.Println("d CreateCustomer")
 
-	query := fmt.Sprintf(`INSERT INTO %s.customers (id, name) VALUES ($1, $2)`, customer.Schema_Name)
+	query := fmt.Sprintf(`INSERT INTO %s.customers (id, name, parent_id) VALUES ($1, $2, $3)`, customer.Schema_Name)
 
 	_, err := d.DB.ExecContext(ctx, query,
 		customer.Id,
 		customer.Name,
+		customer.Subscriber_ID,
 	)
 	if err != nil {
 		fmt.Println(err.Error())
