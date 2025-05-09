@@ -45,7 +45,8 @@ func (d *Database) GetProfileByParent(ctx context.Context, id string) (*model.Pr
 		return nil, nil
 	}
 	if err != nil {
-		return nil, fmt.Errorf("error getting customer: %w", err)
+		fmt.Println(err.Error())
+		return nil, fmt.Errorf("error getting profile: %w", err)
 	}
 
 	return &profile, nil
