@@ -30,6 +30,28 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	db := h.db.(*database.Database).DB
+
+	schema_name := fmt.Sprintf("%s_", strings.ToLower(subscriber.Name[:3]))
+
+	schema_name += strings.ReplaceAll(subscriber.Id, "-", "_")
+
+	schema := schema.Schema{
+		DB:             db,
+		FromSchemaName: "subscriber_template",
+		ToSchemaName:   schema_name,
+	}
+
+	err = schema.CopySchema(ctx)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	_, err = h.db.CreateProfile(ctx, schema_name, subscriber.Id)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
 	common.RespondJSON(w, http.StatusCreated, newsubscriber)
 }
 
