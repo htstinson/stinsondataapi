@@ -109,6 +109,8 @@ func (h *Handler) DeleteSubscriber(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	fmt.Println(subscriber.Schema_Name)
+
 	ctx := r.Context()
 
 	subscriber, err := h.db.GetSubscriber(ctx, subscriber.Id)
