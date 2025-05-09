@@ -7,11 +7,11 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (d *Database) SelectCustomers(ctx context.Context, schema_id string, limit, offset int) ([]model.Customer, error) {
+func (d *Database) SelectCustomers(ctx context.Context, schema_name string, limit, offset int) ([]model.Customer, error) {
 
 	fmt.Println("database.go SelectCustomers()")
 
-	query := fmt.Sprintf("SELECT id, name, created_at FROM %s.customers ORDER BY name ASC LIMIT $1 OFFSET $2", schema_id)
+	query := fmt.Sprintf("SELECT id, name, created_at FROM %s.customers ORDER BY name ASC LIMIT $1 OFFSET $2", schema_name)
 
 	rows, err := d.DB.QueryContext(ctx,
 		query,
