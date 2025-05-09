@@ -89,7 +89,7 @@ type Repository interface {
 
 	// Profiles
 	GetProfile(ctx context.Context, id string) (*model.Profile, error)
-	GetProfileByParent(ctx context.Context, id string) (*model.Profile, error)
+	GetProfileByParent(ctx context.Context, subscriber *model.Subscriber) (*model.Profile, error)
 	CreateProfile(ctx context.Context, schema_name string, parent_id string) (*model.Profile, error)
 	SelectProfiles(ctx context.Context, limit, offset int) ([]model.Profile, error)
 	UpdateProfile(ctx context.Context, profile *model.Profile) error

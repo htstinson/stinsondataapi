@@ -31,14 +31,16 @@ func (d *Database) GetProfile(ctx context.Context, id string) (*model.Profile, e
 	return &profile, nil
 }
 
-func (d *Database) GetProfileByParent(ctx context.Context, id string) (*model.Profile, error) {
+func (d *Database) GetProfileByParent(ctx context.Context, subscriber *model.Subscriber) (*model.Profile, error) {
 	fmt.Println("d GetProfileByParent")
 
 	var profile model.Profile
 
+	query := fmt.Sprintf(`SELECT id, parent_id, created_at, modified_at FROM %s.profile WHERE parent_id = $1`, subscriber.Schema_Name)
+
 	err := d.DB.QueryRowContext(ctx,
-		"SELECT id, parent_id, created_at, modified_at FROM profile WHERE parent_id = $1",
-		id,
+		query,
+		subscriber.Id,
 	).Scan(&profile.Id, &profile.ParentId, &profile.CreatedAt, &profile.ModifiedAt)
 
 	if err == sql.ErrNoRows {

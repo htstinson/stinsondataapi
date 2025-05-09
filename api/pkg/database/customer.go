@@ -39,7 +39,13 @@ func (d *Database) SelectCustomers(ctx context.Context, schema_name string, limi
 func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error) {
 	fmt.Println("d CreateCustomer")
 
-	profile, err := d.GetProfileByParent(ctx, customer.Subscriber_ID)
+	subcriber, err := d.GetSubscriber(ctx, customer.Subscriber_ID)
+	if err != nil {
+		fmt.Println(err.Error())
+		return customer, err
+	}
+
+	profile, err := d.GetProfileByParent(ctx, subcriber)
 	if err != nil {
 		fmt.Println("error getting profile")
 		fmt.Println(customer.Subscriber_ID)
