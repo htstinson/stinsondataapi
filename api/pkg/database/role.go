@@ -27,6 +27,14 @@ func (d *Database) SelectRolesByUser(ctx context.Context, userId string) (model.
 		&roles.Id, &roles.Username, &roles.Names,
 	)
 
+	if err != nil {
+		query := `SELECT user_id, username, role_name FROM user_roles_view WHERE user_id = $1`
+
+		err = d.DB.QueryRowContext(ctx, query, userId).Scan(
+			&roles.Id, &roles.Username, &roles.Names,
+		)
+	}
+
 	return roles, err
 }
 
