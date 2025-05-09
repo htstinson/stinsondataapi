@@ -100,6 +100,7 @@ func (h *Handler) UpdateSubscriber(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) DeleteSubscriber(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h DeleteSubscriber")
 	vars := mux.Vars(r)
 	id := vars["id"]
 
