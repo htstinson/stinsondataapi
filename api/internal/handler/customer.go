@@ -39,6 +39,7 @@ func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h CreateCustomer")
 	var customer *model.Customer
 	if err := json.NewDecoder(r.Body).Decode(&customer); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
