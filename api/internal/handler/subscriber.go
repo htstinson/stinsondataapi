@@ -101,12 +101,17 @@ func (h *Handler) UpdateSubscriber(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) DeleteSubscriber(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h DeleteSubscriber")
-	vars := mux.Vars(r)
-	id := vars["id"]
+
+	var subscriber *model.Subscriber
+	if err := json.NewDecoder(r.Body).Decode(&subscriber); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
 
 	ctx := r.Context()
 
-	subscriber, err := h.db.GetSubscriber(ctx, id)
+	subscriber, err := h.db.GetSubscriber(ctx, subscriber.Id)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 		return
@@ -116,7 +121,7 @@ func (h *Handler) DeleteSubscriber(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.db.DeleteSubscriber(ctx, id)
+	err = h.db.DeleteSubscriber(ctx, subscriber)
 	if err != nil {
 		common.RespondError(w, http.StatusNotFound, "Error deleting subscriber")
 		return

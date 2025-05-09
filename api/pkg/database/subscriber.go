@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"fmt"
 	"time"
 
@@ -86,7 +85,7 @@ func (d *Database) SelectSubscribers(ctx context.Context, limit, offset int) ([]
 	fmt.Println("database.go SelectSubscribers()")
 
 	rows, err := d.DB.QueryContext(ctx,
-		"SELECT id, name, created_at FROM subscribers ORDER BY name ASC LIMIT $1 OFFSET $2",
+		"SELECT id, name, created_at, schema_name FROM subscribers ORDER BY name ASC LIMIT $1 OFFSET $2",
 		limit, offset,
 	)
 	if err != nil {
@@ -98,7 +97,7 @@ func (d *Database) SelectSubscribers(ctx context.Context, limit, offset int) ([]
 	var subscribers []model.Subscriber
 	for rows.Next() {
 		var subscriber model.Subscriber
-		if err := rows.Scan(&subscriber.Id, &subscriber.Name, &subscriber.CreatedAt); err != nil {
+		if err := rows.Scan(&subscriber.Id, &subscriber.Name, &subscriber.CreatedAt, &subscriber.Schema_Name); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning subscriber: %w", err)
 		}
@@ -118,14 +117,14 @@ func (d *Database) UpdateSubscriber(ctx context.Context, subscriber *model.Subsc
 	return err
 }
 
-func (d *Database) DeleteSubscriber(ctx context.Context, id string) error {
+func (d *Database) DeleteSubscriber(ctx context.Context, subscriber *model.Subscriber) error {
 	fmt.Println("d DeleteSubscriber")
-	fmt.Println(id)
+	fmt.Println(subscriber.Id)
 
 	fmt.Println("delete user_subscribe_role")
 	query := `DELETE from common.user_subscriber_role where user_subscriber_id in
 				(select id from common.user_subscriber where subscriber_id = $1);`
-	result, err := d.DB.ExecContext(ctx, query, id)
+	result, err := d.DB.ExecContext(ctx, query, subscriber.Id)
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
@@ -134,7 +133,7 @@ func (d *Database) DeleteSubscriber(ctx context.Context, id string) error {
 
 	fmt.Println("delete user subscriber")
 	query = `DELETE from common.user_subscriber where subscriber_id = $1;`
-	result, err = d.DB.ExecContext(ctx, query, id)
+	result, err = d.DB.ExecContext(ctx, query, subscriber.Id)
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
@@ -143,7 +142,16 @@ func (d *Database) DeleteSubscriber(ctx context.Context, id string) error {
 
 	fmt.Println("delete subscriber")
 	query = `DELETE FROM common.subscribers WHERE id = $1`
-	result, err = d.DB.ExecContext(ctx, query, id)
+	result, err = d.DB.ExecContext(ctx, query, subscriber.Id)
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		fmt.Println(result.RowsAffected())
+	}
+
+	fmt.Println("drop schema")
+	query = fmt.Sprintf(`DROP SCHEMA %s cascade`, subscriber.Schema_Name)
+	result, err = d.DB.ExecContext(ctx, query)
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
@@ -151,18 +159,4 @@ func (d *Database) DeleteSubscriber(ctx context.Context, id string) error {
 	}
 
 	return err
-}
-
-func (d *Database) Create_Schema(ctx context.Context, new_schema_name string) error {
-	fmt.Println("d Create_Schema")
-
-	err := errors.New("temporary stop")
-
-	return err
-
-	// err := Copy_Schema(d.db, d.Config, false, new_schema_name)
-	// if err != nil {
-	// 	fmt.Println(err)
-	// }
-	// return err
 }

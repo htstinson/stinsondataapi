@@ -53,11 +53,9 @@ type Repository interface {
 	CreateSubscriber(ctx context.Context, name string) (*model.Subscriber, error)
 	SelectSubscribers(ctx context.Context, limit, offset int) ([]model.Subscriber, error)
 	UpdateSubscriber(ctx context.Context, subscriber *model.Subscriber) error
-	DeleteSubscriber(ctx context.Context, id string) error
+	DeleteSubscriber(ctx context.Context, subscriber *model.Subscriber) error
 
 	SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error)
-
-	Create_Schema(ctx context.Context, new_schema_name string) error
 
 	// Blocked
 	SelectBlocked(ctx context.Context, limit, offset int, sort string, order string) ([]model.Blocked, error)
