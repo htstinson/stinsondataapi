@@ -93,10 +93,6 @@ func main() {
 	// Create router and handler
 	router := mux.NewRouter()
 
-	//router.Use(middleware.CORS)                // First: Set CORS headers
-	//router.Use(middleware.IpLoggingMiddleware) // Then: Log
-	//router.Use(jwtAuth.Middleware)
-
 	// Setup routes
 	api := router.PathPrefix("/api/v1").Subrouter()
 
@@ -163,7 +159,6 @@ func main() {
 	protected.HandleFunc("/usersubscriberrole/{id}", h.DeleteUserSubscriberRole).Methods("DELETE")
 
 	// Customer
-
 	protected.HandleFunc("/customers/subscriber/{schema_id}", h.SelectCustomers).Methods("GET", "OPTIONS")
 
 	// Subscribers
