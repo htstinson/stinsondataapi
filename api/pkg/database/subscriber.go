@@ -133,7 +133,7 @@ func (d *Database) DeleteSubscriber(ctx context.Context, id string) error {
 	}
 
 	fmt.Println("delete user subscriber")
-	query = `DELETE from common.user_subscriber where subscriber_id = $1);`
+	query = `DELETE from common.user_subscriber where subscriber_id = $1;`
 	result, err = d.DB.ExecContext(ctx, query, id)
 	if err != nil {
 		fmt.Println(err.Error())
