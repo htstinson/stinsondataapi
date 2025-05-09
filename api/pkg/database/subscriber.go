@@ -124,9 +124,10 @@ func (d *Database) DeleteSubscriber(ctx context.Context, id string) error {
 
 	query := `DELETE FROM common.subscribers WHERE id = $1`
 
-	result, err := d.DB.ExecContext(ctx, query, id)
-
-	fmt.Println(result.RowsAffected())
+	_, err := d.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 	return err
 }
