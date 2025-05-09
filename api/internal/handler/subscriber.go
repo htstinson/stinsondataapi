@@ -32,7 +32,7 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 
 	db := h.db.(*database.Database).DB
 
-	schema_name := fmt.Sprintf("%s_", strings.ToLower(subscriber.Name[:3]))
+	schema_name := fmt.Sprintf("%s_", strings.ToLower(newsubscriber.Name[:3]))
 
 	schema_name += strings.ReplaceAll(newsubscriber.Id, "-", "_")
 
@@ -47,7 +47,7 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	_, err = h.db.CreateProfile(ctx, schema_name, subscriber.Id)
+	_, err = h.db.CreateProfile(ctx, schema_name, newsubscriber.Id)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
