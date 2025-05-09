@@ -17,9 +17,9 @@ func (d *Database) GetSubscriber(ctx context.Context, id string) (*model.Subscri
 	var subscriber model.Subscriber
 
 	err := d.DB.QueryRowContext(ctx,
-		"SELECT id, name, created_at FROM subscribers WHERE id = $1",
+		"SELECT id, name, created_at, schema_name FROM subscribers WHERE id = $1",
 		id,
-	).Scan(&subscriber.Id, &subscriber.Name, &subscriber.CreatedAt)
+	).Scan(&subscriber.Id, &subscriber.Name, &subscriber.CreatedAt, &subscriber.Schema_Name)
 
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -36,13 +36,14 @@ func (d *Database) GetSubscriberByName(ctx context.Context, name string) (*model
 
 	subscriber := &model.Subscriber{}
 	query := `
-        SELECT id, name, created_at FROM subscribers WHERE username = $1
+        SELECT id, name, created_at, schema_name FROM subscribers WHERE username = $1
     `
 
 	err := d.DB.QueryRowContext(ctx, query, name).Scan(
 		&subscriber.Id,
 		&subscriber.Name,
 		&subscriber.CreatedAt,
+		&subscriber.Schema_Name,
 	)
 	if err == sql.ErrNoRows {
 		return nil, nil

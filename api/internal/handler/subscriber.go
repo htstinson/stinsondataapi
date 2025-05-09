@@ -113,7 +113,7 @@ func (h *Handler) DeleteSubscriber(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	subscriber, err := h.db.GetSubscriber(ctx, subscriber.Id)
+	_, err := h.db.GetSubscriber(ctx, subscriber.Id)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 		return
