@@ -151,6 +151,7 @@ func (d *Database) DeleteSubscriber(ctx context.Context, subscriber *model.Subsc
 
 	fmt.Println("drop schema")
 	query = fmt.Sprintf(`DROP SCHEMA %s cascade`, subscriber.Schema_Name)
+	fmt.Println(query)
 	result, err = d.DB.ExecContext(ctx, query)
 	if err != nil {
 		fmt.Println(err.Error())
