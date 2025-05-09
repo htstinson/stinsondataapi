@@ -120,6 +120,7 @@ func (d *Database) UpdateSubscriber(ctx context.Context, subscriber *model.Subsc
 
 func (d *Database) DeleteSubscriber(ctx context.Context, id string) error {
 	fmt.Println("d DeleteSubscriber")
+	fmt.Println(id)
 
 	query := `DELETE FROM subscribers WHERE id = $1`
 
