@@ -34,7 +34,7 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 
 	schema_name := fmt.Sprintf("%s_", strings.ToLower(subscriber.Name[:3]))
 
-	schema_name += strings.ReplaceAll(subscriber.Id, "-", "_")
+	schema_name += strings.ReplaceAll(newsubscriber.Id, "-", "_")
 
 	schema := schema.Schema{
 		DB:             db,
