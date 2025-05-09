@@ -46,6 +46,7 @@ type Repository interface {
 
 	// Customer
 	SelectCustomers(ctx context.Context, schema_id string, limit, offset int) ([]model.Customer, error)
+	CreateCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error)
 
 	//Subscriber
 	GetSubscriber(ctx context.Context, id string) (*model.Subscriber, error)
