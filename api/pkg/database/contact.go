@@ -14,8 +14,6 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 	query := fmt.Sprintf(`SELECT id, parent_id, lastname, firstname, created_at FROM %s.contacts 
 	WHERE parent_id = '%s' ORDER BY lastname,firstname ASC LIMIT $1 OFFSET $2`, customer.Schema_Name, customer.Id)
 
-	fmt.Println(query)
-
 	rows, err := d.DB.QueryContext(ctx,
 		query,
 		limit, offset,
