@@ -21,7 +21,7 @@ func (h *Handler) SelectContacts(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	contacts, err := h.db.SelectContacts(ctx, customer.Schema_Name, 100, 0)
+	contacts, err := h.db.SelectContacts(ctx, *customer, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to list contacts")
 		return
