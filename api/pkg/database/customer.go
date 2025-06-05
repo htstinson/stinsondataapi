@@ -78,6 +78,8 @@ func (d *Database) GetCustomer(ctx context.Context, customer *model.Customer) (*
 
 	query := fmt.Sprintf(`SELECT name, subscriber_id, schema_name, created_at FROM %s.customer WHERE id = $1`, customer.Schema_Name)
 
+	fmt.Println(query)
+
 	err := d.DB.QueryRowContext(ctx, query, customer.Id).Scan(&customer.Name, &customer.Subscriber_ID, &customer.Schema_Name, &customer.CreatedAt)
 
 	if err == sql.ErrNoRows {
