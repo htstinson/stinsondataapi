@@ -95,6 +95,9 @@ type Repository interface {
 	UpdateProfile(ctx context.Context, profile *model.Profile) error
 	DeleteProfile(ctx context.Context, id string) error
 
+	// Contacts
+	SelectContacts(ctx context.Context, schema_id string, limit, offset int) ([]model.Contact, error)
+
 	RowCount(tablename string) (int, error)
 
 	Close() error

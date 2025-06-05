@@ -126,12 +126,12 @@ func main() {
 	protected.HandleFunc("/items", h.ListItems).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/items/{id}", h.DeleteItem).Methods("DELETE")
 
-	// Account
+	// Salesforce Account
 	protected.HandleFunc("/accounts", sf.Handler.CreateAccount).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/accounts/{id}", sf.Handler.UpdateAccount).Methods("PATCH", "OPTIONS")
 	protected.HandleFunc("/accounts", sf.Handler.ListAccounts).Methods("GET", "OPTIONS")
 
-	// Contact
+	// Salesforce Contact
 	protected.HandleFunc("/contacts", sf.Handler.ListContacts).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/contacts/{accountid}", sf.Handler.ListContacts).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/contact/{contactid}", sf.Handler.GetContactById).Methods("GET", "OPTIONS")
@@ -158,9 +158,12 @@ func main() {
 	protected.HandleFunc("/usersubscriberrole/{id}", h.UpdateUserSubscriberRole).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/usersubscriberrole/{id}", h.DeleteUserSubscriberRole).Methods("DELETE")
 
-	// Customer
+	// Subscriber - Customer
 	protected.HandleFunc("/subscriber/customers", h.SelectCustomers).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscriber/customer", h.CreateCustomer).Methods("POST", "OPTIONS")
+
+	// Subscriber - Customer - Contacts
+	protected.HandleFunc("/subscriber/customer/contacts", h.SelectContacts).Methods("POST", "OPTIONS")
 
 	// Subscribers
 	protected.HandleFunc("/subscribers", h.CreateSubscriber).Methods("POST", "OPTIONS")
