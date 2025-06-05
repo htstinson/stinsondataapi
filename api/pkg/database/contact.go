@@ -29,7 +29,7 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 	var contacts []model.Contact
 	for rows.Next() {
 		var contact model.Contact
-		if err := rows.Scan(&contact.Id, &contact.LastName, contact.FirstName, &contact.CreatedAt); err != nil {
+		if err := rows.Scan(&contact.Id, &contact.ParentId, &contact.LastName, contact.FirstName, &contact.CreatedAt); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning contact: %w", err)
 		}
