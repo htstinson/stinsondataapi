@@ -7,11 +7,11 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (d *Database) SelectCustomers(ctx context.Context, schema_name string, limit, offset int) ([]model.Customer, error) {
+func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.Customer, error) {
 
 	fmt.Println("database.go SelectCustomers()")
 
-	query := fmt.Sprintf("SELECT id, name, created_at FROM %s.customers ORDER BY name ASC LIMIT $1 OFFSET $2", schema_name)
+	query := fmt.Sprintf("SELECT id, name, created_at FROM %s.customers ORDER BY name ASC LIMIT $1 OFFSET $2", subscriber.Schema_Name)
 
 	rows, err := d.DB.QueryContext(ctx,
 		query,
@@ -30,6 +30,9 @@ func (d *Database) SelectCustomers(ctx context.Context, schema_name string, limi
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning customer: %w", err)
 		}
+
+		customer.Schema_Name = subscriber.Schema_Name
+		customer.Subscriber_ID = subscriber.Id
 
 		customers = append(customers, customer)
 	}

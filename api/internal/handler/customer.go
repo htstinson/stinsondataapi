@@ -28,7 +28,7 @@ func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 	}
 
-	customers, err := h.db.SelectCustomers(ctx, subcriber.Schema_Name, 100, 0)
+	customers, err := h.db.SelectCustomers(ctx, *subcriber, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to list customers")
 		return
