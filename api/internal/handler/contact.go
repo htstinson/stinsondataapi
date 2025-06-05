@@ -35,17 +35,17 @@ func (h *Handler) SelectContacts(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h CreateContact")
 
-	fmt.Println(r.Body)
-
-	return
-
-	var customer *model.Customer
-	if err := json.NewDecoder(r.Body).Decode(&customer); err != nil {
+	var contact *model.Contact
+	if err := json.NewDecoder(r.Body).Decode(&contact); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 	defer r.Body.Close()
 	ctx := r.Context()
+
+	fmt.Println(contact)
+
+	return
 
 	subcriber, err := h.db.GetSubscriber(ctx, customer.Subscriber_ID)
 	if err != nil {
