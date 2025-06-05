@@ -43,11 +43,9 @@ func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	ctx := r.Context()
 
-	fmt.Println(contact)
+	fmt.Println(contact.ParentId)
 
-	return
-
-	subcriber, err := h.db.GetSubscriber(ctx, customer.Subscriber_ID)
+	subcriber, err := h.db.GetSubscriber(ctx, contact.SubscriberID)
 	if err != nil {
 		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
