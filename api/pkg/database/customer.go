@@ -73,14 +73,12 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 }
 
 // Item
-func (d *Database) GetCustomer(ctx context.Context, id string) (*model.Customer, error) {
+func (d *Database) GetCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error) {
 	fmt.Println("d GetCustomer")
-	var customer model.Customer
 
-	err := d.DB.QueryRowContext(ctx,
-		"SELECT id, name, subscriber_id, schema_name, created_at FROM customers WHERE id = $1",
-		id,
-	).Scan(&customer.Id, &customer.Name, &customer.Subscriber_ID, &customer.Schema_Name, &customer.CreatedAt)
+	query := fmt.Sprintf(`SELECT name, subscriber_id, schema_name, created_at FROM %s.customer WHERE id = $1`, customer.Schema_Name)
+
+	err := d.DB.QueryRowContext(ctx, query, customer.Id).Scan(&customer.Name, &customer.Subscriber_ID, &customer.Schema_Name, &customer.CreatedAt)
 
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -88,5 +86,5 @@ func (d *Database) GetCustomer(ctx context.Context, id string) (*model.Customer,
 	if err != nil {
 		return nil, fmt.Errorf("error getting customer: %w", err)
 	}
-	return &customer, nil
+	return customer, nil
 }

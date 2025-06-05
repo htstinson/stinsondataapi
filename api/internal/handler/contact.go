@@ -46,7 +46,11 @@ func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(contact.ParentId)
 
-	customer, err := h.db.GetCustomer(ctx, contact.ParentId)
+	var customer = &model.Customer{
+		Id: contact.ParentId,
+	}
+
+	customer, err := h.db.GetCustomer(ctx, customer)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
@@ -54,6 +58,7 @@ func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
 
 	contact.Id = uuid.New().String()
 	contact.ParentId = customer.Id
+	contact.Schema_Name_ = customer.Schema_Name
 
 	contact, err = h.db.CreateContact(ctx, contact)
 	if err != nil {
