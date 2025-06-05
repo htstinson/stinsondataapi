@@ -32,8 +32,8 @@ func (h *Handler) SelectContacts(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (h *Handler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h CreateCustomer")
+func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h CreateContact")
 
 	fmt.Println(r.Body)
 
