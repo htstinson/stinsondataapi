@@ -41,11 +41,16 @@ func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer r.Body.Close()
+
 	ctx := r.Context()
 
 	fmt.Println(contact.ParentId)
 
 	customer, err := h.db.GetCustomer(ctx, contact.ParentId)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
 	contact.Id = uuid.New().String()
 	contact.ParentId = customer.Id

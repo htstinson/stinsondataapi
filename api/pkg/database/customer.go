@@ -74,7 +74,9 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 
 // Item
 func (d *Database) GetCustomer(ctx context.Context, id string) (*model.Customer, error) {
+	fmt.Println("d GetCustomer")
 	var customer model.Customer
+
 	err := d.DB.QueryRowContext(ctx,
 		"SELECT id, name, subscriber_id, schema_name, created_at FROM customers WHERE id = $1",
 		id,
@@ -84,7 +86,7 @@ func (d *Database) GetCustomer(ctx context.Context, id string) (*model.Customer,
 		return nil, nil
 	}
 	if err != nil {
-		return nil, fmt.Errorf("error getting item: %w", err)
+		return nil, fmt.Errorf("error getting customer: %w", err)
 	}
 	return &customer, nil
 }
