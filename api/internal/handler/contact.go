@@ -45,6 +45,7 @@ func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	fmt.Println(contact.ParentId)
+	fmt.Println(contact.Schema_Name_)
 
 	var customer = &model.Customer{
 		Id: contact.ParentId,
