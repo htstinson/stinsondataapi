@@ -47,6 +47,7 @@ type Repository interface {
 	// Customer
 	SelectCustomers(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.Customer, error)
 	CreateCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error)
+	GetCustomer(ctx context.Context, id string) (*model.Customer, error)
 
 	//Subscriber
 	GetSubscriber(ctx context.Context, id string) (*model.Subscriber, error)
@@ -97,6 +98,7 @@ type Repository interface {
 
 	// Contacts
 	SelectContacts(ctx context.Context, customer model.Customer, limit, offset int) ([]model.Contact, error)
+	CreateContact(ctx context.Context, contact *model.Contact) (*model.Contact, error)
 
 	RowCount(tablename string) (int, error)
 

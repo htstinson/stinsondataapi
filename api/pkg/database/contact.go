@@ -36,3 +36,18 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 	}
 	return contacts, nil
 }
+
+func (d *Database) CreateContact(ctx context.Context, contact *model.Contact) (*model.Contact, error) {
+	fmt.Println("d CreateCustomer")
+
+	query := fmt.Sprintf(`INSERT INTO %s.contacts (parent_id, last_name, first_name) VALUES ($1, $2, $3)`, contact.Schema_Name_)
+
+	_, err := d.DB.ExecContext(ctx, query, contact.ParentId, contact.LastName, contact.FirstName)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, fmt.Errorf("error creating customer: %w", err)
+	}
+
+	return contact, nil
+
+}

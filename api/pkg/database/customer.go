@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
 	"github.com/htstinson/stinsondataapi/api/internal/model"
@@ -69,4 +70,21 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 
 	return customer, nil
 
+}
+
+// Item
+func (d *Database) GetCustomer(ctx context.Context, id string) (*model.Customer, error) {
+	var customer model.Customer
+	err := d.DB.QueryRowContext(ctx,
+		"SELECT id, name, subscriber_id, schema_name, created_at FROM customers WHERE id = $1",
+		id,
+	).Scan(&customer.Id, &customer.Name, &customer.Subscriber_ID, &customer.Schema_Name, &customer.CreatedAt)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting item: %w", err)
+	}
+	return &customer, nil
 }
