@@ -40,7 +40,7 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 func (d *Database) CreateContact(ctx context.Context, contact *model.Contact) (*model.Contact, error) {
 	fmt.Println("d CreateCustomer")
 
-	query := fmt.Sprintf(`INSERT INTO %s.contacts (parent_id, last_name, first_name) VALUES ($1, $2, $3)`, contact.Schema_Name_)
+	query := fmt.Sprintf(`INSERT INTO %s.contacts (parent_id, lastname, firstname) VALUES ($1, $2, $3)`, contact.Schema_Name_)
 
 	_, err := d.DB.ExecContext(ctx, query, contact.ParentId, contact.LastName, contact.FirstName)
 	if err != nil {
