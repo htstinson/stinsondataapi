@@ -83,6 +83,6 @@ func (h *Handler) DeleteContact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	common.RespondJSON(w, http.StatusOK, item)
+	common.RespondJSON(w, http.StatusOK, contact)
 
 }
