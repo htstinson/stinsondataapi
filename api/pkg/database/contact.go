@@ -64,14 +64,18 @@ func (d *Database) DeleteContact(ctx context.Context, contact *model.Contact) er
 	return err
 }
 
-func (d *Database) GetContact(ctx context.Context, contact *model.Contact) (*model.Contact, error) {
+func (d *Database) GetContact(ctx context.Context, c model.Contact) (*model.Contact, error) {
 	fmt.Println("d GetContact")
 
-	query := fmt.Sprintf(`SELECT parent_id, lastname, firstname, created_at FROM %s.contacts WHERE id = $1`, contact.Schema_Name_)
+	query := fmt.Sprintf(`SELECT parent_id, lastname, firstname, created_at FROM %s.contacts WHERE id = $1`, c.Schema_Name_)
 
 	fmt.Println(query)
 
-	err := d.DB.QueryRowContext(ctx, query, contact.Id).Scan(&contact.ParentId, &contact.LastName, &contact.FirstName, &contact.CreatedAt)
+	contact := &model.Contact{
+		Id: c.Id,
+	}
+
+	err := d.DB.QueryRowContext(ctx, query, c.Id).Scan(&contact.ParentId, &contact.LastName, &contact.FirstName, &contact.CreatedAt)
 	if err != nil {
 		fmt.Println(err.Error())
 	}

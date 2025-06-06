@@ -100,7 +100,7 @@ type Repository interface {
 	SelectContacts(ctx context.Context, customer model.Customer, limit, offset int) ([]model.Contact, error)
 	CreateContact(ctx context.Context, contact *model.Contact) (*model.Contact, error)
 	DeleteContact(ctx context.Context, contact *model.Contact) error
-	GetContact(ctx context.Context, contact *model.Contact) (*model.Contact, error)
+	GetContact(ctx context.Context, contact model.Contact) (*model.Contact, error)
 	UpdateContact(ctx context.Context, contact *model.Contact) error
 
 	RowCount(tablename string) (int, error)
