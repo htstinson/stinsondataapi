@@ -44,28 +44,15 @@ func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	fmt.Println(contact.ParentId)
-	fmt.Println(contact.Schema_Name_)
-
-	var customer = &model.Customer{
-		Id: contact.ParentId,
-	}
-
-	customer, err := h.db.GetCustomer(ctx, customer)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-
 	contact.Id = uuid.New().String()
-	contact.ParentId = customer.Id
-	contact.Schema_Name_ = customer.Schema_Name
+	fmt.Println(contact.Schema_Name_)
+	fmt.Println(contact.ParentId)
 
-	contact, err = h.db.CreateContact(ctx, contact)
+	contact, err := h.db.CreateContact(ctx, contact)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to create customer")
 		return
 	}
 
-	common.RespondJSON(w, http.StatusCreated, customer)
+	common.RespondJSON(w, http.StatusCreated, contact)
 }
