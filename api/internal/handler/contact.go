@@ -98,6 +98,10 @@ func (h *Handler) UpdateContact(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	fmt.Println()
+	fmt.Println(contact)
+	fmt.Println()
+
 	current, err := h.db.GetContact(ctx, &contact)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get contact")
@@ -107,8 +111,6 @@ func (h *Handler) UpdateContact(w http.ResponseWriter, r *http.Request) {
 		common.RespondError(w, http.StatusNotFound, "Contact not found")
 		return
 	}
-
-	fmt.Println(contact)
 
 	err = h.db.UpdateContact(ctx, &contact)
 	if err != nil {
