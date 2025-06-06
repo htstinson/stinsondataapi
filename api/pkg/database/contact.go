@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
 	"github.com/htstinson/stinsondataapi/api/internal/model"
@@ -50,4 +51,29 @@ func (d *Database) CreateContact(ctx context.Context, contact *model.Contact) (*
 
 	return contact, nil
 
+}
+
+func (d *Database) DeleteContact(ctx context.Context, contact *model.Contact) error {
+
+	query := fmt.Sprintf(`DELETE FROM %s.contacts WHERE id = $1`, contact.Schema_Name_)
+
+	_, err := d.DB.ExecContext(ctx, query, contact.Id)
+
+	return err
+}
+
+func (d *Database) GetContact(ctx context.Context, contact *model.Contact) (*model.Contact, error) {
+	fmt.Println("d GetContact")
+
+	query := fmt.Sprintf(`SELECT parent_id, lastname, firstname, subscriber_id, created_at FROM %s.customer WHERE id = $1`, contact.Schema_Name_)
+
+	err := d.DB.QueryRowContext(ctx, query, contact.Id).Scan(&contact.ParentId, &contact.LastName, &contact.FirstName, &contact.Subscriber_Id_, &contact.CreatedAt)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting contact: %w", err)
+	}
+	return contact, nil
 }

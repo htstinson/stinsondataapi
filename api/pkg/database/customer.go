@@ -72,7 +72,6 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 
 }
 
-// Item
 func (d *Database) GetCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error) {
 	fmt.Println("d GetCustomer")
 

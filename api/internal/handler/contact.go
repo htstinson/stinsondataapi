@@ -56,3 +56,32 @@ func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
 
 	common.RespondJSON(w, http.StatusCreated, contact)
 }
+
+func (h *Handler) DeleteContact(w http.ResponseWriter, r *http.Request) {
+	var contact *model.Contact
+	if err := json.NewDecoder(r.Body).Decode(&contact); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	ctx := r.Context()
+
+	item, err := h.db.GetContact(ctx, contact)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get contact")
+		return
+	}
+	if item == nil {
+		common.RespondError(w, http.StatusNotFound, "Contact not found")
+		return
+	}
+	err = h.db.DeleteContact(ctx, contact)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error deleting item")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, item)
+
+}
