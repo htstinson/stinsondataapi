@@ -65,11 +65,14 @@ func (d *Database) DeleteContact(ctx context.Context, contact *model.Contact) er
 func (d *Database) GetContact(ctx context.Context, contact *model.Contact) (*model.Contact, error) {
 	fmt.Println("d GetContact")
 
-	query := fmt.Sprintf(`SELECT parent_id, lastname, firstname, subscriber_id, created_at FROM %s.contact WHERE id = $1`, contact.Schema_Name_)
+	query := fmt.Sprintf(`SELECT parent_id, lastname, firstname, subscriber_id, created_at FROM %s.contacts WHERE id = $1`, contact.Schema_Name_)
 
 	fmt.Println(query)
 
 	err := d.DB.QueryRowContext(ctx, query, contact.Id).Scan(&contact.ParentId, &contact.LastName, &contact.FirstName, &contact.Subscriber_Id_, &contact.CreatedAt)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 	if err == sql.ErrNoRows {
 		return nil, nil
