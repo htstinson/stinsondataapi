@@ -33,6 +33,8 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 			return nil, fmt.Errorf("error scanning contact: %w", err)
 		}
 
+		contact.Schema_Name_ = customer.Schema_Name
+
 		contacts = append(contacts, contact)
 	}
 	return contacts, nil
