@@ -90,6 +90,9 @@ func (d *Database) UpdateContact(ctx context.Context, contact *model.Contact) er
 
 	query := fmt.Sprintf(`UPDATE %s.contacts SET lastname = $2, firstname = $3 WHERE id = $1`, contact.Schema_Name_)
 	fmt.Println(query)
+	fmt.Println(contact.Id)
+	fmt.Println(contact.LastName)
+	fmt.Println(contact.FirstName)
 
 	_, err := d.DB.ExecContext(ctx, query, contact.Id, contact.LastName, contact.FirstName)
 	if err != nil {
