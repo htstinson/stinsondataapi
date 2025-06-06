@@ -58,6 +58,7 @@ func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) DeleteContact(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h DeleteContact")
 	var contact *model.Contact
 	if err := json.NewDecoder(r.Body).Decode(&contact); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
@@ -67,12 +68,12 @@ func (h *Handler) DeleteContact(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	item, err := h.db.GetContact(ctx, contact)
+	contact, err := h.db.GetContact(ctx, contact)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get contact")
 		return
 	}
-	if item == nil {
+	if contact == nil {
 		common.RespondError(w, http.StatusNotFound, "Contact not found")
 		return
 	}
