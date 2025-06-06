@@ -67,6 +67,8 @@ func (d *Database) GetContact(ctx context.Context, contact *model.Contact) (*mod
 
 	query := fmt.Sprintf(`SELECT parent_id, lastname, firstname, subscriber_id, created_at FROM %s.customer WHERE id = $1`, contact.Schema_Name_)
 
+	fmt.Println(query)
+
 	err := d.DB.QueryRowContext(ctx, query, contact.Id).Scan(&contact.ParentId, &contact.LastName, &contact.FirstName, &contact.Subscriber_Id_, &contact.CreatedAt)
 
 	if err == sql.ErrNoRows {
