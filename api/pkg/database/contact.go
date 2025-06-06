@@ -65,7 +65,7 @@ func (d *Database) DeleteContact(ctx context.Context, contact *model.Contact) er
 func (d *Database) GetContact(ctx context.Context, contact *model.Contact) (*model.Contact, error) {
 	fmt.Println("d GetContact")
 
-	query := fmt.Sprintf(`SELECT parent_id, lastname, firstname, subscriber_id, created_at FROM %s.customer WHERE id = $1`, contact.Schema_Name_)
+	query := fmt.Sprintf(`SELECT parent_id, lastname, firstname, subscriber_id, created_at FROM %s.contact WHERE id = $1`, contact.Schema_Name_)
 
 	fmt.Println(query)
 
