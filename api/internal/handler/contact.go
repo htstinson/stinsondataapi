@@ -108,11 +108,13 @@ func (h *Handler) UpdateContact(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(contact)
+
 	err = h.db.UpdateContact(ctx, &contact)
 	if err != nil {
 		common.RespondError(w, http.StatusNotFound, "Error updating contact")
 		return
 	}
 
-	common.RespondJSON(w, http.StatusOK, current)
+	common.RespondJSON(w, http.StatusOK, contact)
 }
