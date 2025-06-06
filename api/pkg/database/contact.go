@@ -82,3 +82,13 @@ func (d *Database) GetContact(ctx context.Context, contact *model.Contact) (*mod
 	}
 	return contact, nil
 }
+
+func (d *Database) UpdateContact(ctx context.Context, contact *model.Contact) error {
+
+	query := fmt.Sprintf(`UPDATE %s.contacts SET lastname = $2, firstname = $3 WHERE id = $1`, contact.Schema_Name_)
+
+	_, err := d.DB.ExecContext(ctx, query, contact.Id, contact.LastName, contact.FirstName)
+
+	return err
+
+}

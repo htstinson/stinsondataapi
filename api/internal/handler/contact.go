@@ -86,3 +86,35 @@ func (h *Handler) DeleteContact(w http.ResponseWriter, r *http.Request) {
 	common.RespondJSON(w, http.StatusOK, contact)
 
 }
+
+func (h *Handler) UpdateContact(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h UpateContact")
+	ctx := r.Context()
+
+	var contact model.Contact
+	if err := json.NewDecoder(r.Body).Decode(&contact); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	current, err := h.db.GetContact(ctx, &contact)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get contact")
+		return
+	}
+	if current == nil {
+		common.RespondError(w, http.StatusNotFound, "Contact not found")
+		return
+	}
+
+	current.LastName = contact.LastName
+	current.FirstName = contact.FirstName
+	err = h.db.UpdateContact(ctx, current)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error updating contact")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, current)
+}

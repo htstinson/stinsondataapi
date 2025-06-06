@@ -166,6 +166,7 @@ func main() {
 	protected.HandleFunc("/subscriber/customer/contacts", h.SelectContacts).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscriber/customer/contact", h.CreateContact).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscriber/customer/contactd", h.DeleteContact).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/subscriber/customer/contact", h.UpdateContact).Methods("PUT", "OPTIONS")
 
 	// Subscribers
 	protected.HandleFunc("/subscribers", h.CreateSubscriber).Methods("POST", "OPTIONS")
