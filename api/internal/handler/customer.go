@@ -82,16 +82,21 @@ func (h *Handler) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
 
 	current, err := h.db.GetCustomer(ctx, customer)
 	if err != nil {
+		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get customer")
 		return
 	}
 	if current == nil {
-		common.RespondError(w, http.StatusNotFound, "Contact not found")
+		fmt.Println("Customer not found")
+		common.RespondError(w, http.StatusNotFound, "Customer not found")
 		return
 	}
+
+	fmt.Println(current.Id)
+
 	err = h.db.DeleteCustomer(ctx, customer)
 	if err != nil {
-		common.RespondError(w, http.StatusNotFound, "Error deleting item")
+		common.RespondError(w, http.StatusNotFound, "Error deleting Customer")
 		return
 	}
 

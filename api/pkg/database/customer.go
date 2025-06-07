@@ -82,9 +82,11 @@ func (d *Database) GetCustomer(ctx context.Context, customer *model.Customer) (*
 	err := d.DB.QueryRowContext(ctx, query, customer.Id).Scan(&customer.Name, &customer.Subscriber_ID, &customer.Schema_Name, &customer.CreatedAt)
 
 	if err == sql.ErrNoRows {
+		fmt.Println(err.Error())
 		return nil, nil
 	}
 	if err != nil {
+		fmt.Println(err.Error())
 		return nil, fmt.Errorf("error getting customer: %w", err)
 	}
 	return customer, nil
