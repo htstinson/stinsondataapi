@@ -80,7 +80,7 @@ func (h *Handler) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	current, err := h.db.GetCustomer(ctx, customer)
+	current, err := h.db.GetCustomer(ctx, *customer)
 	if err != nil {
 		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get customer")
