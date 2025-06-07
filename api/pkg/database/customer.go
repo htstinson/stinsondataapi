@@ -109,6 +109,9 @@ func (d *Database) UpdateCustomer(ctx context.Context, customer *model.Customer)
 
 	query := fmt.Sprintf(`UPDATE %s.customers SET name = $2 WHERE id = $1`, customer.Schema_Name)
 
+	fmt.Println(query)
+	fmt.Println(customer.Name)
+
 	_, err := d.DB.ExecContext(ctx, query, customer.Id, customer.Name)
 	if err != nil {
 		fmt.Println(err.Error())
