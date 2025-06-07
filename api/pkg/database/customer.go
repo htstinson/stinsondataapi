@@ -73,7 +73,7 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 
 }
 
-func (d *Database) GetCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error) {
+func (d *Database) GetCustomer(ctx context.Context, customer model.Customer) (*model.Customer, error) {
 	fmt.Println("d GetCustomer")
 
 	query := fmt.Sprintf(`SELECT name, created_at FROM %s.customers WHERE id = $1`, customer.Schema_Name)
@@ -90,7 +90,7 @@ func (d *Database) GetCustomer(ctx context.Context, customer *model.Customer) (*
 		return nil, fmt.Errorf("error getting customer: %w", err)
 	}
 
-	return customer, nil
+	return &customer, nil
 }
 
 func (d *Database) DeleteCustomer(ctx context.Context, customer *model.Customer) error {
