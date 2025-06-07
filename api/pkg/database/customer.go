@@ -10,7 +10,7 @@ import (
 
 func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.Customer, error) {
 
-	fmt.Println("database.go SelectCustomers()")
+	fmt.Println("d SelectCustomers")
 
 	query := fmt.Sprintf("SELECT id, name, created_at FROM %s.customers ORDER BY name ASC LIMIT $1 OFFSET $2", subscriber.Schema_Name)
 
@@ -63,6 +63,7 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 		customer.Name,
 		profile.Id,
 	)
+
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, fmt.Errorf("error creating customer: %w", err)
@@ -77,18 +78,18 @@ func (d *Database) GetCustomer(ctx context.Context, customer *model.Customer) (*
 
 	query := fmt.Sprintf(`SELECT name, created_at FROM %s.customers WHERE id = $1`, customer.Schema_Name)
 
-	fmt.Println(query)
-
 	err := d.DB.QueryRowContext(ctx, query, customer.Id).Scan(&customer.Name, &customer.CreatedAt)
 
 	if err == sql.ErrNoRows {
 		fmt.Println(err.Error())
 		return nil, nil
 	}
+
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, fmt.Errorf("error getting customer: %w", err)
 	}
+
 	return customer, nil
 }
 
@@ -101,4 +102,18 @@ func (d *Database) DeleteCustomer(ctx context.Context, customer *model.Customer)
 	_, err := d.DB.ExecContext(ctx, query, customer.Id)
 
 	return err
+}
+
+func (d *Database) UpdateCustomer(ctx context.Context, customer *model.Customer) error {
+	fmt.Println("d UpdateCustomer")
+
+	query := fmt.Sprintf(`UPDATE %s.customers SET name = $2 WHERE id = $1`, customer.Schema_Name)
+
+	_, err := d.DB.ExecContext(ctx, query, customer.Id, customer.Name)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
 }

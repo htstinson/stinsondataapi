@@ -88,7 +88,7 @@ func (h *Handler) DeleteContact(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateContact(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h UpateContact")
+	fmt.Println("h UpdateContact")
 	ctx := r.Context()
 
 	var contact model.Contact

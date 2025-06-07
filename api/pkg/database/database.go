@@ -49,6 +49,7 @@ type Repository interface {
 	CreateCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error)
 	GetCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error)
 	DeleteCustomer(ctx context.Context, customer *model.Customer) error
+	UpdateCustomer(ctx context.Context, customer *model.Customer) error
 
 	//Subscriber
 	GetSubscriber(ctx context.Context, id string) (*model.Subscriber, error)

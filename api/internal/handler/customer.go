@@ -103,3 +103,33 @@ func (h *Handler) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
 	common.RespondJSON(w, http.StatusOK, customer)
 
 }
+
+func (h *Handler) UpdateCustomer(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h UpdateCustomer")
+	ctx := r.Context()
+
+	var customer model.Customer
+	if err := json.NewDecoder(r.Body).Decode(&customer); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	current, err := h.db.GetCustomer(ctx, &customer)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get customer")
+		return
+	}
+	if current == nil {
+		common.RespondError(w, http.StatusNotFound, "Customer not found")
+		return
+	}
+
+	err = h.db.UpdateCustomer(ctx, &customer)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error updating customer")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, customer)
+}
