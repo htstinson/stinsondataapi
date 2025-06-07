@@ -102,6 +102,9 @@ func (d *Database) DeleteCustomer(ctx context.Context, customer *model.Customer)
 	fmt.Println(customer)
 
 	_, err := d.DB.ExecContext(ctx, query, customer.Id)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 	return err
 }
