@@ -10,7 +10,7 @@ import (
 
 func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, limit, offset int) ([]model.Contact, error) {
 
-	fmt.Println("database.go SelectContacts()")
+	fmt.Println("d SelectContacts")
 
 	query := fmt.Sprintf(`SELECT id, parent_id, lastname, firstname, created_at FROM %s.contacts 
 	WHERE parent_id = '%s' ORDER BY lastname,firstname ASC LIMIT $1 OFFSET $2`, customer.Schema_Name, customer.Id)
@@ -21,9 +21,6 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 	)
 	if err != nil {
 		fmt.Println(err.Error())
-		if err == sql.ErrNoRows {
-			return nil, err
-		}
 		return nil, fmt.Errorf("error listing contacts: %w", err)
 	}
 	defer rows.Close()

@@ -93,15 +93,19 @@ func (h *Handler) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = h.db.SelectContacts(ctx, *current, 100, 0)
-	if err == nil {
-		common.RespondError(w, http.StatusConflict, "Cannot delete customer: customer has associated contacts")
-	} else {
+	contacts, err := h.db.SelectContacts(ctx, *current, 100, 0)
+
+	if err != nil {
 		fmt.Println(err.Error())
 		if err != sql.ErrNoRows {
 			common.RespondError(w, http.StatusOK, "Error locating contacts")
 			return
 		}
+	}
+
+	if len(contacts) > 0 {
+		common.RespondError(w, http.StatusConflict, "Cannot delete customer: customer has associated contacts")
+		return
 	}
 
 	err = h.db.DeleteCustomer(ctx, customer)
