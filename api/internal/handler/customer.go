@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -30,7 +31,7 @@ func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
 
 	customers, err := h.db.SelectCustomers(ctx, *subcriber, 100, 0)
 	if err != nil {
-		common.RespondError(w, http.StatusInternalServerError, "Failed to list customers")
+		common.RespondError(w, http.StatusInternalServerError, "Failed to select customers")
 		return
 	}
 
@@ -92,7 +93,16 @@ func (h *Handler) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(current.Id)
+	_, err = h.db.SelectContacts(ctx, *current, 100, 0)
+	if err == nil {
+		common.RespondError(w, http.StatusConflict, "Cannot delete customer: customer has associated contacts")
+	} else {
+		fmt.Println(err.Error())
+		if err != sql.ErrNoRows {
+			common.RespondError(w, http.StatusOK, "Error locating contacts")
+			return
+		}
+	}
 
 	err = h.db.DeleteCustomer(ctx, customer)
 	if err != nil {

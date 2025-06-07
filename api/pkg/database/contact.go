@@ -21,6 +21,9 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 	)
 	if err != nil {
 		fmt.Println(err.Error())
+		if err == sql.ErrNoRows {
+			return nil, err
+		}
 		return nil, fmt.Errorf("error listing contacts: %w", err)
 	}
 	defer rows.Close()
