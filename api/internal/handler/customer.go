@@ -67,3 +67,34 @@ func (h *Handler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
 
 	common.RespondJSON(w, http.StatusCreated, customer)
 }
+
+func (h *Handler) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h DeleteCustomer")
+
+	var customer *model.Customer
+	if err := json.NewDecoder(r.Body).Decode(&customer); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	ctx := r.Context()
+
+	current, err := h.db.GetCustomer(ctx, *&customer)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get customer")
+		return
+	}
+	if current == nil {
+		common.RespondError(w, http.StatusNotFound, "Contact not found")
+		return
+	}
+	err = h.db.DeleteCustomer(ctx, customer)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error deleting item")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, customer)
+
+}

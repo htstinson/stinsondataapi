@@ -89,3 +89,14 @@ func (d *Database) GetCustomer(ctx context.Context, customer *model.Customer) (*
 	}
 	return customer, nil
 }
+
+func (d *Database) DeleteCustomer(ctx context.Context, customer *model.Customer) error {
+
+	fmt.Println("d DeleteCustomer")
+
+	query := fmt.Sprintf(`DELETE FROM %s.contacts WHERE id = $1`, customer.Schema_Name)
+
+	_, err := d.DB.ExecContext(ctx, query, customer.Id)
+
+	return err
+}
