@@ -94,7 +94,7 @@ func (d *Database) DeleteCustomer(ctx context.Context, customer *model.Customer)
 
 	fmt.Println("d DeleteCustomer")
 
-	query := fmt.Sprintf(`DELETE FROM %s.contacts WHERE id = $1`, customer.Schema_Name)
+	query := fmt.Sprintf(`DELETE FROM %s.customers WHERE id = $1`, customer.Schema_Name)
 
 	_, err := d.DB.ExecContext(ctx, query, customer.Id)
 
