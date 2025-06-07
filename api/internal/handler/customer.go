@@ -115,6 +115,8 @@ func (h *Handler) UpdateCustomer(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	fmt.Println(customer.Name)
+
 	current, err := h.db.GetCustomer(ctx, &customer)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get customer")
