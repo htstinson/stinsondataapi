@@ -75,7 +75,7 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 func (d *Database) GetCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error) {
 	fmt.Println("d GetCustomer")
 
-	query := fmt.Sprintf(`SELECT name, subscriber_id, schema_name, created_at FROM %s.customer WHERE id = $1`, customer.Schema_Name)
+	query := fmt.Sprintf(`SELECT name, subscriber_id, schema_name, created_at FROM %s.customers WHERE id = $1`, customer.Schema_Name)
 
 	fmt.Println(query)
 
