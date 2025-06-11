@@ -141,7 +141,7 @@ func main() {
 	protected.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/users/{id}", h.DeleteUser).Methods("DELETE")
 	protected.HandleFunc("/users/{id}", h.GetUser).Methods("GET")
-	protected.HandleFunc("/users/u", h.GetUserByUserName).Methods("GET")
+	protected.HandleFunc("/users/u", h.GetUserByUserName).Methods("GET", "OPTIONS")
 
 	protected.HandleFunc("/users", h.SelectUsers).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/users/roles", h.SelectUserRoles).Methods("GET", "OPTIONS")
