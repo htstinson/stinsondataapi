@@ -77,6 +77,35 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	common.RespondJSON(w, http.StatusOK, user)
 }
 
+func (h *Handler) GetUserByUserName(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("h GetUserByUserName")
+
+	var user *model.User
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	ctx := r.Context()
+
+	user, err := h.db.GetUserByUsername(ctx, user.Username)
+	if err != nil {
+		fmt.Println(2, err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
+		return
+	}
+
+	if user == nil {
+		fmt.Println(3)
+		common.RespondError(w, http.StatusNotFound, "Item not found")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, user)
+}
+
 func (h *Handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["id"]
