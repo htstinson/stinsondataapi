@@ -116,6 +116,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		User_ID: user.ID,
 	}
 
+	fmt.Println("handler login user.ID = ", user.ID)
+
 	user_subscriber_role_view, err := h.db.SelectUserSubscriberRoleView(r.Context(), user_customer_role_view, 100, 0)
 	if err != nil {
 		fmt.Println(err.Error())
