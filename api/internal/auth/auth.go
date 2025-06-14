@@ -20,11 +20,11 @@ var (
 )
 
 type Claims struct {
-	UserID     string                       `json:"user_id"`
-	Username   string                       `json:"username"`
-	Roles      string                       `json:"roles"`
-	IP_Address string                       `json:"ip_address"`
-	Subscribed []model.User_Subscriber_View `json:"subscribed"`
+	UserID     string                            `json:"user_id"`
+	Username   string                            `json:"username"`
+	Roles      string                            `json:"roles"`
+	IP_Address string                            `json:"ip_address"`
+	Subscribed []model.User_Subscriber_Role_View `json:"subscribed"`
 	jwt.RegisteredClaims
 }
 
