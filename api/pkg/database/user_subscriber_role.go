@@ -34,8 +34,8 @@ func (d *Database) SelectUserSubscriberRoleView(ctx context.Context, user_subscr
 	} else {
 		// User_ID was provided
 		query = `SELECT id, user_subscriber_id, role_id, role_name, user_id, username, subscriber_id, subscriber_name, created_at, updated_at 
-		FROM common.user_subscriber_role_view 
-		ORDER BY username, subscriber_name, role_name where user_id = $1 ASC LIMIT $2 OFFSET $3`
+		FROM common.user_subscriber_role_view where user_id = $1
+		ORDER BY username, subscriber_name, role_name ASC LIMIT $2 OFFSET $3`
 
 		fmt.Println(query)
 
