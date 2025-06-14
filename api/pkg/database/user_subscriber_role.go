@@ -10,7 +10,7 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (d *Database) SelectUserSubscriberRolesView(ctx context.Context, limit, offset int) ([]model.User_Subscriber_Roles_View, error) {
+func (d *Database) SelectUserSubscriberRoleView(ctx context.Context, limit, offset int) ([]model.User_Subscriber_Role_View, error) {
 	fmt.Println("database.go SelectUserSubscriberRolesView()")
 	rows, err := d.DB.QueryContext(ctx,
 		"SELECT id, user_subscriber_id, role_id, role_name, user_id, username, subscriber_id, subscriber_name, created_at, updated_at FROM user_subscriber_role_view ORDER BY username, subscriber_name, role_name ASC LIMIT $1 OFFSET $2",
@@ -22,9 +22,9 @@ func (d *Database) SelectUserSubscriberRolesView(ctx context.Context, limit, off
 	}
 	defer rows.Close()
 
-	var user_subscriber_role_views []model.User_Subscriber_Roles_View
+	var user_subscriber_role_views []model.User_Subscriber_Role_View
 	for rows.Next() {
-		var user_subscriber_role_view model.User_Subscriber_Roles_View
+		var user_subscriber_role_view model.User_Subscriber_Role_View
 		if err := rows.Scan(&user_subscriber_role_view.Id, &user_subscriber_role_view.User_Subscriber_ID,
 			&user_subscriber_role_view.Role_Id, &user_subscriber_role_view.Role_Name,
 			&user_subscriber_role_view.User_ID, &user_subscriber_role_view.User_Name,

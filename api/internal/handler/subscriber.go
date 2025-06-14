@@ -151,6 +151,29 @@ func (h *Handler) GetSubscriber(w http.ResponseWriter, r *http.Request) {
 	common.RespondJSON(w, http.StatusOK, subscriber)
 }
 
+func (h *Handler) GetSubscriberP(w http.ResponseWriter, r *http.Request) {
+
+	var subscriber *model.Subscriber
+	if err := json.NewDecoder(r.Body).Decode(&subscriber); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	ctx := r.Context()
+	subscriber, err := h.db.GetSubscriber(ctx, subscriber.Id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
+		return
+	}
+	if subscriber == nil {
+		common.RespondError(w, http.StatusNotFound, "subscriber not found")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, subscriber)
+}
+
 func (h *Handler) SelectSubscribers(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()

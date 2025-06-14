@@ -175,6 +175,7 @@ func main() {
 	protected.HandleFunc("/subscribers/{id}", h.UpdateSubscriber).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/subscribers", h.DeleteSubscriber).Methods("DELETE")
 	protected.HandleFunc("/subscibers/{id}", h.GetSubscriber).Methods("GET")
+	protected.HandleFunc("/subscribers/g", h.GetSubscriberP).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscribers", h.SelectSubscribers).Methods("GET", "OPTIONS")
 
 	// Role

@@ -2,7 +2,7 @@ package model
 
 import "time"
 
-// Customer
+// Subscriber
 type Subscriber struct {
 	Id          string    `json:"id"`
 	Name        string    `json:"name"`

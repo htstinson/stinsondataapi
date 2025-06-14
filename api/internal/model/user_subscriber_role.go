@@ -11,7 +11,7 @@ type User_Subscriber_Role struct {
 	Updated_At         time.Time `json:"updated_at"`
 }
 
-type User_Subscriber_Roles_View struct {
+type User_Subscriber_Role_View struct {
 	Id                 string    `json:"id"`
 	User_Subscriber_ID string    `json:"user_subscriber_id"`
 	Role_Id            string    `json:"role_id"`
