@@ -35,8 +35,8 @@ func IpLoggingMiddleware(next http.Handler) http.Handler {
 		//ipAddr := getTCPAddr(r)
 
 		// Log the connection information
-		//fmt.Printf("[%v] [IpLoggingMiddleware] Method: %s, Path: %s\n", time.Now().Format(time.RFC3339), r.Method, r.URL.Path)
-		//fmt.Printf("[%v] [IpLoggingMiddleware] X-Forwarded-For: %s\n", time.Now().Format(time.RFC3339), r.Header.Get("X-Forwarded-For"))
+		fmt.Printf("[%v] [IpLoggingMiddleware] Method: %s, Path: %s\n", time.Now().Format(time.RFC3339), r.Method, r.URL.Path)
+		fmt.Printf("[%v] [IpLoggingMiddleware] X-Forwarded-For: %s\n", time.Now().Format(time.RFC3339), r.Header.Get("X-Forwarded-For"))
 
 		// Continue to the next handler
 		next.ServeHTTP(w, r)

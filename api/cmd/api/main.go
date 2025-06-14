@@ -106,7 +106,7 @@ func main() {
 
 	// Protected routes
 	protected := api.PathPrefix("/").Subrouter()
-	//protected.Use(middleware.IpLoggingMiddleware)
+	protected.Use(middleware.IpLoggingMiddleware)
 	protected.Use(middleware.CORS) // First: Set CORS headers
 	protected.Use(jwtAuth.Middleware)
 
