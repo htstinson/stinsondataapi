@@ -20,6 +20,8 @@ func (h *Handler) SelectUserSubscriberRolesView(w http.ResponseWriter, r *http.R
 	}
 	defer r.Body.Close()
 
+	fmt.Println(user_subscriber_role_view)
+
 	ctx := r.Context()
 	user_customer_roles_views, err := h.db.SelectUserSubscriberRoleView(ctx, *user_subscriber_role_view, 100, 0)
 	if err != nil {
