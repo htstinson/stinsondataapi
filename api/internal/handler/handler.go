@@ -105,6 +105,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Generate token
+	// TODO replace this with roles per user_subscription
 	roles, err := h.db.SelectRolesByUser(r.Context(), user.ID)
 	if err != nil {
 		fmt.Println(err.Error())
