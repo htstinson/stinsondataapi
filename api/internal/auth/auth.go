@@ -62,6 +62,8 @@ func (a *JWTAuth) GenerateToken(user model.User, roles model.Roles, subscribed [
 		},
 	}
 
+	fmt.Println("Generate Token, subscribed len = ", len(subscribed))
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(a.Config.SecretKey))
 }
