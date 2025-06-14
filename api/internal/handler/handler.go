@@ -113,12 +113,12 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println(user.ID, roles)
 
-	user_subscriber_views, err := h.db.SelectUserSubscriberView(r.Context(), user.ID, 100, 0)
+	user_subscriber_role_view, err := h.db.SelectUserSubscriberView(r.Context(), user.ID, 100, 0)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 
-	token, err := h.auth.GenerateToken(*user, roles, user_subscriber_views)
+	token, err := h.auth.GenerateToken(*user, roles, user_subscriber_role_view)
 	if err != nil {
 		fmt.Printf("[%v] Error: %s\n", time.Now().Format(time.RFC3339), err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Error generating token")

@@ -41,7 +41,7 @@ func New(config Config) *JWTAuth {
 	return &JWTAuth{Config: config}
 }
 
-func (a *JWTAuth) GenerateToken(user model.User, roles model.Roles, subscribed []model.User_Subscriber_View) (string, error) {
+func (a *JWTAuth) GenerateToken(user model.User, roles model.Roles, subscribed []model.User_Subscriber_Role_View) (string, error) {
 	now := time.Now()
 
 	fmt.Println("GenerateToken")
