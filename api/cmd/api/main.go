@@ -96,7 +96,7 @@ func main() {
 	// Setup routes
 	api := router.PathPrefix("/api/v1").Subrouter()
 
-	api.Use(middleware.IpLoggingMiddleware)
+	//api.Use(middleware.IpLoggingMiddleware)
 
 	// Public routes
 	api.HandleFunc("/health", h.HealthCheck).Methods("GET")
@@ -106,7 +106,7 @@ func main() {
 
 	// Protected routes
 	protected := api.PathPrefix("/").Subrouter()
-	protected.Use(middleware.IpLoggingMiddleware)
+	//protected.Use(middleware.IpLoggingMiddleware)
 	protected.Use(middleware.CORS) // First: Set CORS headers
 	protected.Use(jwtAuth.Middleware)
 

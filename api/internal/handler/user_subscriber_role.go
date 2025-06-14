@@ -13,8 +13,6 @@ import (
 func (h *Handler) SelectUserSubscriberRoleView(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h SelectUserSubscriberRoleView")
 
-	fmt.Println(r.Body)
-
 	var user_subscriber_role_view *model.User_Subscriber_Role_View
 	if err := json.NewDecoder(r.Body).Decode(&user_subscriber_role_view); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
