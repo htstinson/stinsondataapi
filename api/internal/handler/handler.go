@@ -111,9 +111,11 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(user.ID, roles)
+	var user_customer_role_view = model.User_Subscriber_Role_View{
+		User_ID: user.ID,
+	}
 
-	user_subscriber_role_view, err := h.db.SelectUserSubscriberView(r.Context(), user.ID, 100, 0)
+	user_subscriber_role_view, err := h.db.SelectUserSubscriberRoleView(r.Context(), user_customer_role_view, 100, 0)
 	if err != nil {
 		fmt.Println(err.Error())
 	}

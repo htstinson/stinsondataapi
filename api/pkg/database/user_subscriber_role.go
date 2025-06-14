@@ -10,17 +10,40 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (d *Database) SelectUserSubscriberRoleView(ctx context.Context, limit, offset int) ([]model.User_Subscriber_Role_View, error) {
+func (d *Database) SelectUserSubscriberRoleView(ctx context.Context, user_customer_role_view model.User_Subscriber_Role_View, limit, offset int) ([]model.User_Subscriber_Role_View, error) {
 	fmt.Println("database.go SelectUserSubscriberRolesView()")
-	rows, err := d.DB.QueryContext(ctx,
-		"SELECT id, user_subscriber_id, role_id, role_name, user_id, username, subscriber_id, subscriber_name, created_at, updated_at FROM user_subscriber_role_view ORDER BY username, subscriber_name, role_name ASC LIMIT $1 OFFSET $2",
-		limit, offset,
-	)
-	if err != nil {
-		fmt.Println(err.Error())
-		return nil, fmt.Errorf("error listing rows: %w", err)
+
+	var rows *sql.Rows
+	var query string
+	var err error
+
+	// User_ID was not provided
+	if user_customer_role_view.User_ID == "" {
+		query = `SELECT id, user_subscriber_id, role_id, role_name, user_id, username, 
+		subscriber_id, subscriber_name, created_at, updated_at 
+		FROM common.user_subscriber_role_view 
+		ORDER BY username, subscriber_name, role_name ASC LIMIT $1 OFFSET $2`
+
+		rows, err = d.DB.QueryContext(ctx, query, limit, offset)
+		if err != nil {
+			fmt.Println(err.Error())
+			return nil, fmt.Errorf("error selecting rows: %w", err)
+		}
+		defer rows.Close()
+
+	} else {
+		// User_ID was provided
+		query = `SELECT id, user_subscriber_id, role_id, role_name, user_id, username, subscriber_id, subscriber_name, created_at, updated_at 
+		FROM common.user_subscriber_role_view 
+		ORDER BY username, subscriber_name, role_name where user_id = $1 ASC LIMIT $2 OFFSET $3`
+
+		rows, err = d.DB.QueryContext(ctx, query, user_customer_role_view.User_ID, limit, offset)
+		if err != nil {
+			fmt.Println(err.Error())
+			return nil, fmt.Errorf("error selecting rows: %w", err)
+		}
+		defer rows.Close()
 	}
-	defer rows.Close()
 
 	var user_subscriber_role_views []model.User_Subscriber_Role_View
 	for rows.Next() {
