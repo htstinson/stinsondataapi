@@ -69,6 +69,7 @@ func CORS(next http.Handler) http.Handler {
 		// Only handle OPTIONS preflight requests here
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
+			fmt.Println("options")
 			return // Don't call next.ServeHTTP for OPTIONS
 		}
 
