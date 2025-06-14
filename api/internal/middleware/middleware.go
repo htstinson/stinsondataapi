@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -12,24 +13,21 @@ import (
 func Logger(logger *log.Logger) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			/*
-				start := time.Now()
-				next.ServeHTTP(w, r)
-				qp := r.URL.Query()
-				dir := qp.Get("dir")
-				fld := qp.Get("field")
-
-					fmt.Printf(
-						"[%v] [middleware Logger] %s %s %s %s %s %s %s\n",
-						time.Now().Format(time.RFC3339),
-						r.Method,
-						r.URL.Path,
-						dir,
-						fld,
-						r.Header.Get("X-Forwarded-For"), r.URL.User,
-						time.Since(start),
-					)
-			*/
+			start := time.Now()
+			next.ServeHTTP(w, r)
+			qp := r.URL.Query()
+			dir := qp.Get("dir")
+			fld := qp.Get("field")
+			fmt.Printf(
+				"[%v] [middleware Logger] %s %s %s %s %s %s %s\n",
+				time.Now().Format(time.RFC3339),
+				r.Method,
+				r.URL.Path,
+				dir,
+				fld,
+				r.Header.Get("X-Forwarded-For"), r.URL.User,
+				time.Since(start),
+			)
 		})
 	}
 }
@@ -69,7 +67,6 @@ func CORS(next http.Handler) http.Handler {
 		// Only handle OPTIONS preflight requests here
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
-			fmt.Println("options")
 			return // Don't call next.ServeHTTP for OPTIONS
 		}
 
