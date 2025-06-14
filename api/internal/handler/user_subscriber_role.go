@@ -10,8 +10,10 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (h *Handler) SelectUserSubscriberRolesView(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h SelectUserSubscriberRolesView")
+func (h *Handler) SelectUserSubscriberRoleView(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h SelectUserSubscriberRoleView")
+
+	fmt.Println(r.Body)
 
 	var user_subscriber_role_view *model.User_Subscriber_Role_View
 	if err := json.NewDecoder(r.Body).Decode(&user_subscriber_role_view); err != nil {
