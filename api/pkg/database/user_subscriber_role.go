@@ -10,7 +10,7 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (d *Database) SelectUserSubscriberRoleView(ctx context.Context, user_subscriber_role_view model.User_Subscriber_Role_View, limit, offset int) ([]model.User_Subscriber_Role_View, error) {
+func (d *Database) SelectUserSubscriberRoleView(ctx context.Context, user_subscriber_view model.User_Subscriber_View, limit, offset int) ([]model.User_Subscriber_Role_View, error) {
 	fmt.Println("database.go SelectUserSubscriberRolesView()")
 
 	var rows *sql.Rows
@@ -18,7 +18,7 @@ func (d *Database) SelectUserSubscriberRoleView(ctx context.Context, user_subscr
 	var err error
 
 	// User_ID was not provided
-	if user_subscriber_role_view.User_ID == "" {
+	if user_subscriber_view.User_ID == "" {
 		query = `SELECT id, user_subscriber_id, role_id, role_name, user_id, username, 
 		subscriber_id, subscriber_name, created_at, updated_at 
 		FROM common.user_subscriber_role_view 
@@ -39,7 +39,7 @@ func (d *Database) SelectUserSubscriberRoleView(ctx context.Context, user_subscr
 
 		fmt.Println(query)
 
-		rows, err = d.DB.QueryContext(ctx, query, user_subscriber_role_view.User_ID, limit, offset)
+		rows, err = d.DB.QueryContext(ctx, query, user_subscriber_view.User_ID, limit, offset)
 		if err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error selecting rows: %w", err)

@@ -112,13 +112,13 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var user_customer_role_view = model.User_Subscriber_Role_View{
+	var user_subscriber_view = model.User_Subscriber_View{
 		User_ID: user.ID,
 	}
 
 	fmt.Println("handler login user.ID = ", user.ID)
 
-	user_subscriber_role_view, err := h.db.SelectUserSubscriberRoleView(r.Context(), user_customer_role_view, 100, 0)
+	user_subscriber_role_view, err := h.db.SelectUserSubscriberRoleView(r.Context(), user_subscriber_view, 100, 0)
 	if err != nil {
 		fmt.Println(err.Error())
 	}

@@ -13,17 +13,17 @@ import (
 func (h *Handler) SelectUserSubscriberRoleView(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h SelectUserSubscriberRoleView")
 
-	var user_subscriber_role_view *model.User_Subscriber_Role_View
-	if err := json.NewDecoder(r.Body).Decode(&user_subscriber_role_view); err != nil {
+	var user_subscriber_view *model.User_Subscriber_View
+	if err := json.NewDecoder(r.Body).Decode(&user_subscriber_view); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 	defer r.Body.Close()
 
-	fmt.Println(user_subscriber_role_view)
+	fmt.Println(user_subscriber_view)
 
 	ctx := r.Context()
-	user_customer_roles_views, err := h.db.SelectUserSubscriberRoleView(ctx, *user_subscriber_role_view, 100, 0)
+	user_customer_roles_views, err := h.db.SelectUserSubscriberRoleView(ctx, *user_subscriber_view, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select user_customer_roles_view")
 		return
