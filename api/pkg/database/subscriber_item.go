@@ -19,7 +19,7 @@ func (d *Database) SelectSubscriberItemView(ctx context.Context, subscriber_id s
 			return nil, err
 		} else {
 			fmt.Println(subscriber_id, "validated.")
-			where_clause = fmt.Sprintf(` where subscribber_id = '%s' `, subscriber_id)
+			where_clause = fmt.Sprintf(` where subscriber_id = '%s' `, subscriber_id)
 		}
 	}
 
