@@ -83,7 +83,7 @@ func (d *Database) LookupSubscriberItem(ctx context.Context, item_id string, sub
 	var subscriber_item = model.Subscriber_Item{}
 
 	err := d.DB.QueryRowContext(ctx,
-		"SELECT id, item_id, subscriber_id FROM subscriber_item WHERE item_id = $1 and subscriber_id = $2",
+		"SELECT id, item_id, subscriber_id FROM subscriber_items WHERE item_id = $1 and subscriber_id = $2",
 		item_id, subscriber_id,
 	).Scan(&subscriber_item.Id, &subscriber_item.Item_ID, &subscriber_item.Subscriber_Id)
 
