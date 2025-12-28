@@ -109,6 +109,7 @@ func (d *Database) DeleteSubscriberItem(ctx context.Context, id string) error {
 
 func (d *Database) GetSubscriberItem(ctx context.Context, id string) (*model.Subscriber_Item, error) {
 	fmt.Println("d GetSubscriberItem")
+	fmt.Println(id)
 
 	var subscriberitem model.Subscriber_Item
 
