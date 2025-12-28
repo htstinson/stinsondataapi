@@ -124,5 +124,7 @@ func (d *Database) GetSubscriberItem(ctx context.Context, id string) (*model.Sub
 		return nil, fmt.Errorf("error getting subscriber_item: %w", err)
 	}
 
+	fmt.Println(subscriberitem.Id, subscriberitem.Item_ID, subscriberitem.Subscriber_Id)
+
 	return &subscriberitem, nil
 }
