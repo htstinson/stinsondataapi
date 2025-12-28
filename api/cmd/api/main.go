@@ -9,7 +9,6 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/middleware"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 	"github.com/htstinson/stinsondataapi/api/pkg/database"
-	"github.com/htstinson/stinsondataapi/api/salesforce"
 
 	"context"
 	"crypto/tls"
@@ -40,13 +39,13 @@ func main() {
 
 	log.SetOutput(os.Stdout)
 
-	fmt.Printf("[%v] [main] Initializing SalesForce.com connection.\n", time.Now().Format(time.RFC3339))
+	//	fmt.Printf("[%v] [main] Initializing SalesForce.com connection.\n", time.Now().Format(time.RFC3339))
 
-	sf, err := salesforce.New()
-	if err != nil {
-		fmt.Printf("[%v] [main] SalesForce error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
-		return
-	}
+	//	sf, err := salesforce.New()
+	//	if err != nil {
+	//		fmt.Printf("[%v] [main] SalesForce error: %s.\n", time.Now().Format(time.RFC3339), err.Error())
+	//		return
+	//	}
 
 	fmt.Printf("[%v] [main] Initializing RDS database.\n", time.Now().Format(time.RFC3339))
 	var RDSLogin = &model.RDSLogin{}
@@ -127,14 +126,14 @@ func main() {
 	protected.HandleFunc("/items/{id}", h.DeleteItem).Methods("DELETE")
 
 	// Salesforce Account
-	protected.HandleFunc("/accounts", sf.Handler.CreateAccount).Methods("POST", "OPTIONS")
-	protected.HandleFunc("/accounts/{id}", sf.Handler.UpdateAccount).Methods("PATCH", "OPTIONS")
-	protected.HandleFunc("/accounts", sf.Handler.ListAccounts).Methods("GET", "OPTIONS")
+	//protected.HandleFunc("/accounts", sf.Handler.CreateAccount).Methods("POST", "OPTIONS")
+	//protected.HandleFunc("/accounts/{id}", sf.Handler.UpdateAccount).Methods("PATCH", "OPTIONS")
+	//protected.HandleFunc("/accounts", sf.Handler.ListAccounts).Methods("GET", "OPTIONS")
 
 	// Salesforce Contact
-	protected.HandleFunc("/contacts", sf.Handler.ListContacts).Methods("GET", "OPTIONS")
-	protected.HandleFunc("/contacts/{accountid}", sf.Handler.ListContacts).Methods("GET", "OPTIONS")
-	protected.HandleFunc("/contact/{contactid}", sf.Handler.GetContactById).Methods("GET", "OPTIONS")
+	//protected.HandleFunc("/contacts", sf.Handler.ListContacts).Methods("GET", "OPTIONS")
+	//protected.HandleFunc("/contacts/{accountid}", sf.Handler.ListContacts).Methods("GET", "OPTIONS")
+	//protected.HandleFunc("/contact/{contactid}", sf.Handler.GetContactById).Methods("GET", "OPTIONS")
 
 	// User
 	protected.HandleFunc("/users", h.CreateUser).Methods("POST", "OPTIONS")
