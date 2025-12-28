@@ -39,6 +39,34 @@ func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func (h *Handler) SelectSubscriberCustomers(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h SelectSubscriberCustomers")
+
+	var subcriber *model.Subscriber
+	if err := json.NewDecoder(r.Body).Decode(&subcriber); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	ctx := r.Context()
+
+	subcriber, err := h.db.GetSubscriber(ctx, subcriber.Id)
+	if err != nil {
+		fmt.Println(err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
+	}
+
+	customers, err := h.db.SelectCustomers(ctx, *subcriber, 100, 0)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to select customers")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, customers)
+
+}
+
 func (h *Handler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h CreateCustomer")
 
