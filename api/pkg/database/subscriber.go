@@ -13,6 +13,7 @@ import (
 // subscribers
 func (d *Database) GetSubscriber(ctx context.Context, id string) (*model.Subscriber, error) {
 	fmt.Println("d GetSubscriber")
+	fmt.Printgln("id=", id)
 
 	var subscriber model.Subscriber
 
