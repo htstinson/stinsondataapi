@@ -2,8 +2,11 @@ package database
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
+	"github.com/google/uuid"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
@@ -46,4 +49,50 @@ func (d *Database) SelectSubscriberItemView(ctx context.Context, subscriber_id s
 
 	}
 	return subscriber_item_views, nil
+}
+
+func (d *Database) CreateSubscriberItem(ctx context.Context, item_id string, subscriber_id string) (*model.Subscriber_Item, error) {
+	fmt.Println("d CreateUserSubscriber")
+
+	subscriber_item := &model.Subscriber_Item{
+		Id:            uuid.New().String(),
+		Item_ID:       item_id,
+		Subscriber_Id: subscriber_id,
+	}
+
+	query := `
+        INSERT INTO subscriber_item (id, item_id, subscriber_id) VALUES ($1, $2, $3)
+    `
+
+	_, err := d.DB.ExecContext(ctx, query,
+		subscriber_item.Id,
+		subscriber_item.Item_ID,
+		subscriber_item.Subscriber_Id,
+	)
+	if err != nil {
+		return nil, fmt.Errorf("error creating user_subscriber: %w", err)
+	}
+
+	return subscriber_item, nil
+
+}
+
+func (d *Database) LookupSubscriberItem(ctx context.Context, item_id string, subscriber_id string) (*model.Subscriber_Item, error) {
+	fmt.Println("d LookupUserSubscriber")
+
+	var subscriber_item = model.Subscriber_Item{}
+
+	err := d.DB.QueryRowContext(ctx,
+		"SELECT id, item_id, subscriber_id FROM subscriber_item WHERE item_id = $1 and subscriber_id = $2",
+		item_id, subscriber_id,
+	).Scan(&subscriber_item.Id, &subscriber_item.Item_ID, &subscriber_item.Subscriber_Id)
+
+	if err == sql.ErrNoRows {
+		return nil, errors.New("not found")
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting subscriber_item: %w", err)
+	}
+
+	return &subscriber_item, nil
 }

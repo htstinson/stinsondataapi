@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
+	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
 func (h *Handler) SelectSubscriberItemView(w http.ResponseWriter, r *http.Request) {
@@ -23,4 +25,39 @@ func (h *Handler) SelectSubscriberItemView(w http.ResponseWriter, r *http.Reques
 
 	common.RespondJSON(w, http.StatusOK, subscriber_item_views)
 
+}
+
+func (h *Handler) CreateSubscriberItem(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h CreateUserSubscriber")
+
+	var subscriber_item *model.Subscriber_Item
+	if err := json.NewDecoder(r.Body).Decode(&subscriber_item); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	ctx := r.Context()
+
+	_, err := h.db.LookupSubscriberItem(ctx, subscriber_item.Item_ID, subscriber_item.Subscriber_Id)
+	if err != nil {
+		if err.Error() == "not found" {
+			// do nothing
+		} else {
+			fmt.Println(err.Error())
+			fmt.Println("duplicate subscriber item")
+			return
+		}
+	}
+
+	fmt.Println("ok")
+
+	new_user_subscriber, err := h.db.CreateSubscriberItem(ctx, subscriber_item.Item_ID, subscriber_item.Subscriber_Id)
+	if err != nil {
+		fmt.Println("Could not create user_subscriber")
+		common.RespondError(w, http.StatusInternalServerError, "Failed to create user_subscriber")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusCreated, new_user_subscriber)
 }

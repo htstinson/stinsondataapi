@@ -10,3 +10,10 @@ type Subscriber_Item_View struct {
 	Subscriber_Name string    `json:"subscriber_name"`
 	CreatedAt_At    time.Time `json:"created_at"`
 }
+
+type Subscriber_Item struct {
+	Id            string    `json:"id"`
+	Item_ID       string    `json:"item_id"`
+	Subscriber_Id string    `json:"subscriber_id"`
+	CreatedAt_At  time.Time `json:"created_at"`
+}
