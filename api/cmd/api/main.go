@@ -171,6 +171,7 @@ func main() {
 
 	// Subsriber - Item View
 	protected.HandleFunc("/subscriber/items/{id}", h.SelectSubscriberItemView).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/subscriber/item/{id}", h.DeleteSubscriberItem).Methods("DELETE", "OPTIONS")
 	protected.HandleFunc("/subscriber/item", h.CreateSubscriberItem).Methods("POST", "OPTIONS")
 
 	// Subscribers
