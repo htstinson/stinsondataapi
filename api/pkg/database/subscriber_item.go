@@ -52,7 +52,7 @@ func (d *Database) SelectSubscriberItemView(ctx context.Context, subscriber_id s
 }
 
 func (d *Database) CreateSubscriberItem(ctx context.Context, item_id string, subscriber_id string) (*model.Subscriber_Item, error) {
-	fmt.Println("d CreateUserSubscriber")
+	fmt.Println("d CreateSubscriberItem")
 
 	subscriber_item := &model.Subscriber_Item{
 		Id:            uuid.New().String(),
@@ -61,7 +61,7 @@ func (d *Database) CreateSubscriberItem(ctx context.Context, item_id string, sub
 	}
 
 	query := `
-        INSERT INTO subscriber_item (id, item_id, subscriber_id) VALUES ($1, $2, $3)
+        INSERT INTO subscriber_items (id, item_id, subscriber_id) VALUES ($1, $2, $3)
     `
 
 	_, err := d.DB.ExecContext(ctx, query,
@@ -70,7 +70,7 @@ func (d *Database) CreateSubscriberItem(ctx context.Context, item_id string, sub
 		subscriber_item.Subscriber_Id,
 	)
 	if err != nil {
-		return nil, fmt.Errorf("error creating user_subscriber: %w", err)
+		return nil, fmt.Errorf("error creating subscriber_item: %w", err)
 	}
 
 	return subscriber_item, nil
