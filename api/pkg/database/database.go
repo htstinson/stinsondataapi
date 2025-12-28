@@ -61,10 +61,12 @@ type Repository interface {
 
 	SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error)
 
-	//Subsriber_Item_View
+	//Subsriber_Item
 	SelectSubscriberItemView(ctx context.Context, subscriber_id string, limit int, offset int) ([]model.Subscriber_Item_View, error)
 	CreateSubscriberItem(ctx context.Context, item_id string, subscriber_id string) (*model.Subscriber_Item, error)
 	LookupSubscriberItem(ctx context.Context, item_id string, subscriber_id string) (*model.Subscriber_Item, error)
+	DeleteSubscriberItem(ctx context.Context, id string) error
+	GetSubscriberItem(ctx context.Context, id string) (*model.Subscriber_Item, error)
 
 	// Blocked
 	SelectBlocked(ctx context.Context, limit, offset int, sort string, order string) ([]model.Blocked, error)

@@ -96,3 +96,33 @@ func (d *Database) LookupSubscriberItem(ctx context.Context, item_id string, sub
 
 	return &subscriber_item, nil
 }
+
+func (d *Database) DeleteSubscriberItem(ctx context.Context, id string) error {
+	fmt.Println("d DeleteSubscriberItem")
+
+	query := `DELETE FROM subscriber_items WHERE id = $1`
+
+	_, err := d.DB.ExecContext(ctx, query, id)
+
+	return err
+}
+
+func (d *Database) GetSubscriberItem(ctx context.Context, id string) (*model.Subscriber_Item, error) {
+	fmt.Println("d GetSubscriberItem")
+
+	var subscriberitem model.Subscriber_Item
+
+	err := d.DB.QueryRowContext(ctx,
+		"SELECT id, item_id, subscriber_id FROM subscriber_items WHERE id = $1",
+		id,
+	).Scan(&subscriberitem.Id, &subscriberitem.Item_ID, &subscriberitem.Subscriber_Id)
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error getting subscriber_item: %w", err)
+	}
+
+	return &subscriberitem, nil
+}

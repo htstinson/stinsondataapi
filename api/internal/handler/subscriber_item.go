@@ -28,7 +28,7 @@ func (h *Handler) SelectSubscriberItemView(w http.ResponseWriter, r *http.Reques
 }
 
 func (h *Handler) CreateSubscriberItem(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h CreateUserSubscriber")
+	fmt.Println("h CreateSubscriberItem")
 
 	var subscriber_item *model.Subscriber_Item
 	if err := json.NewDecoder(r.Body).Decode(&subscriber_item); err != nil {
@@ -60,4 +60,55 @@ func (h *Handler) CreateSubscriberItem(w http.ResponseWriter, r *http.Request) {
 	}
 
 	common.RespondJSON(w, http.StatusCreated, new_user_subscriber)
+}
+
+func (h *Handler) DeleteSubscriberItem(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h DeleteSubscriberItem")
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	fmt.Println(id)
+
+	ctx := r.Context()
+
+	subscriberitem, err := h.db.GetSubscriberItem(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber_item")
+		return
+	}
+	if subscriberitem == nil {
+		common.RespondError(w, http.StatusNotFound, "Subscriber_item not found")
+		return
+	}
+
+	err = h.db.DeleteSubscriberItem(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error deleting subscriber_item")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, subscriberitem)
+
+}
+
+func (h *Handler) GetSubscriberItem(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("h GetSubscriberItem")
+
+	vars := mux.Vars(r)
+	id := vars["id"]
+
+	ctx := r.Context()
+	subscriberitem, err := h.db.GetSubscriberItem(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriberitem")
+		return
+	}
+	if subscriberitem == nil {
+		common.RespondError(w, http.StatusNotFound, "Subscriber_Item not found")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, subscriberitem)
 }
