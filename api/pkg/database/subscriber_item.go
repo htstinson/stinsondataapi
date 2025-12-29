@@ -101,6 +101,7 @@ func (d *Database) LookupSubscriberItem(ctx context.Context, item_id string, sub
 
 func (d *Database) DeleteSubscriberItem(ctx context.Context, id string) error {
 	fmt.Println("d DeleteSubscriberItem")
+	fmt.Println(id)
 
 	query := `DELETE FROM subscriber_items WHERE id = $1`
 

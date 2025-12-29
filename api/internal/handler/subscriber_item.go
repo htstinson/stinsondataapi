@@ -16,6 +16,8 @@ func (h *Handler) SelectSubscriberItemView(w http.ResponseWriter, r *http.Reques
 	vars := mux.Vars(r)
 	id := vars["id"]
 
+	fmt.Println(id)
+
 	ctx := r.Context()
 	subscriber_item_views, err := h.db.SelectSubscriberItemView(ctx, id, 100, 0)
 	if err != nil {
