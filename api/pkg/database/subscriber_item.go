@@ -40,10 +40,12 @@ func (d *Database) SelectSubscriberItemView(ctx context.Context, subscriber_id s
 	var subscriber_item_views []model.Subscriber_Item_View
 	for rows.Next() {
 		var subscriber_item_view model.Subscriber_Item_View
-		if err := rows.Scan(&subscriber_item_view.Id, &subscriber_item_view.Id, &subscriber_item_view.Subscriber_Id, &subscriber_item_view.Item_Name, &subscriber_item_view.Subscriber_Name); err != nil {
+		if err := rows.Scan(&subscriber_item_view.Id, &subscriber_item_view.Item_ID, &subscriber_item_view.Subscriber_Id, &subscriber_item_view.Item_Name, &subscriber_item_view.Subscriber_Name); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning user_subscriber: %w", err)
 		}
+
+		fmt.Println(subscriber_item_view.Id)
 
 		subscriber_item_views = append(subscriber_item_views, subscriber_item_view)
 
