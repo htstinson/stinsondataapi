@@ -111,6 +111,9 @@ func main() {
 	protected.Use(middleware.CORS) // First: Set CORS headers
 	protected.Use(jwtAuth.Middleware)
 
+	//test
+	protected.HandleFunc("/test", h.Test).Methods("POST", "OPTIONS")
+
 	// Blocked
 	protected.HandleFunc("/blocked/update", h.AddBlockedFromRDSToWAF).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/blocked/parse", h.AddBlockedFromLogs).Methods("GET", "OPTIONS")
