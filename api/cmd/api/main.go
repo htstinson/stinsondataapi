@@ -1,9 +1,7 @@
 package main
 
 import (
-	"flag"
 	"fmt"
-	"strings"
 
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/auth"
@@ -11,9 +9,8 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/middleware"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 	"github.com/htstinson/stinsondataapi/api/pkg/database"
-	"github.com/joho/godotenv"
 
-	searcher "github.com/htstinson/business_searcher"
+	//searcher "github.com/htstinson/business_searcher"
 
 	"context"
 	"crypto/tls"
@@ -283,6 +280,7 @@ func main() {
 	fmt.Printf("[%v] [main] Server stopped.\n", time.Now().Format(time.RFC3339))
 }
 
+/*
 func test() {
 	configFile := flag.String("config", "", "Path to a single YAML configuration file (optional)")
 	configDir := flag.String("config-dir", "./search_definitions", "Path to directory containing YAML configuration files")
@@ -412,3 +410,4 @@ func test() {
 	}
 	fmt.Printf("Results directory: %s\n", *outputDir)
 }
+*/
