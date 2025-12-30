@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,6 +14,11 @@ import (
 	searcher "github.com/htstinson/business_searcher"
 )
 
+type key struct {
+	Name  string `json:"name"`
+	Value string `json:"value"`
+}
+
 func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h Test")
 
@@ -22,7 +28,13 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(apiKey)
+	var k key{}
+
+	err := json.Unmarshal([]byte(apiKey), &k)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	fmt.Println(k.Value)
 
 	var googleSearchConfig = searcher.GoogleSearchConfig{
 		DefaultMaxResults: 10,
@@ -64,7 +76,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Searches:      searches,
 	}
 
-	client, err := searcher.NewSearchClient(apiKey, &config)
+	client, err := searcher.NewSearchClient(k.Value, &config)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
