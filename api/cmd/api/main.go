@@ -255,7 +255,7 @@ func main() {
 	go func() {
 		fmt.Printf("[%v] [main] Server starting...\n", time.Now().Format(time.RFC3339))
 
-		err := srv.ListenAndServeTLS("../../certs/certificate.crt", "../../certs/private.key")
+		err := srv.ListenAndServeTLS("../certs/certificate.crt", "../certs/private.key")
 		if err == http.ErrServerClosed {
 			fmt.Printf("[%v] [main] Failed to start server (tls): %v.\n", time.Now().Format(time.RFC3339), err.Error())
 		} else {
