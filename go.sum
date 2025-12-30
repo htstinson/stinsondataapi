@@ -59,8 +59,8 @@ github.com/googleapis/gax-go/v2 v2.15.0 h1:SyjDc1mGgZU5LncH8gimWo9lW1DtIfPibOG81
 github.com/googleapis/gax-go/v2 v2.15.0/go.mod h1:zVVkkxAQHa1RQpg9z2AUCMnKhi0Qld9rcmyfL1OZhoc=
 github.com/gorilla/mux v1.8.1 h1:TuBL49tXwgrFYWhqrNgrUNEY92u81SPhu7sTdzQEiWY=
 github.com/gorilla/mux v1.8.1/go.mod h1:AKf9I4AEqPTmMytcMc0KkNouC66V3BtZ4qD5fmWSiMQ=
-github.com/htstinson/business_searcher v0.0.0-20251230034106-0bbaace09c02 h1:ZosveGdr+MSGzstSDgsT6qUtVRS9jWKuyW8Z0RuY0sA=
-github.com/htstinson/business_searcher v0.0.0-20251230034106-0bbaace09c02/go.mod h1:L3TP8rFeVxUiNCODPsDAdZa26gXMX3jJjdQIi6qqR8A=
+github.com/htstinson/business_searcher v0.0.0-20251230053405-3c3159dfdba1 h1:uO/UFYXisElh8T1+SHdu+A+ThIRs6/ph1vbbLuYu4qA=
+github.com/htstinson/business_searcher v0.0.0-20251230053405-3c3159dfdba1/go.mod h1:4IkOrM3GQ5Gil7Krl/q0Nb2WOs2NUcaodoZ0XbDzPDE=
 github.com/joho/godotenv v1.5.1 h1:7eLL/+HRGLY0ldzfGMeQkb7vMd0as4CfYvUVzLqw0N0=
 github.com/joho/godotenv v1.5.1/go.mod h1:f4LDr5Voq0i2e/R5DDNOoa2zzDfwtkZa6DnEwAbqwq4=
 github.com/kr/pretty v0.3.1 h1:flRD4NNwYAUpkphVc1HcthR4KEIFJ65n8Mw5qdRn3LE=

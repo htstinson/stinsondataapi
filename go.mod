@@ -10,7 +10,7 @@ require (
 	github.com/golang-jwt/jwt/v4 v4.5.2
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
-	github.com/htstinson/business_searcher v0.0.0-20251230034106-0bbaace09c02
+	github.com/htstinson/business_searcher v0.0.0-20251230053405-3c3159dfdba1
 	github.com/joho/godotenv v1.5.1
 	github.com/lib/pq v1.10.9
 	golang.org/x/crypto v0.46.0
