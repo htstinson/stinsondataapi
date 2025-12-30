@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -11,6 +12,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	searcher "github.com/htstinson/business_searcher"
 	"github.com/joho/godotenv"
 )
@@ -26,10 +30,12 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		log.Printf("Warning: No .env file found, using system environment variables")
 	}
 
-	apiKey := os.Getenv("GOOGLE_API_KEY")
-	if apiKey == "" {
-		log.Fatal("ERROR: GOOGLE_API_KEY environment variable is not set")
-	}
+	//apiKey := os.Getenv("GOOGLE_API_KEY")
+	//if apiKey == "" {
+	//	log.Fatal("ERROR: GOOGLE_API_KEY environment variable is not set")
+	//}
+
+	apiKey, _ := getSecret("Google_Custom_Search")
 
 	// Ensure output directory exists
 	if err := searcher.EnsureDirectory(*outputDir); err != nil {
@@ -144,4 +150,34 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Total failed: %d\n", totalFailed)
 	}
 	fmt.Printf("Results directory: %s\n", *outputDir)
+}
+
+func getSecret(secret_name string) (string, error) {
+	secretName := secret_name
+	region := "us-west-2"
+
+	config, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Create Secrets Manager client
+	svc := secretsmanager.NewFromConfig(config)
+
+	input := &secretsmanager.GetSecretValueInput{
+		SecretId:     aws.String(secretName),
+		VersionStage: aws.String("AWSCURRENT"), // VersionStage defaults to AWSCURRENT if unspecified
+	}
+
+	result, err := svc.GetSecretValue(context.TODO(), input)
+	if err != nil {
+		// For a list of exceptions thrown, see
+		// https://docs.aws.amazon.com/secretsmanager/latest/apireference/API_GetSecretValue.html
+		log.Fatal(err.Error())
+	}
+
+	// Decrypts secret using the associated KMS key.
+	var secretString string = *result.SecretString
+
+	return secretString, err
 }
