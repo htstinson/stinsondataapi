@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,7 +15,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func (h *Handler) test() {
+func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("test")
 	configFile := flag.String("config", "", "Path to a single YAML configuration file (optional)")
 	configDir := flag.String("config-dir", "./search_definitions", "Path to directory containing YAML configuration files")
