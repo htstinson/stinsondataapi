@@ -63,10 +63,10 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 
 	searches := make([]searcher.SearchQuery, 1)
 	searchquery := searcher.SearchQuery{
-		Name:       "",
-		Query:      "",
+		Name:       "Political",
+		Query:      "\"Missouri State District 3\" \"Missouri House District 3\"",
 		ExactMatch: false,
-		CSEID:      "",
+		CSEID:      search_engines["general_web"],
 	}
 	searches = append(searches, searchquery)
 
