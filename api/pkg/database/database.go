@@ -12,6 +12,10 @@ import (
 )
 
 type Repository interface {
+
+	//Calibrate
+	SelectSearchDefinitions(ctx context.Context, customer model.Customer, limit, offset int) ([]model.SearchDefinition, error)
+
 	// Item
 	GetItem(ctx context.Context, id string) (*model.Item, error)
 	CreateItem(ctx context.Context, item *model.Item) error
