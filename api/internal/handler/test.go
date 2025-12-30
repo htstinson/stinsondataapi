@@ -34,7 +34,9 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Println(k.Value)
+	fmt.Println(apiKey)
+	fmt.Println("name", k.Name)
+	fmt.Println("value", k.Value)
 
 	var googleSearchConfig = searcher.GoogleSearchConfig{
 		DefaultMaxResults: 10,
