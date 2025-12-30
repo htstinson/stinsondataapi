@@ -66,7 +66,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Name:       "Political",
 		Query:      "\"Missouri State District 3\" \"Missouri House District 3\"",
 		ExactMatch: false,
-		CSEID:      search_engines["general_web"],
+		CSEID:      search_engines["facebook"],
 	}
 	searches = append(searches, searchquery)
 
