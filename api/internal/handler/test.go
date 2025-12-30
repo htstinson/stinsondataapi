@@ -15,7 +15,6 @@ import (
 )
 
 type key struct {
-	Name  string `json:"name"`
 	Value string `json:"value"`
 }
 
@@ -35,7 +34,6 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 	fmt.Println(apiKey)
-	fmt.Println("name", k.Name)
 	fmt.Println("value", k.Value)
 
 	var googleSearchConfig = searcher.GoogleSearchConfig{
