@@ -13,6 +13,8 @@ import (
 	"github.com/htstinson/stinsondataapi/api/pkg/database"
 	"github.com/joho/godotenv"
 
+	searcher "github.com/htstinson/business_searcher"
+
 	"context"
 	"crypto/tls"
 	"encoding/json"
@@ -297,7 +299,7 @@ func test() {
 	}
 
 	// Ensure output directory exists
-	if err := searcher.ensureDirectory(*outputDir); err != nil {
+	if err := searcher.EnsureDirectory(*outputDir); err != nil {
 		log.Fatalf("ERROR: %v", err)
 	}
 
@@ -319,7 +321,7 @@ func test() {
 	} else {
 		// Directory mode (new default)
 		fmt.Printf("Looking for config files in: %s\n", *configDir)
-		configFiles, err = loadConfigsFromDirectory(*configDir)
+		configFiles, err = searcher.LoadConfigsFromDirectory(*configDir)
 		if err != nil {
 			log.Fatalf("ERROR: %v", err)
 		}
@@ -337,13 +339,13 @@ func test() {
 	for _, cfgFile := range configFiles {
 		fmt.Printf("\n--- Processing: %s ---\n", cfgFile)
 
-		config, err := loadConfig(cfgFile)
+		config, err := searcher.LoadConfig(cfgFile)
 		if err != nil {
 			log.Printf("ERROR: Failed to load configuration from '%s': %v", cfgFile, err)
 			continue
 		}
 
-		client, err := NewSearchClient(apiKey, config)
+		client, err := searcher.NewSearchClient(apiKey, config)
 		if err != nil {
 			log.Printf("ERROR: Failed to create search client for '%s': %v", cfgFile, err)
 			continue
@@ -357,7 +359,7 @@ func test() {
 		fmt.Printf("Executing searches...\n")
 
 		// Build output structure
-		output := OutputResult{
+		output := searcher.OutputResult{
 			Timestamp:     time.Now().Format(time.RFC3339),
 			ConfigFile:    cfgFile,
 			Configuration: client.BuildConfigurationOutput(),
