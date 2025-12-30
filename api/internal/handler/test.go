@@ -71,7 +71,6 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	// Build output structure
 	output := searcher.OutputResult{
 		Timestamp:     time.Now().Format(time.RFC3339),
-		ConfigFile:    cfgFile,
 		Configuration: client.BuildConfigurationOutput(),
 		Searches:      client.ExecuteAllSearches(),
 	}
