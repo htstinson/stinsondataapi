@@ -2,154 +2,81 @@ package handler
 
 import (
 	"context"
-	"encoding/json"
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	searcher "github.com/htstinson/business_searcher"
-	"github.com/joho/godotenv"
 )
 
 func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("test")
-	configFile := flag.String("config", "", "Path to a single YAML configuration file (optional)")
-	configDir := flag.String("config-dir", "./search_definitions", "Path to directory containing YAML configuration files")
-	outputDir := flag.String("output-dir", "./search_results", "Path to directory for output files")
-	flag.Parse()
+	fmt.Println("h Test")
 
-	if err := godotenv.Load(); err != nil {
-		log.Printf("Warning: No .env file found, using system environment variables")
+	apiKey, err := getSecret("Google_Custom_Search")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
 	}
 
-	//apiKey := os.Getenv("GOOGLE_API_KEY")
-	//if apiKey == "" {
-	//	log.Fatal("ERROR: GOOGLE_API_KEY environment variable is not set")
-	//}
-
-	apiKey, _ := getSecret("Google_Custom_Search")
-
-	// Ensure output directory exists
-	if err := searcher.EnsureDirectory(*outputDir); err != nil {
-		log.Fatalf("ERROR: %v", err)
+	var googleSearchConfig = searcher.GoogleSearchConfig{
+		DefaultMaxResults: 10,
+		DefaultSortByDate: true,
+		DefaultCSEID:      "1031fbeefdfa24158",
 	}
 
-	// Determine which config files to process
-	var configFiles []string
-	var err error
+	search_engines := make(map[string]string)
+	search_engines["auto_carfax"] = "60d7580b159ae40c3"
+	search_engines["auto_cargurus"] = "10d608a7a7c314d6b"
+	search_engines["auto_carsforsale"] = "e16b5ec3c749f4e8a"
+	search_engines["auto_cylex"] = "d51c57acf13c140d9"
+	search_engines["auto_powersports"] = "a2300c57c664540f9"
+	search_engines["bbb"] = "4493419a4560045c9"
+	search_engines["general_web"] = "1031fbeefdfa24158"
+	search_engines["linkedin"] = "30739577b50e043fa"
+	search_engines["kvdailyexpress"] = "0160629e137244237"
+	search_engines["missouri_times"] = "b29bcb26023d24b15"
+	search_engines["schuylercountytimes"] = "01ec1d78a3c654bfc"
+	search_engines["kmov"] = "66af520420a4d4f01"
+	search_engines["ktvo"] = "20ab9c7bcadd44ea2"
+	search_engines["kttn"] = "44b91671818b741fc"
+	search_engines["yelp"] = "44a819b1403034ef6"
 
-	if *configFile != "" {
-		// Single file mode (backward compatibility)
-		// If the config file doesn't have a path separator, check in config-dir
-		configPath := *configFile
-		if !strings.Contains(configPath, string(filepath.Separator)) && !filepath.IsAbs(configPath) {
-			// Just a filename, look in config-dir
-			configPath = filepath.Join(*configDir, configPath)
-			fmt.Printf("Looking for config file in: %s\n", configPath)
-		}
-		configFiles = []string{configPath}
-		fmt.Printf("Processing single config file: %s\n", configPath)
-	} else {
-		// Directory mode (new default)
-		fmt.Printf("Looking for config files in: %s\n", *configDir)
-		configFiles, err = searcher.LoadConfigsFromDirectory(*configDir)
-		if err != nil {
-			log.Fatalf("ERROR: %v", err)
-		}
-		fmt.Printf("Found %d config file(s)\n", len(configFiles))
-		for i, cf := range configFiles {
-			fmt.Printf("  [%d] %s\n", i+1, cf)
-		}
+	search_engines["facebook"] = "134a52f3313b84b07"
+
+	searches := make([]searcher.SearchQuery, 1)
+	searchquery := searcher.SearchQuery{
+		Name:       "",
+		Query:      "",
+		ExactMatch: false,
+		CSEID:      "",
+	}
+	searches = append(searches, searchquery)
+
+	var config = searcher.Config{
+		GoogleSearch:  googleSearchConfig,
+		SearchEngines: search_engines,
+		Searches:      searches,
 	}
 
-	// Process each config file
-	totalSearches := 0
-	totalSuccessful := 0
-	totalFailed := 0
-
-	for _, cfgFile := range configFiles {
-		fmt.Printf("\n--- Processing: %s ---\n", cfgFile)
-
-		config, err := searcher.LoadConfig(cfgFile)
-		if err != nil {
-			log.Printf("ERROR: Failed to load configuration from '%s': %v", cfgFile, err)
-			continue
-		}
-
-		client, err := searcher.NewSearchClient(apiKey, config)
-		if err != nil {
-			log.Printf("ERROR: Failed to create search client for '%s': %v", cfgFile, err)
-			continue
-		}
-
-		// Generate output filename
-		timestamp := time.Now().Format("20060102_150405")
-		configName := strings.TrimSuffix(filepath.Base(cfgFile), filepath.Ext(cfgFile))
-		outputFilename := filepath.Join(*outputDir, fmt.Sprintf("search_results_%s_%s.json", configName, timestamp))
-
-		fmt.Printf("Executing searches...\n")
-
-		// Build output structure
-		output := searcher.OutputResult{
-			Timestamp:     time.Now().Format(time.RFC3339),
-			ConfigFile:    cfgFile,
-			Configuration: client.BuildConfigurationOutput(),
-			Searches:      client.ExecuteAllSearches(),
-		}
-
-		// Write JSON to file
-		outputFile, err := os.Create(outputFilename)
-		if err != nil {
-			log.Printf("ERROR: Failed to create output file '%s': %v", outputFilename, err)
-			continue
-		}
-
-		encoder := json.NewEncoder(outputFile)
-		encoder.SetIndent("", "  ")
-		if err := encoder.Encode(output); err != nil {
-			outputFile.Close()
-			log.Printf("ERROR: Failed to write JSON to '%s': %v", outputFilename, err)
-			continue
-		}
-		outputFile.Close()
-
-		// Calculate statistics
-		successCount := 0
-		for _, search := range output.Searches {
-			if search.Error == "" {
-				successCount++
-			}
-		}
-
-		fmt.Printf("✓ Search results saved to: %s\n", outputFilename)
-		fmt.Printf("  Total searches: %d\n", len(output.Searches))
-		fmt.Printf("  Successful: %d\n", successCount)
-		if successCount < len(output.Searches) {
-			fmt.Printf("  Failed: %d\n", len(output.Searches)-successCount)
-		}
-
-		totalSearches += len(output.Searches)
-		totalSuccessful += successCount
-		totalFailed += (len(output.Searches) - successCount)
+	client, err := searcher.NewSearchClient(apiKey, &config)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
 	}
 
-	// Print summary
-	fmt.Printf("\n=== Summary ===\n")
-	fmt.Printf("Config files processed: %d\n", len(configFiles))
-	fmt.Printf("Total searches executed: %d\n", totalSearches)
-	fmt.Printf("Total successful: %d\n", totalSuccessful)
-	if totalFailed > 0 {
-		fmt.Printf("Total failed: %d\n", totalFailed)
+	// Build output structure
+	output := searcher.OutputResult{
+		Timestamp:     time.Now().Format(time.RFC3339),
+		ConfigFile:    cfgFile,
+		Configuration: client.BuildConfigurationOutput(),
+		Searches:      client.ExecuteAllSearches(),
 	}
-	fmt.Printf("Results directory: %s\n", *outputDir)
+
+	fmt.Println(output)
 }
 
 func getSecret(secret_name string) (string, error) {
