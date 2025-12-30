@@ -22,6 +22,8 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(apiKey)
+
 	var googleSearchConfig = searcher.GoogleSearchConfig{
 		DefaultMaxResults: 10,
 		DefaultSortByDate: true,
