@@ -28,9 +28,9 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var k key{}
+	var k = key{}
 
-	err := json.Unmarshal([]byte(apiKey), &k)
+	err = json.Unmarshal([]byte(apiKey), &k)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
