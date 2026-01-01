@@ -66,6 +66,8 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println()
+	fmt.Println("search engines")
 	for _, v := range search_engine_list {
 		search_engines[v.Name] = search_engines[v.SearchEngineId]
 		fmt.Println(search_engines[v.Name], search_engines[v.SearchEngineId])
@@ -84,6 +86,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Query:      `Stinson`,
 		ExactMatch: false,
 		CSEID:      search_engines["facebook"],
+		CSEIDs:     []string{"", ""},
 		MaxResults: 10,
 		SortByDate: false,
 	}
@@ -93,7 +96,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Name:       "Political",
 		Query:      `Soseman`,
 		ExactMatch: false,
-		CSEID:      "",
+		CSEID:      search_engines["general_web"],
 		CSEIDs:     []string{search_engines["facebook"], search_engines["general_web"]},
 		MaxResults: 15,
 		SortByDate: true,
