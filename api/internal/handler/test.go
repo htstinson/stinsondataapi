@@ -61,6 +61,11 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	search_engines := make(map[string]string)
 
 	search_engine_list, err := h.db.SelectSearchEngines(ctx, *subscriber, 10, 0)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
 	for _, v := range search_engine_list {
 		search_engines[v.Name] = search_engines[v.SearchEngineId]
 		fmt.Println(search_engines[v.Name], search_engines[v.SearchEngineId])
