@@ -71,6 +71,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	for _, v := range search_engine_list {
 		search_engines[v.Name] = search_engines[v.SearchEngineId]
 		fmt.Println("Name", search_engines[v.Name], "CSEID", search_engines[v.SearchEngineId])
+		fmt.Println(v)
 	}
 
 	var googleSearchConfig = searcher.GoogleSearchConfig{
