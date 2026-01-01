@@ -1,13 +1,16 @@
 package model
 
-import "time"
+import (
+	"database/sql"
+	"time"
+)
 
 type SearchEngine struct {
-	Id             string    `json:"id"`
-	ParentId       string    `json:"parent_id"`
-	CreatedAt      time.Time `json:"created_at"`
-	ModifiedAt     time.Time `json:"modified_at"`
-	Name           string    `json:"name"`
-	SearchEngineId string    `json:"search_engine_id"`
-	Comment        string    `json:"comment"`
+	Id             string         `json:"id"`
+	ParentId       string         `json:"parent_id"`
+	CreatedAt      time.Time      `json:"created_at"`
+	ModifiedAt     time.Time      `json:"modified_at"`
+	Name           string         `json:"name"`
+	SearchEngineId string         `json:"search_engine_id"`
+	Comment        sql.NullString `json:"comment"`
 }
