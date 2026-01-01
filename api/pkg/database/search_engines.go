@@ -33,6 +33,7 @@ func (d *Database) ListSearchEngines(ctx context.Context, subscriber model.Subsc
 		}
 
 		searchengines = append(searchengines, searchengine)
+		fmt.Println("search_engine_id", searchengine.SearchEngineId)
 	}
 	return searchengines, nil
 }
