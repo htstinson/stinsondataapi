@@ -96,6 +96,10 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Searches:      searches,
 	}
 
+	for k, v := range config.Searches {
+		fmt.Println(k, v)
+	}
+
 	// Create Google Search CLient
 	client, err := searcher.NewSearchClient(k.Value, &config)
 	if err != nil {
