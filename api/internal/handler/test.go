@@ -33,15 +33,8 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Println(apiKey)
-	fmt.Println("value", k.Value)
 
-	var googleSearchConfig = searcher.GoogleSearchConfig{
-		DefaultMaxResults: 10,
-		DefaultSortByDate: true,
-		DefaultCSEID:      "1031fbeefdfa24158",
-	}
-
+	//TODO: store this in RDS
 	search_engines := make(map[string]string)
 	search_engines["auto_carfax"] = "60d7580b159ae40c3"
 	search_engines["auto_cargurus"] = "10d608a7a7c314d6b"
@@ -58,13 +51,18 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	search_engines["ktvo"] = "20ab9c7bcadd44ea2"
 	search_engines["kttn"] = "44b91671818b741fc"
 	search_engines["yelp"] = "44a819b1403034ef6"
-
 	search_engines["facebook"] = "134a52f3313b84b07"
+
+	var googleSearchConfig = searcher.GoogleSearchConfig{
+		DefaultMaxResults: 10,
+		DefaultSortByDate: true,
+		DefaultCSEID:      "1031fbeefdfa24158",
+	}
 
 	searches := make([]searcher.SearchQuery, 1)
 	searchquery := searcher.SearchQuery{
 		Name:       "Political",
-		Query:      "\"Missouri State District 3\" \"Missouri House District 3\"",
+		Query:      `Soseman`,
 		ExactMatch: false,
 		CSEID:      search_engines["facebook"],
 	}
