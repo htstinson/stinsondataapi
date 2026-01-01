@@ -111,6 +111,9 @@ func main() {
 	protected.Use(middleware.CORS) // First: Set CORS headers
 	protected.Use(jwtAuth.Middleware)
 
+	//Search Engines
+	protected.HandleFunc("/searchengines/{subscriber_id}", h.ListSearchEngines).Methods("GET", "OPTIONS")
+
 	//test
 	protected.HandleFunc("/test", h.Test).Methods("POST", "OPTIONS")
 

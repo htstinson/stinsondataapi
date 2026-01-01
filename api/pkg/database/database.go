@@ -15,6 +15,7 @@ type Repository interface {
 
 	//Calibrate
 	SelectSearchDefinitions(ctx context.Context, customer model.Customer, limit, offset int) ([]model.SearchDefinition, error)
+	ListSearchEngines(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchEngine, error)
 
 	// Item
 	GetItem(ctx context.Context, id string) (*model.Item, error)
