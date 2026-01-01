@@ -12,6 +12,8 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
 	searcher "github.com/htstinson/business_searcher"
+	common "github.com/htstinson/stinsondataapi/api/commonweb"
+	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
 type key struct {
@@ -20,6 +22,8 @@ type key struct {
 
 func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h Test")
+
+	ctx := r.Context()
 
 	apiKey, err := getSecret("Google_Custom_Search")
 	if err != nil {
@@ -34,24 +38,35 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	//TODO: store this in RDS
+	var subscriberitem model.Subscriber_Item
+	if err := json.NewDecoder(r.Body).Decode(&subscriberitem); err != nil {
+		fmt.Println(1, err.Error())
+		common.RespondError(w, http.StatusBadRequest, "invalid Subscriber Item")
+		return
+	}
+	defer r.Body.Close()
+
+	subscriber_item, err := h.db.GetSubscriberItem(ctx, subscriberitem.Id)
+	if err != nil {
+		fmt.Println("unable to find subscriber item")
+		return
+	}
+
+	fmt.Println("subsriber id", subscriber_item.Subscriber_Id)
+
+	subscriber, err := h.db.GetSubscriber(ctx, subscriberitem.Subscriber_Id)
+	if err != nil {
+		fmt.Println("unable to find subscriber")
+		return
+	}
+
 	search_engines := make(map[string]string)
-	search_engines["auto_carfax"] = "60d7580b159ae40c3"
-	search_engines["auto_cargurus"] = "10d608a7a7c314d6b"
-	search_engines["auto_carsforsale"] = "e16b5ec3c749f4e8a"
-	search_engines["auto_cylex"] = "d51c57acf13c140d9"
-	search_engines["auto_powersports"] = "a2300c57c664540f9"
-	search_engines["bbb"] = "4493419a4560045c9"
-	search_engines["general_web"] = "1031fbeefdfa24158"
-	search_engines["linkedin"] = "30739577b50e043fa"
-	search_engines["kvdailyexpress"] = "0160629e137244237"
-	search_engines["missouri_times"] = "b29bcb26023d24b15"
-	search_engines["schuylercountytimes"] = "01ec1d78a3c654bfc"
-	search_engines["kmov"] = "66af520420a4d4f01"
-	search_engines["ktvo"] = "20ab9c7bcadd44ea2"
-	search_engines["kttn"] = "44b91671818b741fc"
-	search_engines["yelp"] = "44a819b1403034ef6"
-	search_engines["facebook"] = "134a52f3313b84b07"
+
+	search_engine_list, err := h.db.SelectSearchEngines(ctx, *subscriber, 10, 0)
+	for _, v := range search_engine_list {
+		search_engines[v.Name] = search_engines[v.SearchEngineId]
+
+	}
 
 	var googleSearchConfig = searcher.GoogleSearchConfig{
 		DefaultMaxResults: 10,
