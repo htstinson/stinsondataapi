@@ -79,10 +79,10 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	searches := make([]searcher.SearchQuery, 0)
 
 	daterange := searcher.DateRangeConfig{
-		Type:  "y",  // "d", "w", "m", "y"
-		Value: 1000, //int
-		//		StartDate: "20251201", //YYYYMMDD format
-		//		EndDate:   "20261010", //YYYYMMDD format
+		//Type:  "y",  // "d", "w", "m", "y"
+		//Value: 1000, //int
+		StartDate: "20250101", //YYYYMMDD format
+		EndDate:   "20260101", //YYYYMMDD format
 	}
 
 	searchquery2 := searcher.SearchQuery{
