@@ -69,10 +69,15 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	fmt.Println()
 	fmt.Println("search engines", len(search_engine_list))
 	for _, v := range search_engine_list {
-		search_engines[v.Name] = search_engines[v.SearchEngineId]
 		fmt.Println("Name", v.Name, "CSEID", v.SearchEngineId)
-		fmt.Println(v)
 	}
+
+	fmt.Println()
+	fmt.Println("map")
+	for k, v := range search_engines {
+		fmt.Println(k, v)
+	}
+	fmt.Println()
 
 	var googleSearchConfig = searcher.GoogleSearchConfig{
 		DefaultMaxResults: 10,
