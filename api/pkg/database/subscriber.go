@@ -13,7 +13,6 @@ import (
 // subscribers
 func (d *Database) GetSubscriber(ctx context.Context, id string) (*model.Subscriber, error) {
 	fmt.Println("d GetSubscriber")
-	fmt.Println("id=", id)
 
 	var subscriber model.Subscriber
 
@@ -121,7 +120,6 @@ func (d *Database) UpdateSubscriber(ctx context.Context, subscriber *model.Subsc
 
 func (d *Database) DeleteSubscriber(ctx context.Context, subscriber *model.Subscriber) error {
 	fmt.Println("d DeleteSubscriber")
-	fmt.Println(subscriber.Id)
 
 	fmt.Println("delete user_subscribe_role")
 	query := `DELETE from common.user_subscriber_role where user_subscriber_id in

@@ -65,8 +65,6 @@ func (d *Database) CreateSubscriberItem(ctx context.Context, item_id string, sub
 	query := `
         INSERT INTO subscriber_items (id, item_id, subscriber_id) VALUES ($1, $2, $3)
     `
-	fmt.Println("id,", subscriber_item.Id, "item_id", subscriber_item.Item_ID, "subscriber_id", subscriber_item.Subscriber_Id)
-
 	_, err := d.DB.ExecContext(ctx, query,
 		subscriber_item.Id,
 		subscriber_item.Item_ID,
@@ -113,7 +111,6 @@ func (d *Database) DeleteSubscriberItem(ctx context.Context, id string) error {
 
 func (d *Database) GetSubscriberItem(ctx context.Context, id string) (*model.Subscriber_Item, error) {
 	fmt.Println("d GetSubscriberItem")
-	fmt.Println(id)
 
 	var subscriberitem model.Subscriber_Item
 
@@ -128,8 +125,6 @@ func (d *Database) GetSubscriberItem(ctx context.Context, id string) (*model.Sub
 	if err != nil {
 		return nil, fmt.Errorf("error getting subscriber_item: %w", err)
 	}
-
-	fmt.Println(subscriberitem.Id, subscriberitem.Item_ID, subscriberitem.Subscriber_Id)
 
 	return &subscriberitem, nil
 }
