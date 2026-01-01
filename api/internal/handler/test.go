@@ -109,24 +109,12 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Build output structure
-	output := searcher.OutputResult{
+	_ = searcher.OutputResult{
 		Timestamp:     time.Now().Format(time.RFC3339),
 		Configuration: client.BuildConfigurationOutput(),
 		Searches:      client.ExecuteAllSearches(),
 	}
 
-	for k, v := range output.Searches {
-		fmt.Println("======================")
-		fmt.Println(k, "-", v)
-		fmt.Println(v.DateFilter)
-		fmt.Println(v.Name)
-		fmt.Println(v.Query)
-
-		for m, n := range v.Results {
-			fmt.Println("-----------------------")
-			fmt.Println(m, n)
-		}
-	}
 }
 
 func getSecret(secret_name string) (string, error) {
