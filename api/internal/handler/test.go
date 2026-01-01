@@ -80,7 +80,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 
 	daterange := searcher.DateRangeConfig{
 		Type:      "d",        // "d", "w", "m", "y"
-		Value:     10,         //int
+		Value:     100,        //int
 		StartDate: "20251231", //YYYYMMDD format
 		EndDate:   "20261010", //YYYYMMDD format
 	}
