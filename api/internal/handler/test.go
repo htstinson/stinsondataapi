@@ -38,15 +38,15 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	var subscriberitem model.Subscriber_Item
-	if err := json.NewDecoder(r.Body).Decode(&subscriberitem); err != nil {
+	var payload model.Subscriber_Item
+	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		fmt.Println(1, err.Error())
 		common.RespondError(w, http.StatusBadRequest, "invalid Subscriber Item")
 		return
 	}
 	defer r.Body.Close()
 
-	subscriber_item, err := h.db.GetSubscriberItem(ctx, subscriberitem.Id)
+	subscriber_item, err := h.db.GetSubscriberItem(ctx, payload.Id)
 	if err != nil {
 		fmt.Println("unable to find subscriber item")
 		return
@@ -54,7 +54,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("subsriber id", subscriber_item.Subscriber_Id)
 
-	subscriber, err := h.db.GetSubscriber(ctx, subscriberitem.Subscriber_Id)
+	subscriber, err := h.db.GetSubscriber(ctx, subscriber_item.Subscriber_Id)
 	if err != nil {
 		fmt.Println("unable to find subscriber")
 		return
