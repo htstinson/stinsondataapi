@@ -116,12 +116,14 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for k, v := range output.Searches {
+		fmt.Println("======================")
 		fmt.Println(k, v)
 		fmt.Println(v.DateFilter)
 		fmt.Println(v.Name)
 		fmt.Println(v.Query)
 
 		for m, n := range v.Results {
+			fmt.Println("-----------------------")
 			fmt.Println(m, n)
 		}
 	}
