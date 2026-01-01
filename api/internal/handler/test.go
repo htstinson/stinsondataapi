@@ -80,7 +80,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 
 	searchquery1 := searcher.SearchQuery{
 		Name:       "My Search",
-		Query:      `Tom Stinson`,
+		Query:      `Tom Stinson Kirksville`,
 		ExactMatch: false,
 		CSEIDs:     []string{search_engines["facebook"]},
 		MaxResults: 10,
