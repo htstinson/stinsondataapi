@@ -20,7 +20,7 @@ func (h *Handler) ListSearchEngines(w http.ResponseWriter, r *http.Request) {
 
 	subscriber, err := h.db.GetSubscriber(ctx, subscriber_Id)
 
-	search_engines, err := h.db.ListSearchEngines(ctx, *subscriber, 100, 0)
+	search_engines, err := h.db.SelectSearchEngines(ctx, *subscriber, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select user_subscriber_view")
 		return

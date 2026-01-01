@@ -7,7 +7,7 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (d *Database) ListSearchEngines(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchEngine, error) {
+func (d *Database) SelectSearchEngines(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchEngine, error) {
 
 	fmt.Println("d ListSearchEngines")
 
