@@ -14,6 +14,8 @@ func (d *Database) ListSearchEngines(ctx context.Context, subscriber model.Subsc
 	query := fmt.Sprintf(`SELECT id, created_at, modified_at, name, search_engine_Id, comment FROM %s.calibrate_search_engines 
 	WHERE parent_id = '%s' ORDER BY name ASC LIMIT $1 OFFSET $2`, subscriber.Schema_Name, subscriber.Id)
 
+	fmt.Println("query: ", query)
+
 	rows, err := d.DB.QueryContext(ctx,
 		query,
 		limit, offset,
