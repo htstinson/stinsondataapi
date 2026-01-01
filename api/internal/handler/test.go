@@ -78,22 +78,19 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 
 	searches := make([]searcher.SearchQuery, 0)
 
-	searchquery1 := searcher.SearchQuery{
-		Name:       "My Search",
-		Query:      `"Tom Stinson" Kirksville`,
-		ExactMatch: false,
-		CSEIDs:     []string{search_engines["facebook"]},
-		MaxResults: 10,
-		SortByDate: false,
+	daterange := searcher.DateRangeConfig{
+		Type:      "d",        // "d", "w", "m", "y"
+		Value:     10,         //int
+		StartDate: "20251231", //YYYYMMDD format
+		EndDate:   "20261010", //YYYYMMDD format
 	}
-	searches = append(searches, searchquery1)
 
 	searchquery2 := searcher.SearchQuery{
 		Name:       "Political",
 		Query:      `"Jason Soseman"`,
 		ExactMatch: false,
-		CSEID:      search_engines["general_web"],
 		CSEIDs:     []string{search_engines["facebook"], search_engines["general_web"]},
+		DateRange:  &daterange,
 		MaxResults: 15,
 		SortByDate: true,
 	}
