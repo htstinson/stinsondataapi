@@ -41,7 +41,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	var payload model.Subscriber_Item
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		fmt.Println(1, err.Error())
-		common.RespondError(w, http.StatusBadRequest, "invalid Subscriber Item")
+		common.RespondError(w, http.StatusBadRequest, "invalid payload")
 		return
 	}
 	defer r.Body.Close()
@@ -51,8 +51,6 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("unable to find subscriber item")
 		return
 	}
-
-	fmt.Println("subsriber id", subscriber_item.Subscriber_Id)
 
 	subscriber, err := h.db.GetSubscriber(ctx, subscriber_item.Subscriber_Id)
 	if err != nil {
@@ -71,7 +69,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	var googleSearchConfig = searcher.GoogleSearchConfig{
 		DefaultMaxResults: 10,
 		DefaultSortByDate: true,
-		DefaultCSEID:      "1031fbeefdfa24158",
+		//DefaultCSEID:      "1031fbeefdfa24158",
 	}
 
 	searches := make([]searcher.SearchQuery, 1)
@@ -89,6 +87,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Searches:      searches,
 	}
 
+	// Create Google Search CLient
 	client, err := searcher.NewSearchClient(k.Value, &config)
 	if err != nil {
 		fmt.Println(err.Error())
