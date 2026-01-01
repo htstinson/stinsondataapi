@@ -72,7 +72,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		//DefaultCSEID:      "1031fbeefdfa24158",
 	}
 
-	searches := make([]searcher.SearchQuery, 2)
+	searches := make([]searcher.SearchQuery, 3)
 
 	searchquery1 := searcher.SearchQuery{
 		Name:       "TEST",
