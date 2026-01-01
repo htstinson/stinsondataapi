@@ -65,6 +65,7 @@ func (d *Database) CreateSubscriberItem(ctx context.Context, item_id string, sub
 	query := `
         INSERT INTO subscriber_items (id, item_id, subscriber_id) VALUES ($1, $2, $3)
     `
+	fmt.Println("id,", subscriber_item.Id, "item_id", subscriber_item.Item_ID, "subscriber_id", subscriber_item.Subscriber_Id)
 
 	_, err := d.DB.ExecContext(ctx, query,
 		subscriber_item.Id,

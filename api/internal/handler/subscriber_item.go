@@ -44,6 +44,7 @@ func (h *Handler) CreateSubscriberItem(w http.ResponseWriter, r *http.Request) {
 	_, err := h.db.LookupSubscriberItem(ctx, subscriber_item.Item_ID, subscriber_item.Subscriber_Id)
 	if err != nil {
 		if err.Error() == "not found" {
+			fmt.Println("subscriber item not found")
 			// do nothing
 		} else {
 			fmt.Println(err.Error())
@@ -56,8 +57,8 @@ func (h *Handler) CreateSubscriberItem(w http.ResponseWriter, r *http.Request) {
 
 	new_user_subscriber, err := h.db.CreateSubscriberItem(ctx, subscriber_item.Item_ID, subscriber_item.Subscriber_Id)
 	if err != nil {
-		fmt.Println("Could not create user_subscriber")
-		common.RespondError(w, http.StatusInternalServerError, "Failed to create user_subscriber")
+		fmt.Println("Could not create subscriber_item")
+		common.RespondError(w, http.StatusInternalServerError, "Failed to create subscriber_item")
 		return
 	}
 
