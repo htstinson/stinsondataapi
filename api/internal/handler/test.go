@@ -67,7 +67,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Println()
-	fmt.Println("search engines")
+	fmt.Println("search engines", len(search_engine_list))
 	for _, v := range search_engine_list {
 		search_engines[v.Name] = search_engines[v.SearchEngineId]
 		fmt.Println(search_engines[v.Name], search_engines[v.SearchEngineId])
