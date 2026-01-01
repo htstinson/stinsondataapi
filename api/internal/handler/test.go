@@ -117,6 +117,10 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 
 	for k, v := range output.Searches {
 		fmt.Println(k, v)
+		fmt.Println(v.DateFilter)
+		fmt.Println(v.Name)
+		fmt.Println(v.Query)
+		fmt.Println(v.Results)
 	}
 }
 
