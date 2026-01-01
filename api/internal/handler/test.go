@@ -120,7 +120,10 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(v.DateFilter)
 		fmt.Println(v.Name)
 		fmt.Println(v.Query)
-		fmt.Println(v.Results)
+
+		for m, n := range v.Results {
+			fmt.Println(m, n)
+		}
 	}
 }
 
