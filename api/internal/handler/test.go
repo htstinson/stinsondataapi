@@ -73,24 +73,23 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	var googleSearchConfig = searcher.GoogleSearchConfig{
 		DefaultMaxResults: 10,
 		DefaultSortByDate: true,
-		//DefaultCSEID:      "1031fbeefdfa24158",
 	}
 
 	searches := make([]searcher.SearchQuery, 0)
 
-	daterange := searcher.DateRangeConfig{
-		//Type:  "y",  // "d", "w", "m", "y"
-		//Value: 1000, //int
-		StartDate: "20250101", //YYYYMMDD format
-		EndDate:   "20260101", //YYYYMMDD format
-	}
+	//daterange := searcher.DateRangeConfig{
+	//	//Type:  "y",  // "d", "w", "m", "y"
+	//	//Value: 1000, //int
+	//	StartDate: "20250101", //YYYYMMDD format
+	//	EndDate:   "20260101", //YYYYMMDD format
+	//}
 
 	searchquery2 := searcher.SearchQuery{
 		Name:       "Political",
 		Query:      `"Jason Soseman"`,
 		ExactMatch: false,
 		CSEIDs:     []string{search_engines["facebook"]},
-		DateRange:  &daterange,
+		//DateRange:  &daterange,
 		MaxResults: 15,
 		SortByDate: true,
 	}
@@ -116,7 +115,9 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Searches:      client.ExecuteAllSearches(),
 	}
 
-	fmt.Println(output)
+	for k, v := range output.Searches {
+		fmt.Println(k, v)
+	}
 }
 
 func getSecret(secret_name string) (string, error) {
