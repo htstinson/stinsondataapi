@@ -80,7 +80,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 
 	searchquery1 := searcher.SearchQuery{
 		Name:       "My Search",
-		Query:      `Tom Stinson Kirksville`,
+		Query:      `"Tom Stinson" Kirksville`,
 		ExactMatch: false,
 		CSEIDs:     []string{search_engines["facebook"]},
 		MaxResults: 10,
@@ -90,7 +90,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 
 	searchquery2 := searcher.SearchQuery{
 		Name:       "Political",
-		Query:      `Soseman`,
+		Query:      `"Jason Soseman"`,
 		ExactMatch: false,
 		CSEID:      search_engines["general_web"],
 		CSEIDs:     []string{search_engines["facebook"], search_engines["general_web"]},
