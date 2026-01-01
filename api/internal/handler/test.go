@@ -66,19 +66,9 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println()
-	fmt.Println("search engines", len(search_engine_list))
 	for _, v := range search_engine_list {
-		fmt.Println("Name", v.Name, "CSEID", v.SearchEngineId)
 		search_engines[v.Name] = v.SearchEngineId
 	}
-
-	fmt.Println()
-	fmt.Println("map")
-	for k, v := range search_engines {
-		fmt.Println(k, v)
-	}
-	fmt.Println()
 
 	var googleSearchConfig = searcher.GoogleSearchConfig{
 		DefaultMaxResults: 10,
@@ -89,11 +79,10 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	searches := make([]searcher.SearchQuery, 0)
 
 	searchquery1 := searcher.SearchQuery{
-		Name:       "TEST",
-		Query:      `Stinson`,
+		Name:       "My Search",
+		Query:      `Tom Stinson`,
 		ExactMatch: false,
-		CSEID:      search_engines["facebook"],
-		CSEIDs:     []string{"", ""},
+		CSEIDs:     []string{search_engines["facebook"]},
 		MaxResults: 10,
 		SortByDate: false,
 	}
@@ -115,13 +104,6 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		SearchEngines: search_engines,
 		Searches:      searches,
 	}
-
-	fmt.Println()
-	fmt.Println("config.Searches")
-	for k, v := range config.Searches {
-		fmt.Println(k, v)
-	}
-	fmt.Println()
 
 	// Create Google Search CLient
 	client, err := searcher.NewSearchClient(k.Value, &config)
