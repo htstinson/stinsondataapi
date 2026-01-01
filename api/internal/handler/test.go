@@ -79,6 +79,8 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Query:      `Stinson`,
 		ExactMatch: false,
 		CSEID:      search_engines["facebook"],
+		MaxResults: 10,
+		SortByDate: false,
 	}
 	searches = append(searches, searchquery1)
 
@@ -86,7 +88,10 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Name:       "Political",
 		Query:      `Soseman`,
 		ExactMatch: false,
+		CSEID:      "",
 		CSEIDs:     []string{search_engines["facebook"], search_engines["general_web"]},
+		MaxResults: 15,
+		SortByDate: true,
 	}
 	searches = append(searches, searchquery2)
 
