@@ -35,7 +35,7 @@ func (d *Database) SelectSearchEngines(ctx context.Context, subscriber model.Sub
 		}
 
 		searchengines = append(searchengines, searchengine)
-		fmt.Println("search_engine_id", searchengine.SearchEngineId)
+		fmt.Println(searchengine.Name, searchengine.SearchEngineId)
 	}
 	return searchengines, nil
 }
