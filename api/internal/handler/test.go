@@ -72,14 +72,23 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		//DefaultCSEID:      "1031fbeefdfa24158",
 	}
 
-	searches := make([]searcher.SearchQuery, 1)
-	searchquery := searcher.SearchQuery{
+	searches := make([]searcher.SearchQuery, 2)
+
+	searchquery1 := searcher.SearchQuery{
+		Name:       "TEST",
+		Query:      `Stinson`,
+		ExactMatch: false,
+		CSEID:      search_engines["facebook"],
+	}
+	searches = append(searches, searchquery1)
+
+	searchquery2 := searcher.SearchQuery{
 		Name:       "Political",
 		Query:      `Soseman`,
 		ExactMatch: false,
 		CSEID:      search_engines["facebook"],
 	}
-	searches = append(searches, searchquery)
+	searches = append(searches, searchquery2)
 
 	var config = searcher.Config{
 		GoogleSearch:  googleSearchConfig,
