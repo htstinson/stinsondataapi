@@ -46,9 +46,6 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	fmt.Println(payload)
-	return
-
 	subscriber_item, err := h.db.GetSubscriberItem(ctx, payload.Id)
 	if err != nil {
 		fmt.Println("unable to find subscriber item")
