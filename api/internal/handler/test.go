@@ -114,6 +114,9 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Searches:      client.ExecuteAllSearches(),
 	}
 
+	fmt.Println("Timestamp", output.Timestamp)
+	fmt.Println("Total Searches", output.Configuration.TotalSearches)
+
 	for k, v := range output.Searches {
 		for m, n := range v.Results {
 			for a, b := range n.Items {
