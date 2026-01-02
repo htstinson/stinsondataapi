@@ -8,7 +8,7 @@ type SearchDefinition struct {
 	ModifiedAt time.Time `json:"modified_at"`
 	Name       string    `json:"name"`
 	Query      string    `json:"query"`
-	Comment    string    `json:"common"`
+	Comment    *string   `json:"common"`
 	ExactMatch bool      `json:"exact_match"`
 	MaxResults int       `json:"max_results"`
 	SortByDate bool      `json:"sort_by_date"`
