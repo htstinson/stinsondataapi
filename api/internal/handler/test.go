@@ -109,10 +109,22 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Build output structure
-	_ = searcher.OutputResult{
+	output := searcher.OutputResult{
 		Timestamp:     time.Now().Format(time.RFC3339),
 		Configuration: client.BuildConfigurationOutput(),
 		Searches:      client.ExecuteAllSearches(),
+	}
+
+	for k, v := range output.Searches {
+		for m, n := range v.Results {
+			for a, b := range n.Items {
+				fmt.Println("---------------------------")
+				fmt.Println(k, m, a, b.Link)
+				fmt.Println(k, m, a, b.Position)
+				fmt.Println(k, m, a, b.Snippet)
+				fmt.Println(k, m, a, b.Title)
+			}
+		}
 	}
 
 }
