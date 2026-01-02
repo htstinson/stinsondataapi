@@ -88,7 +88,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Name:       "Political",
 		Query:      `"Jason Soseman"`,
 		ExactMatch: false,
-		CSEIDs:     []string{search_engines["facebook"]},
+		CSEIDs:     []string{search_engines["general_web"]},
 		//DateRange:  &daterange,
 		MaxResults: 15,
 		SortByDate: true,
