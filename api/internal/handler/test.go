@@ -81,7 +81,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		Type:      "custom",
 		Value:     1000,
 		StartDate: "2025-11-01",
-		EndDate:   "2025-11-30",
+		EndDate:   "2025-12-31",
 	}
 
 	searchquery2 := searcher.SearchQuery{
