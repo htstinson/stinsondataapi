@@ -11,7 +11,7 @@ func (d *Database) SelectSearchDefinitionEnginesView(ctx context.Context, subscr
 	fmt.Println("d SelectSearchDefinitionEnginesView")
 
 	query := fmt.Sprintf(`SELECT id, created_at, modified_at, search_engine_Id, search_engine_name, 
-	search_definition_name, search_query, engine_id, definition_id FROM %s.calibrate_search_engines ORDER BY name ASC LIMIT $1 OFFSET $2`, subscriber.Schema_Name)
+	search_definition_name, search_query, engine_id, definition_id FROM %s.search_definition_engines_view ORDER BY name ASC LIMIT $1 OFFSET $2`, subscriber.Schema_Name)
 
 	fmt.Println(query)
 
