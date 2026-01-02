@@ -51,10 +51,6 @@ func (h *Handler) SelectSubscriberCustomers(w http.ResponseWriter, r *http.Reque
 
 	ctx := r.Context()
 
-	if subcriber != nil {
-		fmt.Println("subscriber.Id", subcriber.Id)
-	}
-
 	subcriber, err := h.db.GetSubscriber(ctx, subcriber.Id)
 	if err != nil {
 		fmt.Println(err.Error())
