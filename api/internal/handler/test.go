@@ -38,13 +38,16 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	var payload model.Subscriber_Item
+	var payload model.SearchDefinition
 	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 		fmt.Println(1, err.Error())
 		common.RespondError(w, http.StatusBadRequest, "invalid payload")
 		return
 	}
 	defer r.Body.Close()
+
+	fmt.Println(payload)
+	return
 
 	subscriber_item, err := h.db.GetSubscriberItem(ctx, payload.Id)
 	if err != nil {
