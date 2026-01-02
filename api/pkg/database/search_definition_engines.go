@@ -10,8 +10,8 @@ import (
 func (d *Database) SelectSearchDefinitionEnginesView(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchDefinitionEnginesView, error) {
 	fmt.Println("d SelectSearchDefinitionEnginesView")
 
-	query := fmt.Sprintf(`SELECT id, created_at, modified_at, search_engine_Id,
-	search_engine_name, search_definition_name, search_query, engine_id, definition_id FROM %s.calibrate_search_engines ORDER BY name ASC LIMIT $1 OFFSET $2`, subscriber.Schema_Name)
+	query := fmt.Sprintf(`SELECT id, created_at, modified_at, search_engine_Id, search_engine_name, 
+	search_definition_name, search_query, engine_id, definition_id FROM %s.calibrate_search_engines ORDER BY name ASC LIMIT $1 OFFSET $2`, subscriber.Schema_Name)
 
 	rows, err := d.DB.QueryContext(ctx,
 		query,
@@ -26,8 +26,8 @@ func (d *Database) SelectSearchDefinitionEnginesView(ctx context.Context, subscr
 	var results []model.SearchDefinitionEnginesView
 	for rows.Next() {
 		var row model.SearchDefinitionEnginesView
-		if err := rows.Scan(&row.Id, &row.CreatedAt, &row.ModifiedAt, &row.SearchEngineId,
-			&row.SearchEngineName, row.SearchDefinitionName, row.SearchQuery, row.EngineId, row.DefinitionId); err != nil {
+		if err := rows.Scan(&row.Id, &row.CreatedAt, &row.ModifiedAt, &row.SearchEngineId, &row.SearchEngineName,
+			row.SearchDefinitionName, row.SearchQuery, row.EngineId, row.DefinitionId); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning search_definition: %w", err)
 		}
