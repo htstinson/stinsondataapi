@@ -15,6 +15,8 @@ func (d *Database) SelectSubscriberItemView(ctx context.Context, subscriber_id s
 
 	where_clause := " "
 
+	fmt.Println("SubscriberId", subscriber_id)
+
 	if subscriber_id != "" {
 		_, err := ValidateUUID(subscriber_id)
 		if err != nil {
