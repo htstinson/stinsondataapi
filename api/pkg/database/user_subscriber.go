@@ -11,7 +11,7 @@ import (
 )
 
 func (d *Database) SelectUserSubscriberView(ctx context.Context, user_id string, limit int, offset int) ([]model.User_Subscriber_View, error) {
-	fmt.Println("database.go SelectUserSubscriberView()")
+	fmt.Println("d SelectUserSubscriberView()")
 
 	where_clause := " "
 
@@ -21,12 +21,9 @@ func (d *Database) SelectUserSubscriberView(ctx context.Context, user_id string,
 			fmt.Printf("Invalid UUID error: %v\n", err)
 			return nil, err
 		} else {
-			fmt.Println(user_id, "validated.")
 			where_clause = fmt.Sprintf(` where user_id = '%s' `, user_id)
 		}
 	}
-
-	fmt.Println("new query")
 
 	query := fmt.Sprintf("SELECT id, user_id, subscriber_id, user_username, subscriber_name FROM user_subscriber_view%sORDER BY user_username, subscriber_name ASC LIMIT $1 OFFSET $2", where_clause)
 
@@ -55,9 +52,6 @@ func (d *Database) UpdateUserSubscriber(ctx context.Context, user_subscriber mod
 	fmt.Println("d UpdateUserSubscriber")
 
 	query := `UPDATE user_subscriber SET user_id = $1, subscriber_id = $2 WHERE id = $3`
-	fmt.Println("id", user_subscriber.Id)
-	fmt.Println("user id", user_subscriber.User_ID)
-	fmt.Println("subscriber id", user_subscriber.Subscriber_Id)
 
 	_, err := d.DB.ExecContext(ctx, query, user_subscriber.User_ID, user_subscriber.Subscriber_Id, user_subscriber.Id)
 

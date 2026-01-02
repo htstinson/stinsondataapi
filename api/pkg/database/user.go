@@ -15,7 +15,7 @@ import (
 //User
 
 func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.User, error) {
-	fmt.Println("database.go SelectUsers()")
+	fmt.Println("d SelectUsers()")
 	rows, err := d.DB.QueryContext(ctx,
 		"SELECT id, username, ip_address FROM users ORDER BY username ASC LIMIT $1 OFFSET $2",
 		limit, offset,
@@ -41,7 +41,7 @@ func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.
 }
 
 func (d *Database) SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error) {
-	fmt.Println("database.go SelectUserRoles()")
+	fmt.Println("d SelectUserRoles")
 	rows, err := d.DB.QueryContext(ctx,
 		"SELECT user_id, username, ip_address, role_name FROM user_roles_view ORDER BY username ASC LIMIT $1 OFFSET $2",
 		limit, offset,
@@ -152,11 +152,9 @@ func (d *Database) DeleteUser(ctx context.Context, id string) error {
 }
 
 func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
-	fmt.Println("h UpdateUser")
+	fmt.Println("d UpdateUser")
 
 	query := `UPDATE users SET username = $1, ip_address = $2 WHERE id = $3`
-
-	fmt.Println("user.Ip_address", user.IP_address)
 
 	var ipAddress string
 	if user.IP_address == "" {
@@ -164,8 +162,6 @@ func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
 	} else {
 		ipAddress = user.IP_address
 	}
-
-	fmt.Println(ipAddress)
 
 	_, err := d.DB.ExecContext(ctx, query, user.Username, ipAddress, user.ID)
 

@@ -16,11 +16,10 @@ type Schema struct {
 // CopySchema creates a new schema with the specified name and copies all tables,
 // sequences, functions, and data from the source schema to the new schema.
 func (schema *Schema) CopySchema(ctx context.Context) error {
-	fmt.Println("Schema copy operation starting")
-	fmt.Printf("Copying from schema '%s' to new schema '%s'\n", schema.FromSchemaName, schema.ToSchemaName)
+	fmt.Println("S CopySchema")
+	// Copying from schema '%s' to new schema '%s'\n", schema.FromSchemaName, schema.ToSchemaName
 
 	// Step 1: Create the new schema
-	fmt.Printf("Creating schema: %s\n", schema.ToSchemaName)
 	_, err := schema.DB.ExecContext(ctx, fmt.Sprintf("CREATE SCHEMA IF NOT EXISTS %s", schema.ToSchemaName))
 	if err != nil {
 		return fmt.Errorf("failed to create schema: %w", err)
@@ -80,7 +79,8 @@ func (schema *Schema) CopySchema(ctx context.Context) error {
 
 // getTableNames gets all table names from the source schema
 func (schema *Schema) getTableNames(ctx context.Context) ([]string, error) {
-	fmt.Println("Getting list of tables in source schema")
+
+	//  Getting list of tables in source schema
 	q := fmt.Sprintf("SELECT tablename FROM pg_tables WHERE schemaname = '%s'", schema.FromSchemaName)
 	rows, err := schema.DB.QueryContext(ctx, q)
 	if err != nil {
@@ -106,7 +106,8 @@ func (schema *Schema) getTableNames(ctx context.Context) ([]string, error) {
 
 // getSequenceNames gets all sequence names from the source schema
 func (schema *Schema) getSequenceNames(ctx context.Context) ([]string, error) {
-	fmt.Println("Getting list of sequences in source schema")
+
+	// Getting list of sequences in source schema"
 	q := fmt.Sprintf("SELECT sequence_name FROM information_schema.sequences WHERE sequence_schema = '%s'", schema.FromSchemaName)
 	seqRows, err := schema.DB.QueryContext(ctx, q)
 	if err != nil {
@@ -132,7 +133,8 @@ func (schema *Schema) getSequenceNames(ctx context.Context) ([]string, error) {
 
 // getViewNames gets all view names from the source schema
 func (schema *Schema) getViewNames(ctx context.Context) ([]string, error) {
-	fmt.Println("Getting list of views in source schema")
+	fmt.Println("s getViewNames")
+
 	q := fmt.Sprintf("SELECT table_name FROM information_schema.views WHERE table_schema = '%s'", schema.FromSchemaName)
 	viewRows, err := schema.DB.QueryContext(ctx, q)
 	if err != nil {
@@ -158,7 +160,9 @@ func (schema *Schema) getViewNames(ctx context.Context) ([]string, error) {
 
 // createStructures creates sequences and tables in the target schema
 func (schema *Schema) createStructures(ctx context.Context, sequences []string, tables []string) error {
-	fmt.Println("Creating tables and sequences in new schema")
+	fmt.Println("s createStructures")
+
+	// Creating tables and sequences in new schema
 
 	// Start a transaction for schema creation
 	tx, err := schema.DB.BeginTx(ctx, nil)
@@ -344,7 +348,7 @@ func (schema *Schema) createStructures(ctx context.Context, sequences []string, 
 		}
 		pkRows.Close()
 
-		fmt.Println("adding triggers")
+		// Adding triggers
 		triggerSQL := fmt.Sprintf(`		
 		CREATE TRIGGER update_profile_modified 
 		BEFORE UPDATE ON %s.%s 
@@ -366,13 +370,15 @@ func (schema *Schema) createStructures(ctx context.Context, sequences []string, 
 		return fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
-	fmt.Println("Successfully created structures in new schema")
+	// Successfully created structures in new schema
 	return nil
 }
 
 // copyTableData copies data from source schema tables to target schema tables
 func (schema *Schema) copyTableData(ctx context.Context, tables []string) error {
-	fmt.Println("Copying data to new schema")
+	fmt.Println("s copyTableData")
+
+	// Copying data to new schema
 
 	// Start a transaction for data copying
 	tx, err := schema.DB.BeginTx(ctx, nil)
@@ -450,13 +456,15 @@ func (schema *Schema) copyTableData(ctx context.Context, tables []string) error 
 		return fmt.Errorf("failed to commit transaction: %w", err)
 	}
 
-	fmt.Println("Successfully copied data to new schema")
+	// Successfully copied data to new schema
 	return nil
 }
 
 // createForeignKeys creates foreign key constraints in the target schema
 func (schema *Schema) createForeignKeys(ctx context.Context) error {
-	fmt.Println("Creating foreign key constraints")
+	fmt.Println("s createForeignKeys")
+
+	// Creating foreign key constraints
 
 	// Check if source schema has any foreign keys
 	var fkCount int
@@ -471,7 +479,7 @@ func (schema *Schema) createForeignKeys(ctx context.Context) error {
 	}
 
 	if fkCount == 0 {
-		fmt.Println("No foreign keys found in source schema, skipping")
+		// No foreign keys found in source schema, skipping
 		return nil
 	}
 
@@ -563,7 +571,7 @@ func (schema *Schema) createIndexes(ctx context.Context) error {
 	}
 
 	if idxCount == 0 {
-		fmt.Println("No indexes found in source schema, skipping")
+		// No indexes found in source schema, skipping
 		return nil
 	}
 
@@ -627,11 +635,11 @@ func (schema *Schema) createIndexes(ctx context.Context) error {
 // createViews creates views in the target schema
 func (schema *Schema) createViews(ctx context.Context, views []string) error {
 	if len(views) == 0 {
-		fmt.Println("No views to create, skipping")
+		// No views to create, skipping
 		return nil
 	}
 
-	fmt.Println("Creating views")
+	// Creating views
 
 	// Start a transaction for creating views
 	tx, err := schema.DB.BeginTx(ctx, nil)

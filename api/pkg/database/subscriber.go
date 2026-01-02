@@ -83,7 +83,7 @@ func (d *Database) CreateSubscriber(ctx context.Context, name string) (*model.Su
 
 func (d *Database) SelectSubscribers(ctx context.Context, limit, offset int) ([]model.Subscriber, error) {
 
-	fmt.Println("database.go SelectSubscribers()")
+	fmt.Println("d SelectSubscribers()")
 
 	rows, err := d.DB.QueryContext(ctx,
 		"SELECT id, name, created_at, schema_name FROM subscribers ORDER BY name ASC LIMIT $1 OFFSET $2",
@@ -121,26 +121,19 @@ func (d *Database) UpdateSubscriber(ctx context.Context, subscriber *model.Subsc
 func (d *Database) DeleteSubscriber(ctx context.Context, subscriber *model.Subscriber) error {
 	fmt.Println("d DeleteSubscriber")
 
-	fmt.Println("delete user_subscribe_role")
 	query := `DELETE from common.user_subscriber_role where user_subscriber_id in
 				(select id from common.user_subscriber where subscriber_id = $1);`
 	result, err := d.DB.ExecContext(ctx, query, subscriber.Id)
 	if err != nil {
 		fmt.Println(err.Error())
-	} else {
-		fmt.Println(result.RowsAffected())
 	}
 
-	fmt.Println("delete user subscriber")
 	query = `DELETE from common.user_subscriber where subscriber_id = $1;`
 	result, err = d.DB.ExecContext(ctx, query, subscriber.Id)
 	if err != nil {
 		fmt.Println(err.Error())
-	} else {
-		fmt.Println(result.RowsAffected())
 	}
 
-	fmt.Println("delete subscriber")
 	query = `DELETE FROM common.subscribers WHERE id = $1`
 	result, err = d.DB.ExecContext(ctx, query, subscriber.Id)
 	if err != nil {
@@ -149,14 +142,11 @@ func (d *Database) DeleteSubscriber(ctx context.Context, subscriber *model.Subsc
 		fmt.Println(result.RowsAffected())
 	}
 
-	fmt.Println("drop schema")
 	query = fmt.Sprintf(`DROP SCHEMA %s cascade`, subscriber.Schema_Name)
-	fmt.Println(query)
+
 	result, err = d.DB.ExecContext(ctx, query)
 	if err != nil {
 		fmt.Println(err.Error())
-	} else {
-		fmt.Println(result.RowsAffected())
 	}
 
 	return err

@@ -11,7 +11,7 @@ import (
 )
 
 func (d *Database) SelectUserSubscriberRoleView(ctx context.Context, user_subscriber_view model.User_Subscriber_View, limit, offset int) ([]model.User_Subscriber_Role_View, error) {
-	fmt.Println("database.go SelectUserSubscriberRolesView()")
+	fmt.Println("d SelectUserSubscriberRolesView()")
 
 	var rows *sql.Rows
 	var query string
@@ -36,8 +36,6 @@ func (d *Database) SelectUserSubscriberRoleView(ctx context.Context, user_subscr
 		query = `SELECT id, user_subscriber_id, role_id, role_name, user_id, username, subscriber_id, subscriber_name, created_at, updated_at 
 		FROM common.user_subscriber_role_view where user_id = $1
 		ORDER BY username, subscriber_name, role_name ASC LIMIT $2 OFFSET $3`
-
-		fmt.Println(query)
 
 		rows, err = d.DB.QueryContext(ctx, query, user_subscriber_view.User_ID, limit, offset)
 		if err != nil {
@@ -77,9 +75,6 @@ func (d *Database) CreateUserSubscriberRole(ctx context.Context, user_subscriber
         INSERT INTO user_subscriber_role (id, user_subscriber_id, role_id) VALUES ($1, $2, $3)
     `
 
-	fmt.Println(query)
-	fmt.Println(user_subscriber_role)
-
 	_, err := d.DB.ExecContext(ctx, query,
 		user_subscriber_role.Id,
 		user_subscriber_role.User_Subscriber_ID,
@@ -117,9 +112,6 @@ func (d *Database) UpdateUserSubscriberRole(ctx context.Context, user_subscriber
 	fmt.Println("d UpdateUserSubscriberRole")
 
 	query := `UPDATE user_subscriber_role SET user_subscriber_id = $1, role_id = $2 WHERE id = $3`
-	fmt.Println("id", user_subscriber_role.Id)
-	fmt.Println("user_subscriber_id", user_subscriber_role.User_Subscriber_ID)
-	fmt.Println("role id", user_subscriber_role.Role_Id)
 
 	_, err := d.DB.ExecContext(ctx, query, user_subscriber_role.User_Subscriber_ID, user_subscriber_role.Role_Id, user_subscriber_role.Id)
 
