@@ -77,19 +77,19 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 
 	searches := make([]searcher.SearchQuery, 0)
 
-	//daterange := searcher.DateRangeConfig{
-	//	//Type:  "y",  // "d", "w", "m", "y"
-	//	//Value: 1000, //int
-	//	StartDate: "20250101", //YYYYMMDD format
-	//	EndDate:   "20260101", //YYYYMMDD format
-	//}
+	daterange := searcher.DateRangeConfig{
+		Type:      "custom",
+		Value:     1000,
+		StartDate: "2025-10-01",
+		EndDate:   "2025-10-31",
+	}
 
 	searchquery2 := searcher.SearchQuery{
 		Name:       "Political",
 		Query:      `"Jason Soseman"`,
 		ExactMatch: false,
 		CSEIDs:     []string{search_engines["general_web"]},
-		//DateRange:  &daterange,
+		DateRange:  &daterange,
 		MaxResults: 15,
 		SortByDate: true,
 	}
