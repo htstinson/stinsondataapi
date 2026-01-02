@@ -80,7 +80,7 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	daterange := searcher.DateRangeConfig{
 		Type:      "custom",
 		Value:     1000,
-		StartDate: "2025-11-01",
+		StartDate: "2025-09-01",
 		EndDate:   "2025-12-31",
 	}
 
