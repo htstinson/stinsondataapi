@@ -10,10 +10,7 @@ import (
 func (d *Database) SelectSearchEngines(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchEngine, error) {
 	fmt.Println("d SelectSearchEngines")
 
-	query := fmt.Sprintf(`SELECT id, created_at, modified_at, name, search_engine_Id, comment FROM %s.calibrate_search_engines 
-	WHERE parent_id = '%s' ORDER BY name ASC LIMIT $1 OFFSET $2`, subscriber.Schema_Name, subscriber.Id)
-
-	fmt.Println(query)
+	query := fmt.Sprintf(`SELECT id, created_at, modified_at, name, search_engine_Id, comment FROM %s.calibrate_search_engines ORDER BY name ASC LIMIT $1 OFFSET $2`, subscriber.Schema_Name)
 
 	rows, err := d.DB.QueryContext(ctx,
 		query,
@@ -35,8 +32,6 @@ func (d *Database) SelectSearchEngines(ctx context.Context, subscriber model.Sub
 
 		searchengines = append(searchengines, searchengine)
 	}
-
-	fmt.Println(len(searchengines))
 
 	return searchengines, nil
 }
