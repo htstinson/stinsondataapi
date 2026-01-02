@@ -29,7 +29,7 @@ func (d *Database) SelectSearchDefinitionEnginesView(ctx context.Context, subscr
 	for rows.Next() {
 		var row model.SearchDefinitionEnginesView
 		if err := rows.Scan(&row.Id, &row.CreatedAt, &row.ModifiedAt, &row.SearchEngineId, &row.SearchEngineName,
-			row.SearchDefinitionName, row.SearchQuery, row.EngineId, row.DefinitionId); err != nil {
+			&row.SearchDefinitionName, &row.SearchQuery, &row.EngineId, &row.DefinitionId); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning search_definition: %w", err)
 		}
