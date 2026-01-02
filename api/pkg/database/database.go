@@ -14,7 +14,7 @@ import (
 type Repository interface {
 
 	//Calibrate
-	SelectSearchDefinitions(ctx context.Context, customer model.Customer, limit, offset int) ([]model.SearchDefinition, error)
+	SelectSearchDefinitions(ctx context.Context, customer model.Subscriber, limit, offset int) ([]model.SearchDefinition, error)
 	SelectSearchEngines(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchEngine, error)
 
 	// Item

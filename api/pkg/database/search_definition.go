@@ -7,12 +7,12 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (d *Database) SelectSearchDefinitions(ctx context.Context, customer model.Customer, limit, offset int) ([]model.SearchDefinition, error) {
+func (d *Database) SelectSearchDefinitions(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchDefinition, error) {
 
 	fmt.Println("d SelectSearchDefinitions")
 
-	query := fmt.Sprintf(`SELECT id, created_at, modified_at, search_name, search_description, search_definition FROM %s.calibrate_search_definition 
-	WHERE parent_id = '%s' ORDER BY lastname,firstname ASC LIMIT $1 OFFSET $2`, customer.Schema_Name, customer.Id)
+	query := fmt.Sprintf(`SELECT id, created_at, modified_at, name, comment, query, exact_match, max_results, sort_by_date, start_date, end_date, search_type FROM %s.calibrate_search_definition 
+	ORDER BY name ASC LIMIT $1 OFFSET $2`, subscriber.Schema_Name)
 
 	rows, err := d.DB.QueryContext(ctx,
 		query,
@@ -27,7 +27,7 @@ func (d *Database) SelectSearchDefinitions(ctx context.Context, customer model.C
 	var searchdefinitions []model.SearchDefinition
 	for rows.Next() {
 		var searchdefinition model.SearchDefinition
-		if err := rows.Scan(&searchdefinition.Id, &searchdefinition.CreatedAt, &searchdefinition.ModifiedAt, &searchdefinition.SearchName, &searchdefinition.SearchDescription, &searchdefinition.SearchDefinition); err != nil {
+		if err := rows.Scan(&searchdefinition.Id, &searchdefinition.CreatedAt, &searchdefinition.ModifiedAt, &searchdefinition.Name, &searchdefinition.Comment, &searchdefinition.Query, &searchdefinition.ExactMatch, &searchdefinition.MaxResults, &searchdefinition.SortByDate, &searchdefinition.StartDate, &searchdefinition.EndDate, &searchdefinition.SearchType); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning search_definition: %w", err)
 		}
