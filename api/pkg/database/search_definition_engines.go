@@ -10,8 +10,8 @@ import (
 func (d *Database) SelectSearchDefinitionEnginesView(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchDefinitionEnginesView, error) {
 	fmt.Println("d SelectSearchDefinitionEnginesView")
 
-	query := fmt.Sprintf(`SELECT id, created_at, modified_at, search_engine_Id, search_engine_name, 
-	search_definition_name, search_query, engine_id, definition_id FROM %s.search_definition_engines_view ORDER BY name ASC LIMIT $1 OFFSET $2`, subscriber.Schema_Name)
+	query := fmt.Sprintf(`SELECT id, created_at, modified_at, search_engine_Id, search_engine_name, search_definition_name, 
+		search_query, engine_id, definition_id FROM %s.search_definition_engines_view ORDER BY search_engine_name ASC LIMIT $1 OFFSET $2`, subscriber.Schema_Name)
 
 	fmt.Println(query)
 
