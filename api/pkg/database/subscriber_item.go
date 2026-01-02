@@ -11,7 +11,7 @@ import (
 )
 
 func (d *Database) SelectSubscriberItemView(ctx context.Context, subscriber_id string, limit int, offset int) ([]model.Subscriber_Item_View, error) {
-	fmt.Println("d SelectSubscriberItem()")
+	fmt.Println("d SelectSubscriberItem")
 
 	where_clause := " "
 
