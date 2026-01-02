@@ -112,7 +112,7 @@ func main() {
 	protected.Use(jwtAuth.Middleware)
 
 	// Search Definition Engines
-	protected.HandleFunc("/searchdefinitionengines/{subscriber_id}", h.SelectSearchDefinitionEnginesView).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/searchdefinitionenginesview/{subscriber_id}", h.SelectSearchDefinitionEnginesView).Methods("GET", "OPTIONS")
 
 	// Search Definitions
 	protected.HandleFunc("/searchdefinitions/{subscriber_id}", h.SelectSearchDefinitions).Methods("GET", "OPTIONS")
