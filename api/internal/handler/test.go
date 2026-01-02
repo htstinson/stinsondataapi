@@ -46,6 +46,8 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	fmt.Println(payload)
+
 	fmt.Println(payload.SubscriberId)
 
 	subscriber_item, err := h.db.GetSubscriberItem(ctx, payload.SubscriberId)
