@@ -54,11 +54,17 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, v := range search_engine_list {
-		search_engines[v.SearchEngineName] = v.SearchEngineId
-		fmt.Println(v.SearchEngineName)
-		fmt.Println(v.EngineId)
-		fmt.Println(v.SearchQuery)
+	fmt.Println("start date", search_definition.StartDate)
+	fmt.Println("end date", search_definition.EndDate)
+	fmt.Println("query", search_definition.Query)
+	fmt.Println("search type", search_definition.SearchType)
+
+	searches := make([]searcher.SearchQuery, 0)
+
+	daterange := searcher.DateRangeConfig{
+		Type:      search_definition.SearchType,
+		StartDate: search_definition.StartDate.Format("2006-01-02"),
+		EndDate:   search_definition.EndDate.Format("2006-01-02"),
 	}
 
 	var googleSearchConfig = searcher.GoogleSearchConfig{
@@ -66,24 +72,24 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		DefaultSortByDate: true,
 	}
 
-	searches := make([]searcher.SearchQuery, 0)
+	//Load each search
+	for _, v := range search_engine_list {
+		search_engines[v.SearchEngineName] = v.SearchEngineId
+		fmt.Println(v.SearchEngineName)
+		fmt.Println(v.EngineId)
 
-	daterange := searcher.DateRangeConfig{
-		Type:      "custom",
-		StartDate: "2025-07-01",
-		EndDate:   "2025-12-31",
-	}
+		searchquery := searcher.SearchQuery{
+			Name:       v.SearchEngineName,
+			Query:      v.SearchQuery,
+			ExactMatch: search_definition.ExactMatch,
+			CSEIDs:     []string{search_engines[v.EngineId]},
+			DateRange:  &daterange,
+			MaxResults: search_definition.MaxResults,
+			SortByDate: search_definition.SortByDate,
+		}
+		searches = append(searches, searchquery)
 
-	searchquery2 := searcher.SearchQuery{
-		Name:       "Political",
-		Query:      `"Jason Soseman"`,
-		ExactMatch: false,
-		CSEIDs:     []string{search_engines["general_web"]},
-		DateRange:  &daterange,
-		MaxResults: 15,
-		SortByDate: true,
 	}
-	searches = append(searches, searchquery2)
 
 	var config = searcher.Config{
 		GoogleSearch:  googleSearchConfig,
