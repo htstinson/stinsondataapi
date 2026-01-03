@@ -85,14 +85,14 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	//Load each search
 	for _, v := range search_engine_list {
 		search_engines[v.SearchEngineName] = v.SearchEngineId
-		fmt.Println(v.SearchEngineName)
-		fmt.Println(v.EngineId)
+		fmt.Println("search engine name", v.SearchEngineName)
+		fmt.Println("search engine id", v.SearchEngineId)
 
 		searchquery := searcher.SearchQuery{
 			Name:       v.SearchEngineName,
 			Query:      v.SearchQuery,
 			ExactMatch: search_definition.ExactMatch,
-			CSEIDs:     []string{search_engines[v.EngineId]},
+			CSEIDs:     []string{search_engines[v.SearchEngineId]},
 			DateRange:  &daterange,
 			MaxResults: search_definition.MaxResults,
 			SortByDate: search_definition.SortByDate,
