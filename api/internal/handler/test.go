@@ -46,6 +46,14 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	subscriber, err := h.db.GetSubscriber(ctx, search_definition.SubscriberId)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	search_definition, err = h.db.GetSearchDefinition(ctx, *subscriber, search_definition.Id, 10, 0)
+
 	fmt.Println("SearchDefinition", search_definition)
 
 	search_engines := make(map[string]string)
