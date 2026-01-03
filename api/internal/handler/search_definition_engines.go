@@ -9,7 +9,7 @@ import (
 )
 
 func (h *Handler) SelectSearchDefinitionEnginesView(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h SelecttSearchDefinitionEngines")
+	fmt.Println("h SelecttSearchDefinitionEnginesView")
 
 	ctx := r.Context()
 
