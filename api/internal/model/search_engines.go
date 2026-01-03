@@ -4,7 +4,7 @@ import "time"
 
 type SearchEngine struct {
 	Id             string    `json:"id"`
-	ParentId       string    `json:"parent_id"`
+	SubscriberId   string    `json:"subscriber_id"`
 	CreatedAt      time.Time `json:"created_at"`
 	ModifiedAt     time.Time `json:"modified_at"`
 	Name           string    `json:"name"`

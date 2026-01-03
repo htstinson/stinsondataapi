@@ -203,8 +203,6 @@ func (h *Handler) Create_Schema(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(id)
-
 	ctx := r.Context()
 
 	subscriber, err := h.db.GetSubscriber(ctx, id)

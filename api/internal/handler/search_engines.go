@@ -1,15 +1,18 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
+	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (h *Handler) ListSearchEngines(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h ListtSearchEngines")
+func (h *Handler) SelectSearchEngines(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h SelecttSearchEngines")
 
 	ctx := r.Context()
 
@@ -31,4 +34,32 @@ func (h *Handler) ListSearchEngines(w http.ResponseWriter, r *http.Request) {
 
 	common.RespondJSON(w, http.StatusOK, search_engines)
 
+}
+
+func (h *Handler) CreateSearchEngine(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h CreateSearchEngine")
+
+	var search_engine *model.SearchEngine
+	if err := json.NewDecoder(r.Body).Decode(&search_engine); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+	ctx := r.Context()
+
+	search_engine.Id = uuid.New().String()
+
+	subcriber, err := h.db.GetSubscriber(ctx, search_engine.SubscriberId)
+	if err != nil {
+		fmt.Println(err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
+	}
+
+	search_engine, err = h.db.CreateSearchEngine(ctx, *search_engine, *subcriber)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to create search engine")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusCreated, search_engine)
 }

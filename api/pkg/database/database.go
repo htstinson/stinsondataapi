@@ -20,6 +20,9 @@ type Repository interface {
 	SelectSearchEngines(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchEngine, error)
 	GetSearchDefinition(ctx context.Context, subscriber model.Subscriber, definition_id string, limit int, offset int) (model.SearchDefinition, error)
 
+	// Calibrate - Search Engine
+	CreateSearchEngine(ctx context.Context, search_engine model.SearchEngine, subscriber model.Subscriber) (*model.SearchEngine, error)
+
 	// Item
 	GetItem(ctx context.Context, id string) (*model.Item, error)
 	CreateItem(ctx context.Context, item *model.Item) error
