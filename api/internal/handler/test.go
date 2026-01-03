@@ -46,6 +46,8 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	fmt.Println("SearchDefinition", search_definition)
+
 	search_engines := make(map[string]string)
 
 	search_engine_list, err := h.db.SelectSearchDefinitionEnginesView(ctx, search_definition, 10, 0)
