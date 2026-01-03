@@ -30,6 +30,8 @@ func (d *Database) SelectSearchEngines(ctx context.Context, subscriber model.Sub
 			return nil, fmt.Errorf("error scanning search_definition: %w", err)
 		}
 
+		fmt.Println(searchengine.Name)
+
 		searchengines = append(searchengines, searchengine)
 	}
 
