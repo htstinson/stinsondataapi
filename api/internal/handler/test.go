@@ -90,9 +90,9 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 
 		searchquery := searcher.SearchQuery{
 			Name:       v.SearchEngineName,
-			Query:      v.SearchQuery,
+			Query:      search_definition.Query,
 			ExactMatch: search_definition.ExactMatch,
-			CSEIDs:     []string{search_engines[v.SearchEngineId]},
+			CSEIDs:     []string{search_engines[v.SearchEngineName]},
 			DateRange:  &daterange,
 			MaxResults: search_definition.MaxResults,
 			SortByDate: search_definition.SortByDate,
