@@ -23,7 +23,7 @@ func (h *Handler) SelectSearchDefinitionEnginesView(w http.ResponseWriter, r *ht
 		return
 	}
 
-	results, err := h.db.SelectSearchDefinitionEnginesView(ctx, *subscriber, 100, 0)
+	results, err := h.db.SelectSearchDefinitionEnginesSubscriberView(ctx, *subscriber, 100, 0)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select search definition engines view")
 		return
