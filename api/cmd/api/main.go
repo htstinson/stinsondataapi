@@ -120,6 +120,7 @@ func main() {
 	//Search Engines
 	protected.HandleFunc("/searchengines/{subscriber_id}", h.SelectSearchEngines).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/searchengines", h.CreateSearchEngine).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/searchengines", h.DeleteSearchEngine).Methods("DELETE")
 
 	//test
 	protected.HandleFunc("/test", h.Test).Methods("POST", "OPTIONS")

@@ -65,3 +65,17 @@ func (d *Database) CreateSearchEngine(ctx context.Context, search_engine model.S
 
 	return &search_engine, nil
 }
+
+func (d *Database) DeleteSearchEngine(ctx context.Context, search_engine model.SearchEngine, subscriber *model.Subscriber) error {
+
+	fmt.Println("d DeleteSearchEngine")
+
+	query := fmt.Sprintf(`DELETE FROM %s.calibrate_search_engines WHERE id = $1`, subscriber.Schema_Name)
+
+	_, err := d.DB.ExecContext(ctx, query, search_engine.Id)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	return err
+}
