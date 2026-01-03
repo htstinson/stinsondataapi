@@ -38,30 +38,27 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	var payload model.SearchDefinition
-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
+	var search_definition model.SearchDefinition
+	if err := json.NewDecoder(r.Body).Decode(&search_definition); err != nil {
 		fmt.Println(1, err.Error())
-		common.RespondError(w, http.StatusBadRequest, "invalid payload")
+		common.RespondError(w, http.StatusBadRequest, "invalid search_definition")
 		return
 	}
 	defer r.Body.Close()
 
-	subscriber, err := h.db.GetSubscriber(ctx, payload.SubscriberId)
-	if err != nil {
-		fmt.Println("unable to find subscriber")
-		return
-	}
-
 	search_engines := make(map[string]string)
 
-	search_engine_list, err := h.db.SelectSearchEngines(ctx, *subscriber, 10, 0)
+	search_engine_list, err := h.db.SelectSearchDefinitionEnginesView(ctx, search_definition, 10, 0)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
 	for _, v := range search_engine_list {
-		search_engines[v.Name] = v.SearchEngineId
+		search_engines[v.SearchEngineName] = v.SearchEngineId
+		fmt.Println(v.SearchEngineName)
+		fmt.Println(v.EngineId)
+		fmt.Println(v.SearchQuery)
 	}
 
 	var googleSearchConfig = searcher.GoogleSearchConfig{
