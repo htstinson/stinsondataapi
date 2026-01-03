@@ -1,8 +1,6 @@
 package model
 
-import (
-	"time"
-)
+import "time"
 
 type SearchEngine struct {
 	Id             string    `json:"id"`
