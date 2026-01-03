@@ -124,6 +124,8 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Timestamp", output.Timestamp)
 	fmt.Println("Total Searches", output.Configuration.TotalSearches)
 
+	var count = 0
+
 	for k, v := range output.Searches {
 		for m, n := range v.Results {
 			for a, b := range n.Items {
@@ -132,8 +134,11 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 				fmt.Println(k, m, a, b.Position)
 				fmt.Println(k, m, a, b.Snippet)
 				fmt.Println(k, m, a, b.Title)
+				count++
 			}
+			fmt.Println("Total Results", count)
 		}
+		count = 0
 	}
 
 }
