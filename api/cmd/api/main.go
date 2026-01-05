@@ -118,7 +118,7 @@ func main() {
 	protected.HandleFunc("/searchdefinitions/{subscriber_id}", h.SelectSearchDefinitions).Methods("GET", "OPTIONS")
 
 	//Search Engines
-	protected.HandleFunc("/searchengines/{subscriber_id}/{search_engine_id}", h.DeleteSearchEngine).Methods("DELETE")
+	protected.HandleFunc("/searchengines/{subscriber_id}/{search_engine_id}", h.DeleteSearchEngine).Methods("DELETE", "OPTIONS")
 	protected.HandleFunc("/searchengines/{subscriber_id}", h.SelectSearchEngines).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/searchengines", h.CreateSearchEngine).Methods("POST", "OPTIONS")
 
