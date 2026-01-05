@@ -67,22 +67,25 @@ func (h *Handler) CreateSearchEngine(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) DeleteSearchEngine(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h DeleteSearchEngine")
 
-	var search_engine *model.SearchEngine
-	if err := json.NewDecoder(r.Body).Decode(&search_engine); err != nil {
-		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
-		return
-	}
-	defer r.Body.Close()
+	vars := mux.Vars(r)
+	subscriber_id := vars["subscriber_id"]
+	search_engine_id := vars["search_engine_id"]
 
 	ctx := r.Context()
 
-	subscriber, err := h.db.GetSubscriber(ctx, search_engine.SubscriberId)
+	subscriber, err := h.db.GetSubscriber(ctx, subscriber_id)
 	if err != nil {
 		fmt.Println(err.Error())
 		return
 	}
 
-	err = h.db.DeleteSearchEngine(ctx, *search_engine, subscriber)
+	search_engine, err := h.db.GetSearchEngine(ctx, *subscriber, search_engine_id, 1, 0)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	err = h.db.DeleteSearchEngine(ctx, subscriber, search_engine)
 	if err != nil {
 		common.RespondError(w, http.StatusNotFound, "Error deleting Search Engine")
 		return

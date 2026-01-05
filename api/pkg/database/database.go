@@ -22,7 +22,8 @@ type Repository interface {
 
 	// Calibrate - Search Engine
 	CreateSearchEngine(ctx context.Context, search_engine model.SearchEngine, subscriber model.Subscriber) (*model.SearchEngine, error)
-	DeleteSearchEngine(ctx context.Context, search_engine model.SearchEngine, subscriber *model.Subscriber) error
+	DeleteSearchEngine(ctx context.Context, subscriber *model.Subscriber, search_engine model.SearchEngine) error
+	GetSearchEngine(ctx context.Context, subscriber model.Subscriber, search_engine_id string, limit int, offset int) (model.SearchEngine, error)
 
 	// Item
 	GetItem(ctx context.Context, id string) (*model.Item, error)
