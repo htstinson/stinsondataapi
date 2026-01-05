@@ -70,7 +70,7 @@ func (d *Database) DeleteSearchEngine(ctx context.Context, subscriber *model.Sub
 
 	fmt.Println("d DeleteSearchEngine")
 
-	query := fmt.Sprintf(`DELETE FROM %s.calibrate_search_engines WHERE id = '$1'`, subscriber.Schema_Name)
+	query := fmt.Sprintf(`DELETE FROM %s.calibrate_search_engines WHERE id = $1`, subscriber.Schema_Name)
 
 	_, err := d.DB.ExecContext(ctx, query, search_engine.Id)
 	if err != nil {
@@ -84,7 +84,7 @@ func (d *Database) GetSearchEngine(ctx context.Context, subscriber model.Subscri
 	fmt.Println("d GetSearchEngine")
 
 	query := fmt.Sprintf(`SELECT id, created_at, modified_at, name, search_engine_Id, comment 
-	FROM %s.calibrate_search_engines WHERE id = '$1' ORDER BY name ASC LIMIT $2 OFFSET $3`, subscriber.Schema_Name)
+	FROM %s.calibrate_search_engines WHERE id = $1 ORDER BY name ASC LIMIT $2 OFFSET $3`, subscriber.Schema_Name)
 
 	var searchengine model.SearchEngine
 
