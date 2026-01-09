@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
@@ -72,14 +71,12 @@ func (h *Handler) CreateSearchDefinition(w http.ResponseWriter, r *http.Request)
 
 	var row *model.SearchDefinition
 	if err := json.NewDecoder(r.Body).Decode(&row); err != nil {
+		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
 		return
 	}
 	defer r.Body.Close()
 	ctx := r.Context()
-
-	row.Id = uuid.New().String()
-	fmt.Println(row.Id)
 
 	subcriber, err := h.db.GetSubscriber(ctx, row.SubscriberId)
 	if err != nil {
