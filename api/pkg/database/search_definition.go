@@ -77,7 +77,7 @@ func (d *Database) DeleteSearchDefinition(ctx context.Context, subscriber *model
 
 	fmt.Println("d DeleteSearchDefinition")
 
-	query := fmt.Sprintf(`DELETE FROM %s.calibrate_search_definitions WHERE id = $1`, subscriber.Schema_Name)
+	query := fmt.Sprintf(`DELETE FROM %s.calibrate_search_definition WHERE id = $1`, subscriber.Schema_Name)
 
 	_, err := d.DB.ExecContext(ctx, query, search_definition_id)
 	if err != nil {
