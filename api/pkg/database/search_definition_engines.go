@@ -84,7 +84,7 @@ func (d *Database) GetSearchDefinitionEnginesView(ctx context.Context, subscribe
 	offset := 0
 
 	query := fmt.Sprintf(`SELECT id, created_at, modified_at, search_engine_Id, search_engine_name, search_definition_name, 
-		search_query, engine_id, definition_id FROM %s.search_definition_engines_view WHERE id = '$1'
+		search_query, engine_id, definition_id FROM %s.search_definition_engines_view WHERE id = $1
 		ORDER BY search_engine_name ASC LIMIT $2 OFFSET $3`, subscriber.Schema_Name)
 
 	var row model.SearchDefinitionEnginesView
