@@ -67,10 +67,10 @@ func (h *Handler) DeleteSearchDefinitionEngine(w http.ResponseWriter, r *http.Re
 
 }
 
-func (h *Handler) CreateSearchDefinition(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h CreateSearchDefinition")
+func (h *Handler) CreateSearchDefinitionEngines(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h CreateSearchDefinitionEngines")
 
-	var row *model.SearchDefinition
+	var row *model.SearchDefinitionEngines
 	if err := json.NewDecoder(r.Body).Decode(&row); err != nil {
 		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
@@ -80,7 +80,6 @@ func (h *Handler) CreateSearchDefinition(w http.ResponseWriter, r *http.Request)
 	ctx := r.Context()
 
 	row.Id = uuid.New().String()
-	row.SearchType = "custom"
 
 	subcriber, err := h.db.GetSubscriber(ctx, row.SubscriberId)
 	if err != nil {
@@ -88,7 +87,7 @@ func (h *Handler) CreateSearchDefinition(w http.ResponseWriter, r *http.Request)
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 	}
 
-	row, err = h.db.CreateSearchDefinition(ctx, *subcriber, *row)
+	row, err = h.db.CreateSearchDefinitionEngine(ctx, *subcriber, *row)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to create row")
 		return
