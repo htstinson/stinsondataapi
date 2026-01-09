@@ -15,8 +15,6 @@ func (d *Database) SelectSearchDefinitions(ctx context.Context, subscriber model
 	search_type, subscriber_id FROM %s.calibrate_search_definition 
 	ORDER BY name ASC LIMIT $1 OFFSET $2`, subscriber.Schema_Name)
 
-	fmt.Println(query)
-
 	rows, err := d.DB.QueryContext(ctx,
 		query,
 		limit, offset,

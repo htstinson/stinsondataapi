@@ -16,8 +16,13 @@ type Repository interface {
 	//Calibrate
 	SelectSearchDefinitionEnginesSubscriberView(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchDefinitionEnginesView, error)
 	SelectSearchDefinitionEnginesView(ctx context.Context, search_definition model.SearchDefinition, limit, offset int) ([]model.SearchDefinitionEnginesView, error)
+	GetSearchDefinitionEnginesView(ctx context.Context, subscriber model.Subscriber, search_definitions_engines_id string) (model.SearchDefinitionEnginesView, error)
+	DeleteSearchDefinitionEngine(ctx context.Context, subscriber *model.Subscriber, id string) error
+
 	SelectSearchDefinitions(ctx context.Context, customer model.Subscriber, limit, offset int) ([]model.SearchDefinition, error)
+
 	SelectSearchEngines(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchEngine, error)
+
 	GetSearchDefinition(ctx context.Context, subscriber model.Subscriber, definition_id string, limit int, offset int) (model.SearchDefinition, error)
 
 	// Calibrate - Search Engine

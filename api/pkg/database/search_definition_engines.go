@@ -76,3 +76,48 @@ func (d *Database) SelectSearchDefinitionEnginesSubscriberView(ctx context.Conte
 
 	return results, nil
 }
+
+func (d *Database) GetSearchDefinitionEnginesView(ctx context.Context, subscriber model.Subscriber, search_definitions_engines_id string) (model.SearchDefinitionEnginesView, error) {
+	fmt.Println("d GetSearchDefinitionEnginesView")
+
+	limit := 1
+	offset := 0
+
+	query := fmt.Sprintf(`SELECT id, created_at, modified_at, search_engine_Id, search_engine_name, search_definition_name, 
+		search_query, engine_id, definition_id FROM %s.search_definition_engines_view WHERE id = '$1'
+		ORDER BY search_engine_name ASC LIMIT $2 OFFSET $3`, subscriber.Schema_Name)
+
+	var row model.SearchDefinitionEnginesView
+
+	rows, err := d.DB.QueryContext(ctx, query, search_definitions_engines_id, limit, offset)
+	if err != nil {
+		fmt.Println(err.Error())
+		return row, fmt.Errorf("error selecting search_engine: %w", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var row model.SearchDefinitionEnginesView
+		if err := rows.Scan(&row.Id, &row.CreatedAt, &row.ModifiedAt, &row.SearchEngineId, &row.SearchEngineName,
+			&row.SearchDefinitionName, &row.SearchQuery, &row.EngineId, &row.DefinitionId); err != nil {
+			fmt.Println(err.Error())
+			return row, fmt.Errorf("error scanning search_definition_engines_view: %w", err)
+		}
+
+	}
+	return row, nil
+}
+
+func (d *Database) DeleteSearchDefinitionEngine(ctx context.Context, subscriber *model.Subscriber, id string) error {
+
+	fmt.Println("d DeleteSearchDefinitionEngine")
+
+	query := fmt.Sprintf(`DELETE FROM %s.calibrate_search_definition_engines WHERE id = $1`, subscriber.Schema_Name)
+
+	_, err := d.DB.ExecContext(ctx, query, id)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	return err
+}
