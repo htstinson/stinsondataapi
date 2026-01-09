@@ -72,3 +72,17 @@ func (d *Database) GetSearchDefinition(ctx context.Context, subscriber model.Sub
 	}
 	return searchdefinition, nil
 }
+
+func (d *Database) DeleteSearchDefinition(ctx context.Context, subscriber *model.Subscriber, search_definition_id string) error {
+
+	fmt.Println("d DeleteSearchDefinition")
+
+	query := fmt.Sprintf(`DELETE FROM %s.calibrate_search_definitions WHERE id = $1`, subscriber.Schema_Name)
+
+	_, err := d.DB.ExecContext(ctx, query, search_definition_id)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	return err
+}

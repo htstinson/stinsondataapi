@@ -116,6 +116,7 @@ func main() {
 	protected.HandleFunc("/searchdefinitionenginesview/{subscriber_id}", h.SelectSearchDefinitionEnginesView).Methods("GET", "OPTIONS")
 
 	// Search Definitions
+	protected.HandleFunc("/searchdefinitions/{subscriber_id}/{search_definition_id}", h.DeleteSearchDefinition).Methods("DELETE", "OPTIONS")
 	protected.HandleFunc("/searchdefinitions/{subscriber_id}", h.SelectSearchDefinitions).Methods("GET", "OPTIONS")
 
 	//Search Engines
