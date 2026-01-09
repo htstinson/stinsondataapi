@@ -86,3 +86,23 @@ func (d *Database) DeleteSearchDefinition(ctx context.Context, subscriber *model
 
 	return err
 }
+
+func (d *Database) CreateSearchDefinition(ctx context.Context, subscriber model.Subscriber, row model.SearchDefinition) (*model.SearchDefinition, error) {
+	fmt.Println("d CreateSearchDefinition")
+
+	table := "calibrate_search_definition"
+	schema_name := subscriber.Schema_Name
+
+	query := fmt.Sprintf(`INSERT INTO %s.%s (id, name, comment, query, exact_match, max_results, sort_by_date, start_date, end_date, search_type, subscriber_id) 
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`, schema_name, table)
+
+	_, err := d.DB.ExecContext(ctx, query,
+		row.Id, row.Name, row.Comment, row.Query, row.ExactMatch, row.MaxResults, row.SortByDate, row.StartDate, row.EndDate, row.SearchType, row.SubscriberId)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, fmt.Errorf("error creating search definition: %w", err)
+	}
+
+	return &row, nil
+}
