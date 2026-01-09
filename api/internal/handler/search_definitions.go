@@ -80,6 +80,7 @@ func (h *Handler) CreateSearchDefinition(w http.ResponseWriter, r *http.Request)
 	ctx := r.Context()
 
 	row.Id = uuid.New().String()
+	row.SearchType = "custom"
 
 	subcriber, err := h.db.GetSubscriber(ctx, row.SubscriberId)
 	if err != nil {

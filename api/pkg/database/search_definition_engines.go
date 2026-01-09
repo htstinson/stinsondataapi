@@ -121,3 +121,23 @@ func (d *Database) DeleteSearchDefinitionEngine(ctx context.Context, subscriber 
 
 	return err
 }
+
+func (d *Database) CreateSearchDefinitionEngine(ctx context.Context, subscriber model.Subscriber, row model.SearchDefinitionEngines) (*model.SearchDefinitionEngines, error) {
+	fmt.Println("d CreateSearchDefinitionEngine")
+
+	table := "search_definition_engines"
+	schema_name := subscriber.Schema_Name
+
+	query := fmt.Sprintf(`INSERT INTO %s.%s (id, search_engine_id, search_definitions_id) 
+		VALUES ($1, $2, $3)`, schema_name, table)
+
+	_, err := d.DB.ExecContext(ctx, query,
+		row.Id, row.SearchEngineId, row.SearchDefinitionsId)
+
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, fmt.Errorf("error creating search definition engine: %w", err)
+	}
+
+	return &row, nil
+}

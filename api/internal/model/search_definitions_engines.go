@@ -8,6 +8,7 @@ type SearchDefinitionEngines struct {
 	ModifiedAt          time.Time `json:"modified_at"`
 	SearchEngineId      string    `json:"search_engine_id"`
 	SearchDefinitionsId string    `json:"search_definitions_id"`
+	SubscriberId        string    `json:"subscriber_id"`
 }
 
 type SearchDefinitionEnginesView struct {

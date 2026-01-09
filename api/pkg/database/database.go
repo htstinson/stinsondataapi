@@ -14,6 +14,7 @@ import (
 type Repository interface {
 
 	//Calibrate
+	CreateSearchDefinitionEngine(ctx context.Context, subscriber model.Subscriber, row model.SearchDefinitionEngines) (*model.SearchDefinitionEngines, error)
 	SelectSearchDefinitionEnginesSubscriberView(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchDefinitionEnginesView, error)
 	SelectSearchDefinitionEnginesView(ctx context.Context, search_definition model.SearchDefinition, limit, offset int) ([]model.SearchDefinitionEnginesView, error)
 	GetSearchDefinitionEnginesView(ctx context.Context, subscriber model.Subscriber, search_definitions_engines_id string) (model.SearchDefinitionEnginesView, error)
