@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
@@ -77,6 +78,8 @@ func (h *Handler) CreateSearchDefinition(w http.ResponseWriter, r *http.Request)
 	}
 	defer r.Body.Close()
 	ctx := r.Context()
+
+	row.Id = uuid.New().String()
 
 	subcriber, err := h.db.GetSubscriber(ctx, row.SubscriberId)
 	if err != nil {
