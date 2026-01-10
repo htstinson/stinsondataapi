@@ -127,7 +127,7 @@ func main() {
 	protected.HandleFunc("/searchengines", h.CreateSearchEngine).Methods("POST", "OPTIONS")
 
 	// search
-	protected.HandleFunc("/test", h.Search).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/search", h.Search).Methods("POST", "OPTIONS")
 
 	// Blocked
 	protected.HandleFunc("/blocked/update", h.AddBlockedFromRDSToWAF).Methods("GET", "OPTIONS")
