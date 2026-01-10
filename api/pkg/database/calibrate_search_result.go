@@ -49,6 +49,8 @@ func (d *Database) SelectSearchResultView(ctx context.Context, subscriber model.
 
 	fmt.Println(rows.Err())
 
+	fmt.Println("a")
+
 	var items []model.CalibrateSearchResultView
 	for rows.Next() {
 		var item model.CalibrateSearchResultView
