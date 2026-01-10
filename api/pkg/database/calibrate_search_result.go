@@ -49,23 +49,23 @@ func (d *Database) SelectSearchResultView(ctx context.Context, subscriber model.
 
 	fmt.Println(rows.Err())
 
-	fmt.Println("a")
-
 	var items []model.CalibrateSearchResultView
 	for rows.Next() {
 		var item model.CalibrateSearchResultView
-		if err := rows.Scan(&item.ResultId, &item.Link, &item.Snippet, &item.Title, &item.SearchTime, &item.ResultCreatedAt, &item.SubscriberId,
+
+		err = rows.Scan(&item.ResultId, &item.Link, &item.Snippet, &item.Title, &item.SearchTime, &item.ResultCreatedAt, &item.SubscriberId,
 			&item.SearchDefinitionId, &item.SearchDefinitionName, &item.Query, &item.SearchDefinitionComment, &item.ExactMatch, &item.MaxResults, &item.SortByDate,
 			&item.StartDate, &item.EndDate, &item.SearchType, &item.SearchEngineId, &item.SearchEngineName, &item.SearchEngineIdentifier, &item.SearchEngineComment,
-			&item.SearchDefinitionEngineID, &item.Published); err != nil {
-			return nil, fmt.Errorf("error scanning item: %w", err)
-		}
+			&item.SearchDefinitionEngineID, &item.Published)
+
 		if err != nil {
 			fmt.Println(err.Error())
+			return &items, nil
 		}
-		fmt.Println("b")
+
 		fmt.Println("published", item.Published.Format(time.RFC3339))
 		items = append(items, item)
 	}
+
 	return &items, nil
 }
