@@ -117,13 +117,9 @@ func (d *Database) UpdateSearchDefinition(ctx context.Context, subscriber *model
 	table := "calibrate_search_definition"
 	schema_name := subscriber.Schema_Name
 
-	query := fmt.Sprintf(`UPDATE %s.%s SET name = $1 WHERE id = $2`, schema_name, table)
+	query := fmt.Sprintf(`UPDATE %s.%s SET name = $1, query = $2, start_date = $3, end_date = $4, comment = $5  WHERE id = $6`, schema_name, table)
 
-	fmt.Println(query)
-
-	fmt.Println(row.Name, row.Id)
-
-	_, err := d.DB.ExecContext(ctx, query, row.Name, row.Id)
+	_, err := d.DB.ExecContext(ctx, query, row.Name, row.Query, row.StartDate, row.EndDate, row.Comment, row.Id)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
