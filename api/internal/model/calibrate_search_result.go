@@ -16,7 +16,7 @@ type CalibrateSearchResult struct {
 	SearchDefinitionEngineID *uuid.UUID `json:"search_definition_engine_id,omitempty" db:"search_definition_engine_id"`
 	SearchTime               *time.Time `json:"search_time,omitempty" db:"search_time"`
 	SubscriberID             uuid.UUID  `json:"subscriber_id" db:"subscriber_id"`
-	Published                time.Time  `json:"published"`
+	Published                *time.Time `json:"published"`
 }
 
 type CalibrateSearchResultView struct {
@@ -42,5 +42,5 @@ type CalibrateSearchResultView struct {
 	SearchEngineIdentifier   *string    `json:"search_engine_identifier"`
 	SearchEngineComment      *string    `json:"search_engine_comment"`
 	SearchDefinitionEngineID *uuid.UUID `json:"search_definition_engine_id,omitempty" db:"search_definition_engine_id"`
-	Published                time.Time  `json:"published"`
+	Published                *time.Time `json:"published"`
 }

@@ -153,7 +153,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 						SubscriberID:             subscriberId,
 						SearchDefinitionEngineID: &search_definition_engine_id,
 						SearchTime:               &search_time,
-						Published:                published,
+						Published:                &published,
 					}
 					_, err = h.db.CreateSearchResult(ctx, *subscriber, calbrate_search_result)
 					if err != nil {
