@@ -160,7 +160,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 						fmt.Println(err.Error())
 					}
 					count++
-
+					fmt.Println(calbrate_search_result.Published)
 				}
 				fmt.Println("Total Results", count)
 				fmt.Println("------------------------------------------------------------------------------------------", v.Id)
