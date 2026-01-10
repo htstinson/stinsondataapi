@@ -42,7 +42,7 @@ func (d *Database) SelectSearchResultView(ctx context.Context, subscriber model.
 	search_definition_id, search_definition_name, query, search_definition_comment, exact_match, max_results, sort_by_date,
 	start_date, end_date, search_type, search_engine_id, search_engine_name, search_engine_identier, search_engine_comment,
 	search_definition_engine_id  
-	FROM %s.%s WHERE search_definition_engine_id = $1)`, schema_name, table)
+	FROM %s.%s WHERE search_definition_engine_id = $1`, schema_name, table)
 
 	fmt.Println(query)
 
