@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
+	"github.com/google/uuid"
 	searcher "github.com/htstinson/business_searcher"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
@@ -137,17 +138,32 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 					fmt.Println(k, m, a, b.Position)
 					fmt.Println(k, m, a, b.Snippet)
 					fmt.Println(k, m, a, b.Title)
-					//	subscriberId, err := uuid.Parse(subscriber.Id)
-					//	calbrate_search_result := model.CalibrateSearchResult{
-					//		Link:    &b.Link,
-					//		Snippet: &b.Snippet,
-					//		Title:   &b.Title,
-					//		SubscriberID: subscriberId,
-					//	}
-					//	_, err = h.db.CreateSearchResult(ctx, *subscriber, calbrate_search_result)
-					//	if err != nil {
-					//		fmt.Println(err.Error())
-					//	}
+					subscriberId, err := uuid.Parse(subscriber.Id)
+					if err != nil {
+						fmt.Println(err.Error())
+					}
+					search_definition_engine_id, err := uuid.Parse(v.Id)
+					if err != nil {
+						fmt.Println(err.Error())
+					}
+
+					search_time, err := time.Parse(time.RFC3339, output.Timestamp)
+					if err != nil {
+						fmt.Printf("error parsing time: %v\n", err)
+					}
+
+					calbrate_search_result := model.CalibrateSearchResult{
+						Link:                     &b.Link,
+						Snippet:                  &b.Snippet,
+						Title:                    &b.Title,
+						SubscriberID:             subscriberId,
+						SearchDefinitionEngineID: &search_definition_engine_id,
+						SearchTime:               &search_time,
+					}
+					_, err = h.db.CreateSearchResult(ctx, *subscriber, calbrate_search_result)
+					if err != nil {
+						fmt.Println(err.Error())
+					}
 					count++
 				}
 				fmt.Println("Total Results", count)
