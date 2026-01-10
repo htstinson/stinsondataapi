@@ -61,23 +61,23 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	searches := make([]searcher.SearchQuery, 0)
-
 	daterange := searcher.DateRangeConfig{
 		Type:      search_definition.SearchType,
 		StartDate: search_definition.StartDate.Format("2006-01-02"),
 		EndDate:   search_definition.EndDate.Format("2006-01-02"),
 	}
 
-	var googleSearchConfig = searcher.GoogleSearchConfig{
-		DefaultMaxResults: 10,
-		DefaultSortByDate: true,
-	}
-
 	fmt.Println("search engines count:", len(search_engine_list))
 
 	//Load each search
 	for _, v := range search_engine_list {
+
+		searches := make([]searcher.SearchQuery, 0)
+
+		var googleSearchConfig = searcher.GoogleSearchConfig{
+			DefaultMaxResults: 10,
+			DefaultSortByDate: true,
+		}
 
 		var config searcher.Config
 		var client *searcher.SearchClient
