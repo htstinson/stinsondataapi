@@ -128,6 +128,9 @@ func (d *Database) CreateSearchDefinitionEngine(ctx context.Context, subscriber 
 	table := "search_definition_engines"
 	schema_name := subscriber.Schema_Name
 
+	fmt.Println(row.SearchEngineId)
+	fmt.Println(row.SearchDefinitionsId)
+
 	query := fmt.Sprintf(`INSERT INTO %s.%s (id, search_engine_id, search_definitions_id) 
 		VALUES ($1, $2, $3)`, schema_name, table)
 
