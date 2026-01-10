@@ -63,6 +63,7 @@ func (d *Database) SelectSearchResultView(ctx context.Context, subscriber model.
 		if err != nil {
 			fmt.Println(err.Error())
 		}
+		fmt.Println("b")
 		fmt.Println("published", item.Published.Format(time.RFC3339))
 		items = append(items, item)
 	}
