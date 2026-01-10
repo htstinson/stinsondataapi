@@ -74,6 +74,8 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		DefaultSortByDate: true,
 	}
 
+	fmt.Println("search engines count:", len(search_engine_list))
+
 	//Load each search
 	for _, v := range search_engine_list {
 
@@ -82,7 +84,6 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		var output searcher.OutputResult
 		var searchquery searcher.SearchQuery
 		var count int
-
 		var search_engines = make(map[string]string)
 
 		search_engines[v.SearchEngineName] = v.SearchEngineId
