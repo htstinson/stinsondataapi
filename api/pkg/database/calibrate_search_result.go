@@ -39,13 +39,14 @@ func (d *Database) SelectSearchResultView(ctx context.Context, subscriber model.
 	query := fmt.Sprintf(`SELECT result_id, link, snippet, title, search_time, result_created_at, subscriber_id,
 	search_definition_id, search_definition_name, query, search_definition_comment, exact_match, max_results, sort_by_date,
 	start_date, end_date, search_type, search_engine_id, search_engine_name, search_engine_identifier, search_engine_comment,
-	search_definition_engine_id, published  
-	FROM %s.%s WHERE search_definition_engine_id = $1`, schema_name, table)
+	search_definition_engine_id, published FROM %s.%s WHERE search_definition_engine_id = $1`, schema_name, table)
 
 	rows, err := d.DB.QueryContext(ctx, query, sde)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+
+	fmt.Println(rows.Err())
 
 	var items []model.CalibrateSearchResultView
 	for rows.Next() {
