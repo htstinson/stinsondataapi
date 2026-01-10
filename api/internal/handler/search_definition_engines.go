@@ -87,6 +87,10 @@ func (h *Handler) CreateSearchDefinitionEngines(w http.ResponseWriter, r *http.R
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 	}
 
+	fmt.Println("id", row.Id)
+	fmt.Println("row.SearchEngineId", row.SearchEngineId)
+	fmt.Println("row.SearchDefinitionsId", row.SearchDefinitionsId)
+
 	row, err = h.db.CreateSearchDefinitionEngine(ctx, *subcriber, *row)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to create row")
