@@ -121,7 +121,12 @@ func (d *Database) UpdateSearchDefinition(ctx context.Context, subscriber *model
 
 	fmt.Println(query)
 
+	fmt.Println(row.Name, row.Id)
+
 	_, err := d.DB.ExecContext(ctx, query, row.Name, row.Id)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 
 	return &row, err
 }
