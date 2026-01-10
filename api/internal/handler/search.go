@@ -20,7 +20,7 @@ type key struct {
 	Value string `json:"value"`
 }
 
-func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h Test")
 
 	ctx := r.Context()
