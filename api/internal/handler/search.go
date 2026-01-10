@@ -141,6 +141,11 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 						fmt.Printf("error parsing time: %v\n", err)
 					}
 
+					published, err := extractdate(b.Snippet)
+					if err != nil {
+						fmt.Println(err.Error())
+					}
+
 					calbrate_search_result := model.CalibrateSearchResult{
 						Link:                     &b.Link,
 						Snippet:                  &b.Snippet,
@@ -148,18 +153,13 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 						SubscriberID:             subscriberId,
 						SearchDefinitionEngineID: &search_definition_engine_id,
 						SearchTime:               &search_time,
+						Published:                published,
 					}
 					_, err = h.db.CreateSearchResult(ctx, *subscriber, calbrate_search_result)
 					if err != nil {
 						fmt.Println(err.Error())
 					}
 					count++
-
-					d, err := extractdate(b.Snippet)
-					if err != nil {
-						fmt.Println(err.Error())
-					}
-					fmt.Println(d.Format("2006-01-02"))
 
 				}
 				fmt.Println("Total Results", count)
