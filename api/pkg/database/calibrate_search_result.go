@@ -44,6 +44,8 @@ func (d *Database) SelectSearchResultView(ctx context.Context, subscriber model.
 	search_definition_engine_id  
 	FROM %s.%s WHERE search_definition_engine_id = $1)`, schema_name, table)
 
+	fmt.Println(query)
+
 	rows, err := d.DB.QueryContext(ctx, query, sde)
 	if err != nil {
 		fmt.Println(err.Error())
