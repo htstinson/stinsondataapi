@@ -62,11 +62,6 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("start date", search_definition.StartDate)
-	fmt.Println("end date", search_definition.EndDate)
-	fmt.Println("query", search_definition.Query)
-	fmt.Println("search type", search_definition.SearchType)
-
 	searches := make([]searcher.SearchQuery, 0)
 
 	daterange := searcher.DateRangeConfig{
@@ -125,6 +120,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 	var count = 0
 
 	for k, v := range output.Searches {
+		fmt.Println("v.name", v.Name)
 		for m, n := range v.Results {
 			for a, b := range n.Items {
 				fmt.Println("---------------------------")
@@ -132,6 +128,17 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 				fmt.Println(k, m, a, b.Position)
 				fmt.Println(k, m, a, b.Snippet)
 				fmt.Println(k, m, a, b.Title)
+				//	subscriberId, err := uuid.Parse(subscriber.Id)
+				//	calbrate_search_result := model.CalibrateSearchResult{
+				//		Link:    &b.Link,
+				//		Snippet: &b.Snippet,
+				//		Title:   &b.Title,
+				//		SubscriberID: subscriberId,
+				//	}
+				//	_, err = h.db.CreateSearchResult(ctx, *subscriber, calbrate_search_result)
+				//	if err != nil {
+				//		fmt.Println(err.Error())
+				//	}
 				count++
 			}
 			fmt.Println("Total Results", count)
