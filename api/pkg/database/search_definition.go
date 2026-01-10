@@ -117,7 +117,7 @@ func (d *Database) UpdateSearchDefinition(ctx context.Context, subscriber *model
 	table := "calibrate_search_definition"
 	schema_name := subscriber.Schema_Name
 
-	query := fmt.Sprintf(`UPDATE %s.%s SET name = $1 WHERE id = $2`, schema_name, table)
+	query := fmt.Sprintf(`UPDATE %s.%s SET (name) = values('$1') WHERE id = $2`, schema_name, table)
 
 	fmt.Println(query)
 
