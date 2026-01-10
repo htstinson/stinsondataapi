@@ -124,5 +124,7 @@ func (h *Handler) UpdateSearchDefinition(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
+	fmt.Println(row.Name)
+
 	common.RespondJSON(w, http.StatusCreated, row)
 }
