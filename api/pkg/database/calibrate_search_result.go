@@ -15,13 +15,15 @@ func (d *Database) CreateSearchResult(ctx context.Context, subscriber model.Subs
 	table := "calibrate_search_results"
 	schema_name := subscriber.Schema_Name
 
-	query := fmt.Sprintf(`INSERT INTO %s.%s (id, link, snippet, title, search_definition_engine_id, search_time, subscriber_id ) 
+	query := fmt.Sprintf(`INSERT INTO %s.%s (id, link, snippet, title, search_definition_engine_id, search_time, subscriber_id, published ) 
 		VALUES ($1, $2, $3, $4, $5, $6, $7)`, schema_name, table)
 
 	id := uuid.New().String()
 
+	fmt.Println("published", row.Published.Format(time.RFC3339))
+
 	_, err := d.DB.ExecContext(ctx, query,
-		id, row.Link, row.Snippet, row.Title, row.SearchDefinitionEngineID, row.SearchTime, row.SubscriberID)
+		id, row.Link, row.Snippet, row.Title, row.SearchDefinitionEngineID, row.SearchTime, row.SubscriberID, row.Published)
 
 	if err != nil {
 		fmt.Println(err.Error())
