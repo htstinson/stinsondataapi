@@ -46,6 +46,10 @@ func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	fmt.Println(search_definition.StartDate)
+	fmt.Println(search_definition.EndDate)
+	fmt.Println(search_definition.SearchType)
+
 	subscriber, err := h.db.GetSubscriber(ctx, search_definition.SubscriberId)
 	if err != nil {
 		fmt.Println(err.Error())
