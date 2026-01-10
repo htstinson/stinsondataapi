@@ -83,6 +83,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("search engine name", v.SearchEngineName)
 		fmt.Println("search engine id", v.SearchEngineId)
 		fmt.Println("search definition id", v.DefinitionId)
+		fmt.Println("search engine uuid", v.EngineId)
 
 		searchquery := searcher.SearchQuery{
 			Name:       v.SearchEngineName,
