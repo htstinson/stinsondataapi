@@ -111,6 +111,10 @@ func main() {
 	protected.Use(middleware.CORS) // First: Set CORS headers
 	protected.Use(jwtAuth.Middleware)
 
+	// SearchResults
+	protected.HandleFunc("/search/{subscriber_id}/{search_definition_engine_id}", h.SelectSearchResults).Methods("GET", "OPTIONS")
+	protected.HandleFunc("/search", h.Search).Methods("POST", "OPTIONS")
+
 	// Search Definition Engines
 	protected.HandleFunc("/searchdefinitionengines/{subscriber_id}/{search_definition_engine_id}", h.DeleteSearchDefinitionEngine).Methods("DELETE", "OPTIONS")
 	protected.HandleFunc("/searchdefinitionenginesview/{subscriber_id}", h.SelectSearchDefinitionEnginesView).Methods("GET", "OPTIONS")
@@ -126,9 +130,6 @@ func main() {
 	protected.HandleFunc("/searchengines/{subscriber_id}/{search_engine_id}", h.DeleteSearchEngine).Methods("DELETE", "OPTIONS")
 	protected.HandleFunc("/searchengines/{subscriber_id}", h.SelectSearchEngines).Methods("GET", "OPTIONS")
 	protected.HandleFunc("/searchengines", h.CreateSearchEngine).Methods("POST", "OPTIONS")
-
-	// search
-	protected.HandleFunc("/search", h.Search).Methods("POST", "OPTIONS")
 
 	// Blocked
 	protected.HandleFunc("/blocked/update", h.AddBlockedFromRDSToWAF).Methods("GET", "OPTIONS")

@@ -17,7 +17,7 @@ type Repository interface {
 
 	// Calibrate Search Results
 	CreateSearchResult(ctx context.Context, subscriber model.Subscriber, row model.CalibrateSearchResult) (*model.CalibrateSearchResult, error)
-	SelectSearchResultView(ctx context.Context, subscriber model.Subscriber, sde model.SearchDefinitionEngines) (*[]model.CalibrateSearchResultView, error)
+	SelectSearchResultView(ctx context.Context, subscriber model.Subscriber, sde string) (*[]model.CalibrateSearchResultView, error)
 
 	CreateSearchDefinitionEngine(ctx context.Context, subscriber model.Subscriber, row model.SearchDefinitionEngines) (*model.SearchDefinitionEngines, error)
 	SelectSearchDefinitionEnginesSubscriberView(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchDefinitionEnginesView, error)

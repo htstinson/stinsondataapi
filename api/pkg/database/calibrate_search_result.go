@@ -30,7 +30,7 @@ func (d *Database) CreateSearchResult(ctx context.Context, subscriber model.Subs
 	return &row, nil
 }
 
-func (d *Database) SelectSearchResultView(ctx context.Context, subscriber model.Subscriber, sde model.SearchDefinitionEngines) (*[]model.CalibrateSearchResultView, error) {
+func (d *Database) SelectSearchResultView(ctx context.Context, subscriber model.Subscriber, sde string) (*[]model.CalibrateSearchResultView, error) {
 	fmt.Println("d SelectSearchResultView")
 
 	table := "v_calibrate_search_results"
@@ -42,7 +42,7 @@ func (d *Database) SelectSearchResultView(ctx context.Context, subscriber model.
 	search_definition_engine_id ) 
 	FROM %s.%s WHERE search_definition_engine_id = $1)`, schema_name, table)
 
-	rows, err := d.DB.QueryContext(ctx, query, sde.Id)
+	rows, err := d.DB.QueryContext(ctx, query, sde)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
