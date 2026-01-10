@@ -16,7 +16,7 @@ func (d *Database) CreateSearchResult(ctx context.Context, subscriber model.Subs
 	schema_name := subscriber.Schema_Name
 
 	query := fmt.Sprintf(`INSERT INTO %s.%s (id, link, snippet, title, search_definition_engine_id, search_time, subscriber_id, published ) 
-		VALUES ($1, $2, $3, $4, $5, $6, $7)`, schema_name, table)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, schema_name, table)
 
 	id := uuid.New().String()
 
