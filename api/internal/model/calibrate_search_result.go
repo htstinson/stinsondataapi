@@ -19,13 +19,13 @@ type CalibrateSearchResult struct {
 }
 
 type CalibrateSearchResultView struct {
-	ResultId                 uuid.UUID  `json:"id" db:"id"`
-	Link                     *string    `json:"link,omitempty" db:"link"`
-	Snippet                  *string    `json:"snippet,omitempty" db:"snippet"`
-	Title                    *string    `json:"title,omitempty" db:"title"`
-	SearchTime               *time.Time `json:"search_time,omitempty" db:"search_time"`
-	ResultCreatedAt          time.Time  `json:"created_at" db:"created_at"`
-	SubscriberId             uuid.UUID  `json:"subscriber_id" db:"subscriber_id"`
+	ResultId                 uuid.UUID  `json:"id"`
+	Link                     *string    `json:"link,omitempty"`
+	Snippet                  *string    `json:"snippet,omitempty"`
+	Title                    *string    `json:"title,omitempty"`
+	SearchTime               *time.Time `json:"search_time,omitempty"`
+	ResultCreatedAt          time.Time  `json:"created_at"`
+	SubscriberId             uuid.UUID  `json:"subscriber_id"`
 	SearchDefinitionId       uuid.UUID  `json:"search_definition_id"`
 	SearchDefinitionName     *string    `json:"search_definition_name"`
 	Query                    *string    `json:"query"`
