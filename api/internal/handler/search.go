@@ -80,19 +80,14 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		var config searcher.Config
 		var client *searcher.SearchClient
 		var output searcher.OutputResult
+		var searchquery searcher.SearchQuery
 		var count int
 
 		var search_engines = make(map[string]string)
 
 		search_engines[v.SearchEngineName] = v.SearchEngineId
 
-		fmt.Println("search engine name", v.SearchEngineName)
-		fmt.Println("search engine id", v.SearchEngineId)
-		fmt.Println("search definition id", v.DefinitionId)
-		fmt.Println("search engine uuid", v.EngineId)
-		fmt.Println("search definition engine uuid", v.Id)
-
-		searchquery := searcher.SearchQuery{
+		searchquery = searcher.SearchQuery{
 			Name:       v.SearchEngineName,
 			Query:      search_definition.Query,
 			ExactMatch: search_definition.ExactMatch,
@@ -123,13 +118,8 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 			Searches:      client.ExecuteAllSearches(),
 		}
 
-		fmt.Println("Timestamp", output.Timestamp)
-		fmt.Println("Total Searches", output.Configuration.TotalSearches)
-
 		count = 0
-
 		for _, w := range output.Searches {
-			fmt.Println("v.name", w.Name)
 
 			for _, n := range w.Results {
 				for _, b := range n.Items {
