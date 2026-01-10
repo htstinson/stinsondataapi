@@ -73,13 +73,13 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		DefaultSortByDate: true,
 	}
 
-	var config searcher.Config
-	var client *searcher.SearchClient
-	var output searcher.OutputResult
-	var count int
-
 	//Load each search
 	for _, v := range search_engine_list {
+
+		var config searcher.Config
+		var client *searcher.SearchClient
+		var output searcher.OutputResult
+		var count int
 
 		var search_engines = make(map[string]string)
 
