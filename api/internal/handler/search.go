@@ -163,7 +163,8 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 					count++
 				}
 				fmt.Println("Total Results", count)
-				fmt.Println("------------------------------------------------------------------------", v.Id)
+				fmt.Println("------------------------------------------------------------------------------------------", v.Id)
+				fmt.Println()
 			}
 			count = 0
 		}
