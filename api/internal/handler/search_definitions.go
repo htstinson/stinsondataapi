@@ -96,3 +96,33 @@ func (h *Handler) CreateSearchDefinition(w http.ResponseWriter, r *http.Request)
 
 	common.RespondJSON(w, http.StatusCreated, row)
 }
+
+func (h *Handler) UpdateSearchDefinition(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h CreateSearchDefinition")
+
+	var row *model.SearchDefinition
+	if err := json.NewDecoder(r.Body).Decode(&row); err != nil {
+		fmt.Println(err.Error())
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+	ctx := r.Context()
+
+	row.Id = uuid.New().String()
+	row.SearchType = "custom"
+
+	subcriber, err := h.db.GetSubscriber(ctx, row.SubscriberId)
+	if err != nil {
+		fmt.Println(err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
+	}
+
+	row, err = h.db.UpdateSearchDefinition(ctx, subcriber, *row)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to create row")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusCreated, row)
+}

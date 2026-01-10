@@ -110,3 +110,16 @@ func (d *Database) CreateSearchDefinition(ctx context.Context, subscriber model.
 
 	return &row, nil
 }
+
+func (d *Database) UpdateSearchDefinition(ctx context.Context, subscriber *model.Subscriber, row model.SearchDefinition) (*model.SearchDefinition, error) {
+	fmt.Println("d UpdateSearchDefinition")
+
+	table := "calibrate_search_definition"
+	schema_name := subscriber.Schema_Name
+
+	query := fmt.Sprintf(`UPDATE %s.%s SET name = $1 WHERE id = $2`, schema_name, table)
+
+	_, err := d.DB.ExecContext(ctx, query, row.Name, row.Id)
+
+	return &row, err
+}

@@ -22,6 +22,7 @@ type Repository interface {
 
 	SelectSearchDefinitions(ctx context.Context, customer model.Subscriber, limit, offset int) ([]model.SearchDefinition, error)
 	CreateSearchDefinition(ctx context.Context, subscriber model.Subscriber, row model.SearchDefinition) (*model.SearchDefinition, error)
+	UpdateSearchDefinition(ctx context.Context, subscriber *model.Subscriber, row model.SearchDefinition) (*model.SearchDefinition, error)
 
 	SelectSearchEngines(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.SearchEngine, error)
 
