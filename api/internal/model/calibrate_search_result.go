@@ -15,4 +15,5 @@ type CalibrateSearchResult struct {
 	Title                    *string    `json:"title,omitempty" db:"title"`
 	SearchDefinitionEngineID *uuid.UUID `json:"search_definition_engine_id,omitempty" db:"search_definition_engine_id"`
 	SearchTime               *time.Time `json:"search_time,omitempty" db:"search_time"`
+	SubscriberID             uuid.UUID  `json:"subscriber_id" db:"subscriber_id"`
 }
