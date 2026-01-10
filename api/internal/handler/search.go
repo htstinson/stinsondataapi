@@ -80,6 +80,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		search_engines[v.SearchEngineName] = v.SearchEngineId
 		fmt.Println("search engine name", v.SearchEngineName)
 		fmt.Println("search engine id", v.SearchEngineId)
+		fmt.Println("seach definitions id", v.SearchDefinitionsId)
 
 		searchquery := searcher.SearchQuery{
 			Name:       v.SearchEngineName,
