@@ -36,6 +36,8 @@ func (d *Database) SelectSearchResultView(ctx context.Context, subscriber model.
 	table := "v_calibrate_search_results"
 	schema_name := subscriber.Schema_Name
 
+	fmt.Println(schema_name)
+
 	query := fmt.Sprintf(`SELECT result_id, link, snippet, title, search_time, result_created_at, subscriber_id,
 	search_definition_id, search_definition_name, query, search_definition_comment, exact_match, max_results, sort_by_date,
 	start_date, end_date, search_type, search_engine_id, search_engine_name, search_engine_identier, search_engine_comment,
