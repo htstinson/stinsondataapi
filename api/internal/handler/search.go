@@ -3,9 +3,11 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -152,6 +154,13 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 						fmt.Println(err.Error())
 					}
 					count++
+
+					d, err := extractdate(b.Snippet)
+					if err != nil {
+						fmt.Println(err.Error())
+					}
+					fmt.Println(d.Format("2006-01-02"))
+
 				}
 				fmt.Println("Total Results", count)
 				fmt.Println("------------------------------------------------------------------------------------------", v.Id)
@@ -162,6 +171,31 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 
 	}
 
+}
+
+func extractdate(input string) (time.Time, error) {
+
+	var t time.Time
+
+	// Regex to match date pattern like "Sep 24, 2024" or "Jan 2, 2024"
+	datePattern := regexp.MustCompile(`([A-Z][a-z]{2})\s+(\d{1,2}),\s+(\d{4})`)
+
+	// Find the first match
+	match := datePattern.FindString(input)
+
+	if match == "" {
+		fmt.Println("No date found")
+		return t, errors.New("no date found")
+	}
+
+	// Parse the date
+	// In Go's time format: Jan 2, 2006
+	parsedDate, err := time.Parse("Jan 2, 2006", match)
+	if err != nil {
+		fmt.Printf("Error parsing date: %v\n", err)
+		return parsedDate, nil
+	}
+	return parsedDate, nil
 }
 
 func getSecret(secret_name string) (string, error) {
