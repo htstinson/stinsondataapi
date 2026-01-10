@@ -128,16 +128,12 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 
 		count = 0
 
-		for k, w := range output.Searches {
+		for _, w := range output.Searches {
 			fmt.Println("v.name", w.Name)
 
-			for m, n := range w.Results {
-				for a, b := range n.Items {
-					fmt.Println("---------------------------")
-					fmt.Println(k, m, a, b.Link)
-					fmt.Println(k, m, a, b.Position)
-					fmt.Println(k, m, a, b.Snippet)
-					fmt.Println(k, m, a, b.Title)
+			for _, n := range w.Results {
+				for _, b := range n.Items {
+
 					subscriberId, err := uuid.Parse(subscriber.Id)
 					if err != nil {
 						fmt.Println(err.Error())
