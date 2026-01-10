@@ -119,6 +119,8 @@ func (d *Database) UpdateSearchDefinition(ctx context.Context, subscriber *model
 
 	query := fmt.Sprintf(`UPDATE %s.%s SET name = $1 WHERE id = $2`, schema_name, table)
 
+	fmt.Println(query)
+
 	_, err := d.DB.ExecContext(ctx, query, row.Name, row.Id)
 
 	return &row, err
