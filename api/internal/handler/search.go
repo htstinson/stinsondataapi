@@ -127,10 +127,10 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 
 		count = 0
 
-		for k, v := range output.Searches {
-			fmt.Println("v.name", v.Name)
+		for k, w := range output.Searches {
+			fmt.Println("v.name", w.Name)
 
-			for m, n := range v.Results {
+			for m, n := range w.Results {
 				for a, b := range n.Items {
 					fmt.Println("---------------------------")
 					fmt.Println(k, m, a, b.Link)
@@ -151,7 +151,7 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 					count++
 				}
 				fmt.Println("Total Results", count)
-				fmt.Println("------------------------------------------------------------------------")
+				fmt.Println("------------------------------------------------------------------------", v.Id)
 			}
 			count = 0
 		}
