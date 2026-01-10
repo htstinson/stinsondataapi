@@ -58,7 +58,7 @@ func (d *Database) SelectSearchResultView(ctx context.Context, subscriber model.
 			&item.SearchDefinitionEngineID, &item.Published); err != nil {
 			return nil, fmt.Errorf("error scanning item: %w", err)
 		}
-		fmt.Println(item.Published.Format(time.RFC3339))
+		fmt.Println("published", item.Published.Format(time.RFC3339))
 		items = append(items, item)
 	}
 	return &items, nil
