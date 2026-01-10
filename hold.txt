@@ -75,11 +75,6 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		DefaultSortByDate: true,
 	}
 
-	var config searcher.Config
-	var client *searcher.SearchClient
-	var output searcher.OutputResult
-	var count int
-
 	//Load each search
 	for _, v := range search_engine_list {
 
@@ -102,59 +97,59 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 		}
 		searches = append(searches, searchquery)
 
-		config = searcher.Config{
-			GoogleSearch:  googleSearchConfig,
-			SearchEngines: search_engines,
-			Searches:      searches,
-		}
+	}
 
-		// Create Google Search CLient
-		client, err = searcher.NewSearchClient(k.Value, &config)
-		if err != nil {
-			fmt.Println(err.Error())
-			return
-		}
+	var config = searcher.Config{
+		GoogleSearch:  googleSearchConfig,
+		SearchEngines: search_engines,
+		Searches:      searches,
+	}
 
-		// Build output structure
-		output = searcher.OutputResult{
-			Timestamp:     time.Now().Format(time.RFC3339),
-			Configuration: client.BuildConfigurationOutput(),
-			Searches:      client.ExecuteAllSearches(),
-		}
+	// Create Google Search CLient
+	client, err := searcher.NewSearchClient(k.Value, &config)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
 
-		fmt.Println("Timestamp", output.Timestamp)
-		fmt.Println("Total Searches", output.Configuration.TotalSearches)
+	// Build output structure
+	output := searcher.OutputResult{
+		Timestamp:     time.Now().Format(time.RFC3339),
+		Configuration: client.BuildConfigurationOutput(),
+		Searches:      client.ExecuteAllSearches(),
+	}
 
-		count = 0
+	fmt.Println("Timestamp", output.Timestamp)
+	fmt.Println("Total Searches", output.Configuration.TotalSearches)
 
-		for k, v := range output.Searches {
-			fmt.Println("v.name", v.Name)
+	var count = 0
 
-			for m, n := range v.Results {
-				for a, b := range n.Items {
-					fmt.Println("---------------------------")
-					fmt.Println(k, m, a, b.Link)
-					fmt.Println(k, m, a, b.Position)
-					fmt.Println(k, m, a, b.Snippet)
-					fmt.Println(k, m, a, b.Title)
-					//	subscriberId, err := uuid.Parse(subscriber.Id)
-					//	calbrate_search_result := model.CalibrateSearchResult{
-					//		Link:    &b.Link,
-					//		Snippet: &b.Snippet,
-					//		Title:   &b.Title,
-					//		SubscriberID: subscriberId,
-					//	}
-					//	_, err = h.db.CreateSearchResult(ctx, *subscriber, calbrate_search_result)
-					//	if err != nil {
-					//		fmt.Println(err.Error())
-					//	}
-					count++
-				}
-				fmt.Println("Total Results", count)
+	for k, v := range output.Searches {
+		fmt.Println("v.name", v.Name)
+		
+		for m, n := range v.Results {
+			for a, b := range n.Items {
+				fmt.Println("---------------------------")
+				fmt.Println(k, m, a, b.Link)
+				fmt.Println(k, m, a, b.Position)
+				fmt.Println(k, m, a, b.Snippet)
+				fmt.Println(k, m, a, b.Title)
+				//	subscriberId, err := uuid.Parse(subscriber.Id)
+				//	calbrate_search_result := model.CalibrateSearchResult{
+				//		Link:    &b.Link,
+				//		Snippet: &b.Snippet,
+				//		Title:   &b.Title,
+				//		SubscriberID: subscriberId,
+				//	}
+				//	_, err = h.db.CreateSearchResult(ctx, *subscriber, calbrate_search_result)
+				//	if err != nil {
+				//		fmt.Println(err.Error())
+				//	}
+				count++
 			}
-			count = 0
+			fmt.Println("Total Results", count)
 		}
-
+		count = 0
 	}
 
 }
