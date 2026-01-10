@@ -98,7 +98,7 @@ func (h *Handler) CreateSearchDefinition(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *Handler) UpdateSearchDefinition(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h CreateSearchDefinition")
+	fmt.Println("h UpdateSearchDefinition")
 
 	var row *model.SearchDefinition
 	if err := json.NewDecoder(r.Body).Decode(&row); err != nil {
