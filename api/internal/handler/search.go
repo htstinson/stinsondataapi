@@ -54,8 +54,6 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 
 	search_definition, err = h.db.GetSearchDefinition(ctx, *subscriber, search_definition.Id, 10, 0)
 
-	search_engines := make(map[string]string)
-
 	search_engine_list, err := h.db.SelectSearchDefinitionEnginesView(ctx, search_definition, 10, 0)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -82,6 +80,8 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 
 	//Load each search
 	for _, v := range search_engine_list {
+
+		var search_engines = make(map[string]string)
 
 		search_engines[v.SearchEngineName] = v.SearchEngineId
 
