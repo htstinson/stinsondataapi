@@ -109,7 +109,6 @@ func (h *Handler) UpdateSearchDefinition(w http.ResponseWriter, r *http.Request)
 	defer r.Body.Close()
 	ctx := r.Context()
 
-	row.Id = uuid.New().String()
 	row.SearchType = "custom"
 
 	subcriber, err := h.db.GetSubscriber(ctx, row.SubscriberId)
