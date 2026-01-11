@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"regexp"
+	"strconv"
 	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -174,28 +175,56 @@ func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
 }
 
 func extractdate(input string) (time.Time, error) {
-
 	var t time.Time
 
-	// Regex to match date pattern like "Sep 24, 2024" or "Jan 2, 2024"
+	// Try to match absolute date pattern like "Sep 24, 2024"
 	datePattern := regexp.MustCompile(`([A-Z][a-z]{2})\s+(\d{1,2}),\s+(\d{4})`)
-
-	// Find the first match
 	match := datePattern.FindString(input)
 
-	if match == "" {
-		fmt.Println("No date found")
-		return t, errors.New("no date found")
-	}
-
-	// Parse the date
-	// In Go's time format: Jan 2, 2006
-	parsedDate, err := time.Parse("Jan 2, 2006", match)
-	if err != nil {
-		fmt.Printf("Error parsing date: %v\n", err)
+	if match != "" {
+		// Parse the absolute date
+		parsedDate, err := time.Parse("Jan 2, 2006", match)
+		if err != nil {
+			return t, fmt.Errorf("error parsing date: %v", err)
+		}
 		return parsedDate, nil
 	}
-	return parsedDate, nil
+
+	// Try to match relative date pattern like "3 days ago", "2 hours ago", etc.
+	relativePattern := regexp.MustCompile(`(\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago`)
+	relativeMatch := relativePattern.FindStringSubmatch(input)
+
+	if len(relativeMatch) > 0 {
+		// Parse the number
+		amount, err := strconv.Atoi(relativeMatch[1])
+		if err != nil {
+			return t, fmt.Errorf("error parsing relative time amount: %v", err)
+		}
+
+		// Get the time unit
+		unit := relativeMatch[2]
+		now := time.Now()
+
+		// Calculate the date based on the unit
+		switch unit {
+		case "second":
+			return now.Add(-time.Duration(amount) * time.Second), nil
+		case "minute":
+			return now.Add(-time.Duration(amount) * time.Minute), nil
+		case "hour":
+			return now.Add(-time.Duration(amount) * time.Hour), nil
+		case "day":
+			return now.AddDate(0, 0, -amount), nil
+		case "week":
+			return now.AddDate(0, 0, -amount*7), nil
+		case "month":
+			return now.AddDate(0, -amount, 0), nil
+		case "year":
+			return now.AddDate(-amount, 0, 0), nil
+		}
+	}
+
+	return t, errors.New("no date found")
 }
 
 func getSecret(secret_name string) (string, error) {
