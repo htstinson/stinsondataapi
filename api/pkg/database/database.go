@@ -15,6 +15,8 @@ type Repository interface {
 
 	//Calibrate
 
+	SelectCalibrateMention(ctx context.Context, subscriber model.Subscriber, search_result_id string) (*[]model.CalibrateMention, error)
+
 	// Calibrate Search Results
 	CreateSearchResult(ctx context.Context, subscriber model.Subscriber, row model.CalibrateSearchResult) (*model.CalibrateSearchResult, error)
 	SelectSearchResultView(ctx context.Context, subscriber model.Subscriber, sde string) (*[]model.CalibrateSearchResultView, error)
