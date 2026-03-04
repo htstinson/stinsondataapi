@@ -104,13 +104,19 @@ func (h *Handler) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id := vars["customer_id"]
 	subscriber_id := vars["subscriber_id"]
+	ctx := r.Context()
+
+	subscriber, err := h.db.GetSubscriber(ctx, subscriber_id)
+	if err != nil {
+		fmt.Println(err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
+	}
 
 	var customer = model.Customer{
 		Id:            id,
 		Subscriber_ID: subscriber_id,
+		Schema_Name:   subscriber.Schema_Name,
 	}
-
-	ctx := r.Context()
 
 	current, err := h.db.GetCustomer(ctx, customer)
 	if err != nil {
