@@ -81,7 +81,7 @@ func (d *Database) GetCustomer(ctx context.Context, temp_customer model.Customer
 	customer := &model.Customer{
 		Id:            temp_customer.Id,
 		Subscriber_ID: temp_customer.Subscriber_ID,
-		Schema_Name:   temp_customer.Name,
+		Schema_Name:   temp_customer.Schema_Name,
 	}
 
 	err := d.DB.QueryRowContext(ctx, query, temp_customer.Id).Scan(&customer.Name, &customer.CreatedAt)
