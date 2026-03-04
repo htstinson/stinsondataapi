@@ -79,7 +79,9 @@ func (d *Database) GetCustomer(ctx context.Context, temp_customer model.Customer
 	query := fmt.Sprintf(`SELECT name, created_at FROM %s.customers WHERE id = $1`, temp_customer.Schema_Name)
 
 	customer := &model.Customer{
-		Id: temp_customer.Id,
+		Id:            temp_customer.Id,
+		Subscriber_ID: temp_customer.Subscriber_ID,
+		Schema_Name:   temp_customer.Name,
 	}
 
 	err := d.DB.QueryRowContext(ctx, query, temp_customer.Id).Scan(&customer.Name, &customer.CreatedAt)
