@@ -130,6 +130,8 @@ func (h *Handler) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(&current.Id, &current.Name, &current.Subscriber_ID, &current.Schema_Name)
+
 	contacts, err := h.db.SelectContacts(ctx, *current, 100, 0)
 
 	if err != nil {
