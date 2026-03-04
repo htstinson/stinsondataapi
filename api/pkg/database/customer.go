@@ -73,12 +73,16 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 
 }
 
-func (d *Database) GetCustomer(ctx context.Context, customer model.Customer) (*model.Customer, error) {
+func (d *Database) GetCustomer(ctx context.Context, temp_customer model.Customer) (*model.Customer, error) {
 	fmt.Println("d GetCustomer")
 
-	query := fmt.Sprintf(`SELECT id, name, created_at FROM %s.customers WHERE id = $1`, customer.Schema_Name)
+	query := fmt.Sprintf(`SELECT name, subsriber_id, schema_name, created_at FROM %s.customers WHERE id = $1`, temp_customer.Schema_Name)
 
-	err := d.DB.QueryRowContext(ctx, query, customer.Id).Scan(&customer.Id, &customer.Name, &customer.CreatedAt)
+	customer := &model.Customer{
+		Id: temp_customer.Id,
+	}
+
+	err := d.DB.QueryRowContext(ctx, query, temp_customer.Id).Scan(&customer.Name, &customer.Subscriber_ID, &customer.Schema_Name, &customer.CreatedAt)
 
 	if err == sql.ErrNoRows {
 		fmt.Println(err.Error())
@@ -90,7 +94,7 @@ func (d *Database) GetCustomer(ctx context.Context, customer model.Customer) (*m
 		return nil, fmt.Errorf("error getting customer: %w", err)
 	}
 
-	return &customer, nil
+	return customer, nil
 }
 
 func (d *Database) DeleteCustomer(ctx context.Context, customer *model.Customer) error {
