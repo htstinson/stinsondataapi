@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
@@ -100,16 +101,18 @@ func (h *Handler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h DeleteCustomer")
 
-	var customer *model.Customer
-	if err := json.NewDecoder(r.Body).Decode(&customer); err != nil {
-		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
-		return
+	vars := mux.Vars(r)
+	id := vars["customer_id"]
+	subscriber_id := vars["subscriber_id"]
+
+	var customer = model.Customer{
+		Id:            id,
+		Subscriber_ID: subscriber_id,
 	}
-	defer r.Body.Close()
 
 	ctx := r.Context()
 
-	current, err := h.db.GetCustomer(ctx, *customer)
+	current, err := h.db.GetCustomer(ctx, customer)
 	if err != nil {
 		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get customer")
@@ -136,7 +139,7 @@ func (h *Handler) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.db.DeleteCustomer(ctx, customer)
+	err = h.db.DeleteCustomer(ctx, &customer)
 	if err != nil {
 		common.RespondError(w, http.StatusNotFound, "Error deleting Customer")
 		return
