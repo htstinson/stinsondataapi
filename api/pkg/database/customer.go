@@ -76,9 +76,9 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 func (d *Database) GetCustomer(ctx context.Context, customer model.Customer) (*model.Customer, error) {
 	fmt.Println("d GetCustomer")
 
-	query := fmt.Sprintf(`SELECT name, created_at FROM %s.customers WHERE id = $1`, customer.Schema_Name)
+	query := fmt.Sprintf(`SELECT id, name, created_at FROM %s.customers WHERE id = $1`, customer.Schema_Name)
 
-	err := d.DB.QueryRowContext(ctx, query, customer.Id).Scan(&customer.Name, &customer.CreatedAt)
+	err := d.DB.QueryRowContext(ctx, query, customer.Id).Scan(&customer.Id, &customer.Name, &customer.CreatedAt)
 
 	if err == sql.ErrNoRows {
 		fmt.Println(err.Error())
