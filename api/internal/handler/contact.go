@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
+	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
@@ -59,16 +60,22 @@ func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
 
 func (h *Handler) DeleteContact(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h DeleteContact")
-	var contact *model.Contact
-	if err := json.NewDecoder(r.Body).Decode(&contact); err != nil {
-		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
-		return
-	}
-	defer r.Body.Close()
+	var contact model.Contact
 
 	ctx := r.Context()
+	vars := mux.Vars(r)
 
-	current, err := h.db.GetContact(ctx, *contact)
+	contact.Subscriber_Id_ = vars["subscriber_id"]
+	contact.Id = vars["contact_id"]
+
+	subscriber, err := h.db.GetSubscriber(ctx, contact.Subscriber_Id_)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Subscriber not found")
+	}
+
+	contact.Schema_Name_ = subscriber.Schema_Name
+
+	current, err := h.db.GetContact(ctx, contact)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get contact")
 		return
@@ -77,7 +84,7 @@ func (h *Handler) DeleteContact(w http.ResponseWriter, r *http.Request) {
 		common.RespondError(w, http.StatusNotFound, "Contact not found")
 		return
 	}
-	err = h.db.DeleteContact(ctx, contact)
+	err = h.db.DeleteContact(ctx, &contact)
 	if err != nil {
 		common.RespondError(w, http.StatusNotFound, "Error deleting item")
 		return

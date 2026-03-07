@@ -188,7 +188,9 @@ func main() {
 	// Subscriber - Customer - Contacts
 	protected.HandleFunc("/subscriber/customer/contacts", h.SelectContacts).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscriber/customer/contact", h.CreateContact).Methods("POST", "OPTIONS")
-	protected.HandleFunc("/subscriber/customer/contactd", h.DeleteContact).Methods("POST", "OPTIONS")
+
+	protected.HandleFunc("/subscriber/contact/{subscriber_id}/{contact_id}", h.DeleteContact).Methods("DELETE", "OPTIONS")
+	//TODO: change POST to DELETE
 	protected.HandleFunc("/subscriber/customer/contact", h.UpdateContact).Methods("PUT", "OPTIONS")
 
 	// Subsriber - Item View
