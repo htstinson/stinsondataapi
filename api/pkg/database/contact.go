@@ -34,6 +34,7 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 		}
 
 		contact.Schema_Name_ = customer.Schema_Name
+		contact.Subscriber_Id_ = customer.Subscriber_ID
 
 		contacts = append(contacts, contact)
 	}
