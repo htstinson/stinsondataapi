@@ -10,7 +10,8 @@ type Contact struct {
 	FirstName      string    `json:"first_name"`
 	Email          string    `json:"email"`
 	Phone          string    `json:"phone"`
-	JobTitle       string    `jsone:"job_title"`
+	JobTitle       string    `json:"job_title"`
+	Department     string    `json:"department"`
 	Schema_Name_   string    `json:"schema_name"`
 	Subscriber_Id_ string    `json:"subscriber_id"`
 	CreatedAt      time.Time `json:"created_at"`

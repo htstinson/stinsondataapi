@@ -12,8 +12,9 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 
 	fmt.Println("d SelectContacts")
 
-	query := fmt.Sprintf(`SELECT id, parent_id, lastname, firstname, email, phone, job_title, created_at FROM %s.contacts 
-	WHERE parent_id = '%s' ORDER BY lastname,firstname ASC LIMIT $1 OFFSET $2`, customer.Schema_Name, customer.Id)
+	query := fmt.Sprintf(`SELECT id, parent_id, lastname, firstname, 
+	email, phone, job_title, department, created_at FROM %s.contacts 
+	WHERE parent_id = '%s' ORDER BY lastname, firstname ASC LIMIT $1 OFFSET $2`, customer.Schema_Name, customer.Id)
 
 	rows, err := d.DB.QueryContext(ctx,
 		query,
@@ -30,7 +31,8 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 		var contact model.Contact
 		if err := rows.Scan(&contact.Id, &contact.ParentId,
 			&contact.LastName, &contact.FirstName, &contact.Email,
-			&contact.Phone, &contact.JobTitle, &contact.CreatedAt); err != nil {
+			&contact.Phone, &contact.JobTitle, &contact.Department,
+			&contact.CreatedAt); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning contact: %w", err)
 		}
@@ -46,9 +48,18 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 func (d *Database) CreateContact(ctx context.Context, contact *model.Contact) (*model.Contact, error) {
 	fmt.Println("d CreateContact")
 
-	query := fmt.Sprintf(`INSERT INTO %s.contacts (parent_id, lastname, firstname) VALUES ($1, $2, $3)`, contact.Schema_Name_)
+	query := fmt.Sprintf(`INSERT INTO %s.contacts (parent_id, 
+	lastname, firstname, 
+	email, phone, job_title, department) 
+	VALUES ($1, $2, $3, $4, $5, $6, $7)`, contact.Schema_Name_)
 
-	_, err := d.DB.ExecContext(ctx, query, contact.ParentId, contact.LastName, contact.FirstName)
+	_, err := d.DB.ExecContext(ctx, query, contact.ParentId,
+		contact.LastName,
+		contact.FirstName,
+		contact.Email,
+		contact.Phone,
+		contact.JobTitle,
+		contact.Department)
 	if err != nil {
 		fmt.Println(err.Error())
 		return nil, fmt.Errorf("error creating customer: %w", err)
@@ -100,7 +111,8 @@ func (d *Database) UpdateContact(ctx context.Context, contact *model.Contact) er
 	firstname = $3,
 	email = $4,
 	phone = $5,
-	job_title = $6 
+	job_title = $6,
+	department = $7 
 	WHERE id = $1`, contact.Schema_Name_)
 
 	_, err := d.DB.ExecContext(ctx, query, contact.Id,
@@ -109,6 +121,7 @@ func (d *Database) UpdateContact(ctx context.Context, contact *model.Contact) er
 		contact.Email,
 		contact.Phone,
 		contact.JobTitle,
+		contact.Department,
 	)
 	if err != nil {
 		fmt.Println(err.Error())
