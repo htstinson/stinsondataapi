@@ -8,6 +8,9 @@ type Contact struct {
 	ParentId       string    `json:"parent_id"` // The parent_id is the customer's id value.
 	LastName       string    `json:"last_name"`
 	FirstName      string    `json:"first_name"`
+	Email          string    `json:"email"`
+	Phone          string    `json:"phone"`
+	JobTitle       string    `jsone:"job_title"`
 	Schema_Name_   string    `json:"schema_name"`
 	Subscriber_Id_ string    `json:"subscriber_id"`
 	CreatedAt      time.Time `json:"created_at"`
