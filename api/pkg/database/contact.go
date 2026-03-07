@@ -12,7 +12,7 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 
 	fmt.Println("d SelectContacts")
 
-	query := fmt.Sprintf(`SELECT id, parent_id, lastname, firstname, created_at FROM %s.contacts 
+	query := fmt.Sprintf(`SELECT id, parent_id, lastname, firstname, email, phone, job_title, created_at FROM %s.contacts 
 	WHERE parent_id = '%s' ORDER BY lastname,firstname ASC LIMIT $1 OFFSET $2`, customer.Schema_Name, customer.Id)
 
 	rows, err := d.DB.QueryContext(ctx,
@@ -28,7 +28,9 @@ func (d *Database) SelectContacts(ctx context.Context, customer model.Customer, 
 	var contacts []model.Contact
 	for rows.Next() {
 		var contact model.Contact
-		if err := rows.Scan(&contact.Id, &contact.ParentId, &contact.LastName, &contact.FirstName, &contact.CreatedAt); err != nil {
+		if err := rows.Scan(&contact.Id, &contact.ParentId,
+			&contact.LastName, &contact.FirstName, &contact.Email,
+			&contact.Phone, &contact.JobTitle, &contact.CreatedAt); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning contact: %w", err)
 		}
