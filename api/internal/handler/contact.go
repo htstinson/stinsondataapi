@@ -45,11 +45,16 @@ func (h *Handler) CreateContact(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	contact.Id = uuid.New().String()
-	fmt.Println(contact.Schema_Name_)
-	fmt.Println(contact.ParentId)
+	subscriber, err := h.db.GetSubscriber(ctx, contact.Subscriber_Id_)
+	if err != nil {
+		fmt.Println(err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
+	}
 
-	contact, err := h.db.CreateContact(ctx, contact)
+	contact.Id = uuid.New().String()
+	contact.Schema_Name_ = subscriber.Schema_Name
+
+	contact, err = h.db.CreateContact(ctx, contact)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to create customer")
 		return
