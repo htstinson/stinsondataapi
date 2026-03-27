@@ -43,6 +43,12 @@ func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) SelectSubscriberCustomers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h SelectSubscriberCustomers")
 
+	order := r.URL.Query().Get("order")
+	sort := r.URL.Query().Get("sort")
+
+	fmt.Println("order", order)
+	fmt.Println("sort", sort)
+
 	var subcriber *model.Subscriber
 	if err := json.NewDecoder(r.Body).Decode(&subcriber); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
