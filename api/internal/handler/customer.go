@@ -15,6 +15,9 @@ import (
 func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h SelectCustomers")
 
+	sort := ""
+	order := ""
+
 	var user *model.CurrentUser
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
@@ -30,7 +33,7 @@ func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 	}
 
-	customers, err := h.db.SelectCustomers(ctx, *subcriber, 100, 0)
+	customers, err := h.db.SelectCustomers(ctx, *subcriber, 100, 0, sort, order)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select customers")
 		return
@@ -64,7 +67,7 @@ func (h *Handler) SelectSubscriberCustomers(w http.ResponseWriter, r *http.Reque
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 	}
 
-	customers, err := h.db.SelectCustomers(ctx, *subcriber, 100, 0)
+	customers, err := h.db.SelectCustomers(ctx, *subcriber, 100, 0, sort, order)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select customers")
 		return

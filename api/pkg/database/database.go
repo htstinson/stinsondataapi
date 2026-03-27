@@ -74,7 +74,7 @@ type Repository interface {
 	DeleteUserSubscriberRole(ctx context.Context, id string) error
 
 	// Customer
-	SelectCustomers(ctx context.Context, subscriber model.Subscriber, limit, offset int) ([]model.Customer, error)
+	SelectCustomers(ctx context.Context, subscriber model.Subscriber, limit int, offset int, sort string, order string) ([]model.Customer, error)
 	CreateCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error)
 	GetCustomer(ctx context.Context, customer model.Customer) (*model.Customer, error)
 	DeleteCustomer(ctx context.Context, customer *model.Customer) error
