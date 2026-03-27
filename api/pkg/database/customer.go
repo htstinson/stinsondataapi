@@ -20,7 +20,7 @@ func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscri
 		sort = "asc"
 	}
 
-	query := fmt.Sprintf("SELECT id, name, created_at FROM %s.customers ORDER BY %s %s LIMIT $1 OFFSET $2", subscriber.Schema_Name, sort, order)
+	query := fmt.Sprintf("SELECT id, name, created_at FROM %s.customers ORDER BY %s %s LIMIT $1 OFFSET $2", subscriber.Schema_Name, order, sort)
 
 	fmt.Println(query)
 
