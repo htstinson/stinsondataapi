@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
@@ -49,8 +50,23 @@ func (h *Handler) SelectSubscriberCustomers(w http.ResponseWriter, r *http.Reque
 	order := r.URL.Query().Get("order")
 	sort := r.URL.Query().Get("sort")
 
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+
+	// Sensible defaults if missing/zero
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 10
+	}
+
+	offset := (page - 1) * limit
+
 	fmt.Println("order", order)
 	fmt.Println("sort", sort)
+	fmt.Println("limit", limit)
+	fmt.Println("offset", offset)
 
 	var subcriber *model.Subscriber
 	if err := json.NewDecoder(r.Body).Decode(&subcriber); err != nil {
