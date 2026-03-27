@@ -34,7 +34,7 @@ func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 	}
 
-	customers, err := h.db.SelectCustomers(ctx, *subcriber, 100, 0, sort, order)
+	customers, _, err := h.db.SelectCustomers(ctx, *subcriber, 100, 0, sort, order)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select customers")
 		return
@@ -78,7 +78,7 @@ func (h *Handler) SelectSubscriberCustomers(w http.ResponseWriter, r *http.Reque
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 	}
 
-	customers, err := h.db.SelectCustomers(ctx, *subcriber, limit, offset, sort, order)
+	customers, total, err := h.db.SelectCustomers(ctx, *subcriber, limit, offset, sort, order)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select customers")
 		return
@@ -88,7 +88,7 @@ func (h *Handler) SelectSubscriberCustomers(w http.ResponseWriter, r *http.Reque
 
 	common.RespondJSON2(w, http.StatusOK, map[string]any{
 		"data":  customers,
-		"total": 11,
+		"total": total,
 	})
 
 }

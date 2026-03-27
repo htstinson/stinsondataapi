@@ -8,7 +8,7 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscriber, limit int, offset int, sort string, order string) ([]model.Customer, error) {
+func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscriber, limit int, offset int, sort string, order string) ([]model.Customer, int, error) {
 
 	fmt.Println("d SelectCustomers")
 
@@ -20,7 +20,7 @@ func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscri
 		sort = "name"
 	}
 
-	query := fmt.Sprintf("SELECT id, name, created_at FROM %s.customers ORDER BY %s %s LIMIT $1 OFFSET $2", subscriber.Schema_Name, sort, order)
+	query := fmt.Sprintf("SELECT id, name, created_at, COUNT(*) OVER() AS total FROM %s.customers ORDER BY %s %s LIMIT $1 OFFSET $2", subscriber.Schema_Name, sort, order)
 
 	fmt.Println(query)
 
@@ -30,16 +30,17 @@ func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscri
 	)
 	if err != nil {
 		fmt.Println(err.Error())
-		return nil, fmt.Errorf("error listing customers: %w", err)
+		return nil, 0, fmt.Errorf("error listing customers: %w", err)
 	}
 	defer rows.Close()
 
+	var total int
 	var customers []model.Customer
 	for rows.Next() {
 		var customer model.Customer
-		if err := rows.Scan(&customer.Id, &customer.Name, &customer.CreatedAt); err != nil {
+		if err := rows.Scan(&customer.Id, &customer.Name, &customer.CreatedAt, &total); err != nil {
 			fmt.Println(err.Error())
-			return nil, fmt.Errorf("error scanning customer: %w", err)
+			return nil, 0, fmt.Errorf("error scanning customer: %w", err)
 		}
 
 		customer.Schema_Name = subscriber.Schema_Name
@@ -47,7 +48,7 @@ func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscri
 
 		customers = append(customers, customer)
 	}
-	return customers, nil
+	return customers, total, nil
 }
 
 func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error) {
