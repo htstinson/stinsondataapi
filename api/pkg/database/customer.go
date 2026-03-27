@@ -13,11 +13,11 @@ func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscri
 	fmt.Println("d SelectCustomers")
 
 	if order == "" {
-		order = "name"
+		order = "asc"
 	}
 
 	if sort == "" {
-		sort = "asc"
+		sort = "name"
 	}
 
 	query := fmt.Sprintf("SELECT id, name, created_at FROM %s.customers ORDER BY %s %s LIMIT $1 OFFSET $2", subscriber.Schema_Name, order, sort)
