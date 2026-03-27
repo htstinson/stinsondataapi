@@ -63,11 +63,6 @@ func (h *Handler) SelectSubscriberCustomers(w http.ResponseWriter, r *http.Reque
 
 	offset := (page - 1) * limit
 
-	fmt.Println("order", order)
-	fmt.Println("sort", sort)
-	fmt.Println("limit", limit)
-	fmt.Println("offset", offset)
-
 	var subcriber *model.Subscriber
 	if err := json.NewDecoder(r.Body).Decode(&subcriber); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
@@ -83,13 +78,18 @@ func (h *Handler) SelectSubscriberCustomers(w http.ResponseWriter, r *http.Reque
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 	}
 
-	customers, err := h.db.SelectCustomers(ctx, *subcriber, 100, 0, sort, order)
+	customers, err := h.db.SelectCustomers(ctx, *subcriber, limit, offset, sort, order)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select customers")
 		return
 	}
 
-	common.RespondJSON(w, http.StatusOK, customers)
+	//common.RespondJSON(w, http.StatusOK, customers)
+
+	common.RespondJSON2(w, http.StatusOK, map[string]any{
+		"data":  customers,
+		"total": 11,
+	})
 
 }
 

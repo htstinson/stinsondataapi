@@ -23,6 +23,18 @@ func RespondJSON(w http.ResponseWriter, status int, payload interface{}) {
 	w.Write(response)
 }
 
+func RespondJSON2(w http.ResponseWriter, status int, payload interface{}) {
+	response, err := json.Marshal(payload)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	w.Write(response)
+}
+
 func RespondError(w http.ResponseWriter, code int, message string) {
 	RespondJSON(w, code, map[string]string{"error": message})
 }
