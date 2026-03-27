@@ -22,6 +22,8 @@ func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscri
 
 	query := fmt.Sprintf("SELECT id, name, created_at FROM %s.customers ORDER BY %s %s LIMIT $1 OFFSET $2", subscriber.Schema_Name, sort, order)
 
+	fmt.Println(query)
+
 	rows, err := d.DB.QueryContext(ctx,
 		query,
 		limit, offset,
