@@ -36,7 +36,7 @@ func (d *Database) GetProfileByParent(ctx context.Context, subscriber *model.Sub
 
 	var profile model.Profile
 
-	query := fmt.Sprintf(`SELECT id, parent_id, created_at, legal_name, modified_at FROM %s.profile WHERE parent_id = $1`, subscriber.Schema_Name)
+	query := fmt.Sprintf(`SELECT id, parent_id, legal_name, created_at, modified_at FROM %s.profile WHERE parent_id = $1`, subscriber.Schema_Name)
 
 	err := d.DB.QueryRowContext(ctx,
 		query,
