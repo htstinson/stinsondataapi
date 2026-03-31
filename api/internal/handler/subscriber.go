@@ -56,7 +56,7 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetSubscriberProfile(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h SelectSubscriberCustomers")
+	fmt.Println("h GetSubscriberProfile")
 
 	var subcriber *model.Subscriber
 	if err := json.NewDecoder(r.Body).Decode(&subcriber); err != nil {
@@ -71,12 +71,14 @@ func (h *Handler) GetSubscriberProfile(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
+		return
 	}
 
 	profile, err := h.db.GetProfileByParent(ctx, subcriber)
 	if err != nil {
 		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get profile")
+		return
 	}
 
 	common.RespondJSON(w, http.StatusOK, profile)
