@@ -25,7 +25,7 @@ func (d *Database) SelectUsers(ctx context.Context, limit int, offset int, sort 
 		sort = "username"
 	}
 
-	query := fmt.Sprintf(`SELECT id, username, ip_address, COUNT(*) OVER() AS total FROM users ORDER BY %s %s LIMIT $1 OFFSET $2`, order, sort)
+	query := fmt.Sprintf(`SELECT id, username, ip_address, COUNT(*) OVER() AS total FROM users ORDER BY %s %s LIMIT $1 OFFSET $2`, sort, order)
 
 	rows, err := d.DB.QueryContext(ctx,
 		query,
