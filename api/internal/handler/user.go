@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
@@ -167,15 +168,37 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) SelectUsers(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h SelectUsers")
+
+	order := r.URL.Query().Get("order")
+	sort := r.URL.Query().Get("sort")
+
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+
+	// Sensible defaults if missing/zero
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 10
+	}
+
+	offset := (page - 1) * limit
 
 	ctx := r.Context()
-	items, err := h.db.SelectUsers(ctx, 100, 0)
+	users, total, err := h.db.SelectUsers(ctx, limit, offset, sort, order)
 	if err != nil {
-		common.RespondError(w, http.StatusInternalServerError, "Failed to list items")
+		common.RespondError(w, http.StatusInternalServerError, "Failed to list users")
 		return
 	}
 
-	common.RespondJSON(w, http.StatusOK, items)
+	//common.RespondJSON(w, http.StatusOK, items)
+
+	common.RespondJSON2(w, http.StatusOK, map[string]any{
+		"data":  users,
+		"total": total,
+	})
 
 }
 

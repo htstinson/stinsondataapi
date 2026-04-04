@@ -1,4 +1,0 @@
-name: List User-Subscribers user=tom.stinson@stinsondata.com
-method: GET
-path: /api/v1/usersubscriberview/user/211cfe41-14ac-4110-920d-f7b6b5670047
-output_file: user_subscribers.json

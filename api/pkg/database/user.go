@@ -14,30 +14,43 @@ import (
 
 //User
 
-func (d *Database) SelectUsers(ctx context.Context, limit, offset int) ([]model.User, error) {
+func (d *Database) SelectUsers(ctx context.Context, limit int, offset int, sort string, order string) ([]model.User, int, error) {
 	fmt.Println("d SelectUsers()")
+
+	if order == "" {
+		order = "asc"
+	}
+
+	if sort == "" {
+		sort = "username"
+	}
+
+	query := fmt.Sprintf(`SELECT id, username, ip_address, COUNT(*) OVER() AS total FROM users ORDER BY %s %s LIMIT $1 OFFSET $2`, order, sort)
+
 	rows, err := d.DB.QueryContext(ctx,
-		"SELECT id, username, ip_address FROM users ORDER BY username ASC LIMIT $1 OFFSET $2",
-		limit, offset,
+		query,
+		limit,
+		offset,
 	)
 	if err != nil {
 		fmt.Println(err.Error())
-		return nil, fmt.Errorf("error listing items: %w", err)
+		return nil, 0, fmt.Errorf("error listing items: %w", err)
 	}
 	defer rows.Close()
 
+	var total int
 	var users []model.User
 	for rows.Next() {
 		var user model.User
-		if err := rows.Scan(&user.ID, &user.Username, &user.IP_address); err != nil {
+		if err := rows.Scan(&user.ID, &user.Username, &user.IP_address, total); err != nil {
 			fmt.Println(err.Error())
-			return nil, fmt.Errorf("error scanning user: %w", err)
+			return nil, 0, fmt.Errorf("error scanning user: %w", err)
 		}
 		user.Roles = strings.Replace(user.Roles, "{", "", -1)
 		user.Roles = strings.Replace(user.Roles, "}", "", -1)
 		users = append(users, user)
 	}
-	return users, nil
+	return users, total, nil
 }
 
 func (d *Database) SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error) {

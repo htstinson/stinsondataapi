@@ -1,0 +1,3 @@
+name: Select Addresses for Stinson Data LLC
+method: POST
+path: /api/v1/subscriber/addresses 
