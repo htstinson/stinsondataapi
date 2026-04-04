@@ -12,12 +12,6 @@ import (
 func (d *Database) SelectSubscriberAddresses(ctx context.Context, subscriber model.Subscriber,
 	limit int, offset int, sort string, order string) (*[]model.Address, int, error) {
 
-	fmt.Println("d SelectSubscriberAddresses")
-	fmt.Println("limit", limit)
-	fmt.Println("order", order)
-	fmt.Println("sort", sort)
-	fmt.Println("offset", offset)
-
 	if order == "" {
 		order = "asc"
 	}
@@ -29,7 +23,7 @@ func (d *Database) SelectSubscriberAddresses(ctx context.Context, subscriber mod
 	query := fmt.Sprintf(`SELECT id, created_at, modified_at, 
 		address_type, address_use, street1, street2, po_box, city, state, zip,
 		COUNT(*) OVER() AS total 
-		FROM %s.addresses WHERE id = $1 ORDER BY %s %s LIMIT $1 OFFSET $2`, subscriber.Schema_Name, sort, order)
+		FROM %s.addresses WHERE id = $1 ORDER BY %s %s LIMIT $2 OFFSET $3`, subscriber.Schema_Name, sort, order)
 
 	rows, err := d.DB.QueryContext(ctx,
 		query,
