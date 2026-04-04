@@ -42,7 +42,7 @@ func (d *Database) SelectUsers(ctx context.Context, limit int, offset int, sort 
 	var users []model.User
 	for rows.Next() {
 		var user model.User
-		if err := rows.Scan(&user.ID, &user.Username, &user.IP_address, total); err != nil {
+		if err := rows.Scan(&user.ID, &user.Username, &user.IP_address, &total); err != nil {
 			fmt.Println(err.Error())
 			return nil, 0, fmt.Errorf("error scanning user: %w", err)
 		}
