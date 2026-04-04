@@ -27,7 +27,6 @@ func (d *Database) SelectSubscriberAddresses(ctx context.Context, subscriber mod
 
 	rows, err := d.DB.QueryContext(ctx,
 		query,
-		subscriber.Id,
 		limit,
 		offset,
 	)
