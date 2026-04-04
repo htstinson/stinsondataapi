@@ -16,3 +16,6 @@ API.code-workspace
 ../.gitignore
 
 update.sh
+.api_token
+test.go
+*.json

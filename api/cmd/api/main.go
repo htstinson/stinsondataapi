@@ -184,7 +184,9 @@ func main() {
 	protected.HandleFunc("/subscriber/customer", h.CreateCustomer).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscriber/customer/{subscriber_id}/{customer_id}", h.DeleteCustomer).Methods("DELETE", "OPTIONS")
 	protected.HandleFunc("/subscriber/customer", h.UpdateCustomer).Methods("PUT", "OPTIONS")
+
 	protected.HandleFunc("/subscriber/profile", h.GetSubscriberProfile).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/subscriber/addresses", h.SelectSubscriberAddresses).Methods("POST", "OPTIONS")
 
 	// Subscriber - Customer - Contacts
 	protected.HandleFunc("/subscriber/customer/contacts", h.SelectContacts).Methods("POST", "OPTIONS")

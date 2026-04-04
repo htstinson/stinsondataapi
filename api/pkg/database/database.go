@@ -89,6 +89,7 @@ type Repository interface {
 	DeleteSubscriber(ctx context.Context, subscriber *model.Subscriber) error
 
 	SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error)
+	SelectSubscriberAddresses(ctx context.Context, subscriber model.Subscriber, limit int, offset int, sort string, order string) (*[]model.Address, int, error)
 
 	//Subsriber_Item
 	SelectSubscriberItemView(ctx context.Context, subscriber_id string, limit int, offset int) ([]model.Subscriber_Item_View, error)

@@ -1,0 +1,5 @@
+name: Get Profile for Stinson Data LLC
+method: POST
+path: /api/v1/subscriber/profile
+body_file: get_subscriber_profile.json
+output_file: subscriber_profile.json

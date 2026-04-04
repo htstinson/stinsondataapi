@@ -81,8 +81,42 @@ func (h *Handler) GetSubscriberProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	println(profile.Legal_Name)
 	common.RespondJSON(w, http.StatusOK, profile)
+}
+
+func (h *Handler) SelectSubscriberAddresses(w http.ResponseWriter, r *http.Request) {
+	// TODO
+	fmt.Println("h SelectSubscriberAddresses")
+
+	sort := ""
+	order := ""
+
+	var subcriber *model.Subscriber
+	if err := json.NewDecoder(r.Body).Decode(&subcriber); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	ctx := r.Context()
+
+	subcriber, err := h.db.GetSubscriber(ctx, subcriber.Id)
+	if err != nil {
+		fmt.Println(err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
+		return
+	}
+
+	limit := 100
+	offset := 0
+	addresses, _, err := h.db.SelectSubscriberAddresses(ctx, *subcriber, limit, offset, sort, order)
+	if err != nil {
+		fmt.Println(err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to select addresses")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, addresses)
 }
 
 func (h *Handler) UpdateSubscriber(w http.ResponseWriter, r *http.Request) {

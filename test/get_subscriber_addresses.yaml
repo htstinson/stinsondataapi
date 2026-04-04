@@ -1,0 +1,5 @@
+name: Get Addresses for Stinson Data LLC
+method: POST
+path: /api/v1/subscriber/addresses
+body_file: get_subscriber_profile.json
+output_file: subscriber_addresses.json
