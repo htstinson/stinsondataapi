@@ -56,5 +56,5 @@ func (d *Database) SelectSubscriberAddresses(ctx context.Context, subscriber mod
 		addresses = append(addresses, address)
 	}
 
-	return &addresses, 0, nil
+	return &addresses, total, nil
 }
