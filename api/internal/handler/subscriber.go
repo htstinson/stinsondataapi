@@ -88,8 +88,8 @@ func (h *Handler) SelectSubscriberAddresses(w http.ResponseWriter, r *http.Reque
 	// TODO
 	fmt.Println("h SelectSubscriberAddresses")
 
-	sort := ""
-	order := ""
+	sort := "id"
+	order := "asc"
 
 	var subcriber *model.Subscriber
 	if err := json.NewDecoder(r.Body).Decode(&subcriber); err != nil {

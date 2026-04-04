@@ -13,6 +13,10 @@ func (d *Database) SelectSubscriberAddresses(ctx context.Context, subscriber mod
 	limit int, offset int, sort string, order string) (*[]model.Address, int, error) {
 
 	fmt.Println("d SelectSubscriberAddresses")
+	fmt.Println("limit", limit)
+	fmt.Println("order", order)
+	fmt.Println("sort", sort)
+	fmt.Println("offset", offset)
 
 	if order == "" {
 		order = "asc"
