@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
@@ -88,8 +89,21 @@ func (h *Handler) SelectSubscriberAddresses(w http.ResponseWriter, r *http.Reque
 	// TODO
 	fmt.Println("h SelectSubscriberAddresses")
 
-	sort := "id"
-	order := "asc"
+	order := r.URL.Query().Get("order")
+	sort := r.URL.Query().Get("sort")
+
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))
+
+	// Sensible defaults if missing/zero
+	if page < 1 {
+		page = 1
+	}
+	if limit < 1 {
+		limit = 10
+	}
+
+	offset := (page - 1) * limit
 
 	var subcriber *model.Subscriber
 	if err := json.NewDecoder(r.Body).Decode(&subcriber); err != nil {
@@ -107,16 +121,17 @@ func (h *Handler) SelectSubscriberAddresses(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	limit := 100
-	offset := 0
-	addresses, _, err := h.db.SelectSubscriberAddresses(ctx, *subcriber, limit, offset, sort, order)
+	addresses, total, err := h.db.SelectSubscriberAddresses(ctx, *subcriber, limit, offset, sort, order)
 	if err != nil {
 		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to select addresses")
 		return
 	}
 
-	common.RespondJSON(w, http.StatusOK, addresses)
+	common.RespondJSON2(w, http.StatusOK, map[string]any{
+		"data":  addresses,
+		"total": total,
+	})
 }
 
 func (h *Handler) UpdateSubscriber(w http.ResponseWriter, r *http.Request) {
