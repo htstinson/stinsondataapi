@@ -63,18 +63,17 @@ func (d *Database) UpdateSubscriberAddress(ctx context.Context, subscriber *mode
 	fmt.Println("d UpdateSubscriberAddress")
 
 	query := fmt.Sprintf(`UPDATE %s.addresses SET 
-	address_type = $2 
-	address_use = $3 
-	street1 = $4 
-	street2 = $5
-	po_box = $6 
-	city = $8 
-	state = $9 
-	zip = $10 
-	WHERE id = $1`, subscriber.Schema_Name)
+	address_type = $1, 
+	address_use = $2, 
+	street1 = $3, 
+	street2 = $4, 
+	po_box = $5, 
+	city = $6, 
+	state = $7, 
+	zip = $8 
+	WHERE id = $9`, subscriber.Schema_Name)
 
 	_, err := d.DB.ExecContext(ctx, query,
-		address.Id,
 		address.AddressType,
 		address.AddressUse,
 		address.Street1,
@@ -82,7 +81,8 @@ func (d *Database) UpdateSubscriberAddress(ctx context.Context, subscriber *mode
 		address.POBox,
 		address.City,
 		address.State,
-		address.Zip)
+		address.Zip,
+		address.Id)
 	if err != nil {
 		fmt.Println(err.Error())
 		return err
