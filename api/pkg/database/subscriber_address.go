@@ -90,3 +90,28 @@ func (d *Database) UpdateSubscriberAddress(ctx context.Context, subscriber *mode
 
 	return nil
 }
+
+func (d *Database) CreateSubscriberAddress(ctx context.Context, subscriber *model.Subscriber, address model.Address) error {
+	fmt.Println("d Create Subscriber Address")
+
+	query := fmt.Sprintf(`INSERT INTO %s.addresses (subscriber_id, address_type, 
+	address_use, street1, street2, po_box, city, state, zip) 
+	values ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, subscriber.Schema_Name)
+
+	_, err := d.DB.ExecContext(ctx, query,
+		subscriber.Id,
+		address.AddressType,
+		address.AddressUse,
+		address.Street1,
+		address.Street2,
+		address.POBox,
+		address.City,
+		address.State,
+		address.Zip)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
+}
