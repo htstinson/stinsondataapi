@@ -59,6 +59,34 @@ func (d *Database) SelectSubscriberAddresses(ctx context.Context, subscriber mod
 	return &addresses, total, nil
 }
 
+func (d *Database) GetSubscriberAddress(ctx context.Context, subscriber_schema_name string, address_id string) (*model.Address, error) {
+	fmt.Println("d Get Subscriber Address")
+
+	query := fmt.Sprintf(`SELECT id, subscriber_id, created_at, modified_at, 
+		address_type, address_use, street1, street2, po_box, 
+		city, state, zip FROM %s.addresses WHERE id = $1`, subscriber_schema_name)
+
+	rows, err := d.DB.QueryContext(ctx, query, address_id)
+	if err != nil {
+		return nil, fmt.Errorf("error listing addresses: %w", err)
+	}
+	defer rows.Close()
+
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
+
+	var address = model.Address{}
+	if err := rows.Scan(&address.Id, &address.SubscriberId, &address.CreatedAt, &address.ModifiedAt,
+		&address.AddressType, &address.AddressUse, &address.Street1, &address.Street2, &address.POBox,
+		&address.City, &address.State, &address.Zip); err != nil {
+
+		return nil, fmt.Errorf("error scanning address: %w", err)
+	}
+
+	return &address, nil
+}
+
 func (d *Database) UpdateSubscriberAddress(ctx context.Context, subscriber *model.Subscriber, address model.Address) error {
 	fmt.Println("d UpdateSubscriberAddress")
 

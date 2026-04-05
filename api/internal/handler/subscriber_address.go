@@ -6,13 +6,14 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
 func (h *Handler) SelectSubscriberAddresses(w http.ResponseWriter, r *http.Request) {
 	// TODO
-	fmt.Println("h SelectSubscriberAddresses")
+	fmt.Println("h Select Subscriber Addresses")
 
 	order := r.URL.Query().Get("order")
 	sort := r.URL.Query().Get("sort")
@@ -57,6 +58,36 @@ func (h *Handler) SelectSubscriberAddresses(w http.ResponseWriter, r *http.Reque
 		"data":  addresses,
 		"total": total,
 	})
+}
+
+func (h *Handler) GetSubscriberAddress(w http.ResponseWriter, r *http.Request) {
+	// TODO
+	fmt.Println("h Get Subscriber Address")
+
+	var address *model.Address
+	if err := json.NewDecoder(r.Body).Decode(&address); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	ctx := r.Context()
+
+	subcriber, err := h.db.GetSubscriber(ctx, address.SubscriberId)
+	if err != nil {
+		fmt.Println(err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
+		return
+	}
+
+	address, err = h.db.GetSubscriberAddress(ctx, subcriber.Schema_Name, address.Id)
+	if err != nil {
+		fmt.Println(err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to select addresses")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, address)
 }
 
 func (h *Handler) UpdateSubscriberAddress(w http.ResponseWriter, r *http.Request) {
@@ -111,4 +142,34 @@ func (h *Handler) CreateSubscriberAddress(w http.ResponseWriter, r *http.Request
 	}
 
 	common.RespondJSON(w, http.StatusOK, subscriber)
+}
+
+func (h *Handler) DeleteSubscriberAddress(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h Delete Subscriber Address")
+
+	vars := mux.Vars(r)
+	id := vars["subscriber_id"]
+
+	fmt.Println(id)
+
+	ctx := r.Context()
+
+	subscriberitem, err := h.db.GetSubscriberItem(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber_item")
+		return
+	}
+	if subscriberitem == nil {
+		common.RespondError(w, http.StatusNotFound, "Subscriber_item not found")
+		return
+	}
+
+	err = h.db.DeleteSubscriberItem(ctx, id)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error deleting subscriber_item")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, subscriberitem)
+
 }

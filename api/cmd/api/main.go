@@ -186,9 +186,11 @@ func main() {
 	protected.HandleFunc("/subscriber/customer", h.UpdateCustomer).Methods("PUT", "OPTIONS")
 
 	protected.HandleFunc("/subscriber/profile", h.GetSubscriberProfile).Methods("POST", "OPTIONS")
+
 	protected.HandleFunc("/subscriber/addresses", h.SelectSubscriberAddresses).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscriber/address", h.UpdateSubscriberAddress).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/subscriber/address", h.CreateSubscriberAddress).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/subscriber/address/g", h.GetSubscriberAddress).Methods("POST", "OPTIONS")
 
 	// Subscriber - Customer - Contacts
 	protected.HandleFunc("/subscriber/customer/contacts", h.SelectContacts).Methods("POST", "OPTIONS")
