@@ -77,13 +77,14 @@ func (d *Database) GetSubscriberAddress(ctx context.Context, subscriber_schema_n
 	}
 
 	var address = model.Address{}
-	if err := rows.Scan(&address.Id, &address.SubscriberId, &address.CreatedAt, &address.ModifiedAt,
-		&address.AddressType, &address.AddressUse, &address.Street1, &address.Street2, &address.POBox,
-		&address.City, &address.State, &address.Zip); err != nil {
+	for rows.Next() {
+		if err := rows.Scan(&address.Id, &address.SubscriberId, &address.CreatedAt, &address.ModifiedAt,
+			&address.AddressType, &address.AddressUse, &address.Street1, &address.Street2, &address.POBox,
+			&address.City, &address.State, &address.Zip); err != nil {
 
-		return nil, fmt.Errorf("error scanning address: %w", err)
+			return nil, fmt.Errorf("error scanning address: %w", err)
+		}
 	}
-
 	return &address, nil
 }
 
