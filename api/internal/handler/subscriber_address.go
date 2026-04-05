@@ -148,28 +148,26 @@ func (h *Handler) DeleteSubscriberAddress(w http.ResponseWriter, r *http.Request
 	fmt.Println("h Delete Subscriber Address")
 
 	vars := mux.Vars(r)
-	id := vars["subscriber_id"]
-
-	fmt.Println(id)
+	subscriber_id := vars["subscriber_id"]
+	address_id := vars["address_id"]
 
 	ctx := r.Context()
 
-	subscriberitem, err := h.db.GetSubscriberItem(ctx, id)
+	subscriber, err := h.db.GetSubscriber(ctx, subscriber_id)
 	if err != nil {
-		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber_item")
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 		return
 	}
-	if subscriberitem == nil {
-		common.RespondError(w, http.StatusNotFound, "Subscriber_item not found")
+	if subscriber == nil {
+		common.RespondError(w, http.StatusNotFound, "Subscriber not found")
 		return
 	}
 
-	err = h.db.DeleteSubscriberItem(ctx, id)
+	err = h.db.DeleteSubscriberAddress(ctx, subscriber.Schema_Name, address_id)
 	if err != nil {
-		common.RespondError(w, http.StatusNotFound, "Error deleting subscriber_item")
+		common.RespondError(w, http.StatusNotFound, "Error deleting subscriber address")
 		return
 	}
 
-	common.RespondJSON(w, http.StatusOK, subscriberitem)
-
+	common.RespondJSON(w, http.StatusOK, nil)
 }

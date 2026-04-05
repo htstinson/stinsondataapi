@@ -93,6 +93,7 @@ type Repository interface {
 	UpdateSubscriberAddress(ctx context.Context, subscriber *model.Subscriber, address model.Address) error
 	CreateSubscriberAddress(ctx context.Context, subscriber *model.Subscriber, address model.Address) error
 	GetSubscriberAddress(ctx context.Context, subscriber_schema_name string, address_id string) (*model.Address, error)
+	DeleteSubscriberAddress(ctx context.Context, subscriber_schema_name string, address_id string) error
 
 	//Subsriber_Item
 	SelectSubscriberItemView(ctx context.Context, subscriber_id string, limit int, offset int) ([]model.Subscriber_Item_View, error)

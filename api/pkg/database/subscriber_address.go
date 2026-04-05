@@ -144,3 +144,13 @@ func (d *Database) CreateSubscriberAddress(ctx context.Context, subscriber *mode
 
 	return nil
 }
+
+func (d *Database) DeleteSubscriberAddress(ctx context.Context, subscriber_schema_name string, address_id string) error {
+	fmt.Println("d DeleteSubscriberAddress")
+
+	query := fmt.Sprintf(`DELETE FROM %s.addresses WHERE id = $1`, subscriber_schema_name)
+
+	_, err := d.DB.ExecContext(ctx, query, address_id)
+
+	return err
+}
