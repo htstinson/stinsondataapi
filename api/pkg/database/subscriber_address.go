@@ -58,3 +58,17 @@ func (d *Database) SelectSubscriberAddresses(ctx context.Context, subscriber mod
 
 	return &addresses, total, nil
 }
+
+func (d *Database) UpdateSubscriberAddress(ctx context.Context, subscriber *model.Subscriber, address model.Address) error {
+	fmt.Println("d UpdateSubscriberAddress")
+
+	query := fmt.Sprintf(`UPDATE %s.addresses SET address_use = $2 WHERE id = $1`, subscriber.Schema_Name)
+
+	_, err := d.DB.ExecContext(ctx, query, address.Id, address.AddressUse)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	return nil
+}

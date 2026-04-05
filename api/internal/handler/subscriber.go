@@ -134,6 +134,33 @@ func (h *Handler) SelectSubscriberAddresses(w http.ResponseWriter, r *http.Reque
 	})
 }
 
+func (h *Handler) UpdateSubscriberAddress(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h UpdateSubscriberAddress")
+	ctx := r.Context()
+
+	var address model.Address
+	if err := json.NewDecoder(r.Body).Decode(&address); err != nil {
+		fmt.Println(err.Error())
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	subscriber, err := h.db.GetSubscriber(ctx, address.SubscriberId)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
+		return
+	}
+
+	err = h.db.UpdateSubscriberAddress(ctx, subscriber, address)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to update subscriber address")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, subscriber)
+}
+
 func (h *Handler) UpdateSubscriber(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h UpdateSubscriber")
 	vars := mux.Vars(r)
