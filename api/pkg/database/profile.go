@@ -61,19 +61,17 @@ func (d *Database) GetProfile(ctx context.Context, subscriber *model.Subscriber)
 	return &profile, nil
 }
 
-func (d *Database) CreateProfile(ctx context.Context, schema_name string, parent_id string) (*model.Profile, error) {
+func (d *Database) CreateProfile(ctx context.Context, subscriber model.Subscriber, profile model.Profile) (*model.Profile, error) {
 	fmt.Println("d CreateProfile")
 
-	profile := &model.Profile{
-		Id:         uuid.New().String(),
-		ParentId:   parent_id,
-		CreatedAt:  time.Now(),
-		ModifiedAt: time.Now(),
-	}
+	profile.Id = uuid.New().String()
+	profile.ParentId = subscriber.Id
+	profile.CreatedAt = time.Now()
+	profile.ModifiedAt = time.Now()
 
-	query := fmt.Sprintf(`INSERT INTO %s.profile (id, parent_id, created_at, modified_at) VALUES ($1, $2, $3, $4)`, schema_name)
+	query := fmt.Sprintf(`INSERT INTO %s.profile (id, parent_id, created_at, modified_at, 
 
-	fmt.Println(query)
+	) VALUES ($1, $2, $3, $4)`, subscriber.Schema_Name)
 
 	_, err := d.DB.ExecContext(ctx, query, profile.Id, profile.ParentId, profile.CreatedAt, profile.ModifiedAt)
 	if err != nil {
@@ -82,23 +80,19 @@ func (d *Database) CreateProfile(ctx context.Context, schema_name string, parent
 
 	query = `UPDATE common.subscribers SET schema_name = $1 WHERE id = $2`
 
-	fmt.Println(query)
-
-	_, err = d.DB.ExecContext(ctx, query, schema_name, parent_id)
+	_, err = d.DB.ExecContext(ctx, query, subscriber.Schema_Name, subscriber.Id)
 	if err != nil {
 		return nil, fmt.Errorf("error updating parent: %w", err)
 	}
 
-	query = fmt.Sprintf(`INSERT INTO %s.customers (name, parent_id) VALUES ($1, $2)`, schema_name)
-
-	fmt.Println(query)
+	query = fmt.Sprintf(`INSERT INTO %s.customers (name, parent_id) VALUES ($1, $2)`, subscriber.Id)
 
 	_, err = d.DB.ExecContext(ctx, query, "Individual Contacts", profile.Id)
 	if err != nil {
 		return nil, fmt.Errorf("error updating customers: %w", err)
 	}
 
-	return profile, nil
+	return &profile, nil
 
 }
 

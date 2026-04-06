@@ -47,41 +47,16 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	_, err = h.db.CreateProfile(ctx, schema_name, newsubscriber.Id)
+	profile := model.Profile{
+		Legal_Name: &newsubscriber.Name,
+	}
+
+	_, err = h.db.CreateProfile(ctx, *newsubscriber, profile)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 
 	common.RespondJSON(w, http.StatusCreated, newsubscriber)
-}
-
-func (h *Handler) GetSubscriberProfile(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h GetSubscriberProfile")
-
-	var subcriber *model.Subscriber
-	if err := json.NewDecoder(r.Body).Decode(&subcriber); err != nil {
-		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
-		return
-	}
-	defer r.Body.Close()
-
-	ctx := r.Context()
-
-	subcriber, err := h.db.GetSubscriber(ctx, subcriber.Id)
-	if err != nil {
-		fmt.Println(err.Error())
-		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
-		return
-	}
-
-	profile, err := h.db.GetProfile(ctx, subcriber)
-	if err != nil {
-		fmt.Println(err.Error())
-		common.RespondError(w, http.StatusInternalServerError, "Failed to get profile")
-		return
-	}
-
-	common.RespondJSON(w, http.StatusOK, profile)
 }
 
 func (h *Handler) UpdateSubscriber(w http.ResponseWriter, r *http.Request) {
@@ -257,11 +232,6 @@ func (h *Handler) Create_Schema(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = schema.CopySchema(ctx)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	_, err = h.db.CreateProfile(ctx, schema_name, subscriber.Id)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
