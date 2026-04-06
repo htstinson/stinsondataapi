@@ -22,6 +22,7 @@ type Profile struct {
 	GlassDoor      *string   `json:"glassdoor"`
 	Github         *string   `json:"github"`
 	NextDoor       *string   `json:"nextdoor"`
+	Bizapedia      *string   `json:"bizapedia"`
 	CreatedAt      time.Time `json:"created_at"`
 	ModifiedAt     time.Time `json:"modified_at"`
 }
