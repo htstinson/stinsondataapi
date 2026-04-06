@@ -19,7 +19,7 @@ type Profile struct {
 	Pinterest      string    `json:"pinterest"`
 	GoogleBusiness string    `json:"google_business"`
 	Yelp           string    `json:"yelp"`
-	GlassDoor      string    `json:"glass_door"`
+	GlassDoor      string    `json:"glassdoor"`
 	Github         string    `json:"github"`
 	NextDoor       string    `json:"nextdoor"`
 	CreatedAt      time.Time `json:"created_at"`

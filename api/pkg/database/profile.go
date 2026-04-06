@@ -38,7 +38,7 @@ func (d *Database) GetProfileByParent(ctx context.Context, subscriber *model.Sub
 
 	query := fmt.Sprintf(`SELECT id, parent_id, created_at, modified_at,
 		legal_name, phone, fax, website, linkedin, facebook, instagram, x, youtube, pinterest, google_business,
-		yelp, glass_door, github, nextdoor
+		yelp, glassdoor, github, nextdoor
 		FROM %s.profile WHERE id = $1`, subscriber.Schema_Name)
 
 	err := d.DB.QueryRowContext(ctx,
