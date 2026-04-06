@@ -36,12 +36,18 @@ func (d *Database) GetProfileByParent(ctx context.Context, subscriber *model.Sub
 
 	var profile model.Profile
 
-	query := fmt.Sprintf(`SELECT id, parent_id, legal_name, created_at, modified_at FROM %s.profile WHERE parent_id = $1`, subscriber.Schema_Name)
+	query := fmt.Sprintf(`SELECT id, parent_id, created_at, modified_at,
+		legal_name, phone, fax, website, linkedin, facebook, instagram, x, youtube, pinterest, google_business,
+		yelp, glass_door, github, nextdoor
+		FROM %s.profile WHERE id = $1`, subscriber.Schema_Name)
 
 	err := d.DB.QueryRowContext(ctx,
 		query,
 		subscriber.Id,
-	).Scan(&profile.Id, &profile.ParentId, &profile.Legal_Name, &profile.CreatedAt, &profile.ModifiedAt)
+	).Scan(&profile.Id, &profile.ParentId, &profile.CreatedAt, &profile.ModifiedAt,
+		&profile.Legal_Name, &profile.Phone, &profile.Fax, &profile.Website, &profile.LinkedIn, &profile.Facebook,
+		&profile.Instagram, &profile.X, &profile.YouTube, &profile.Pinterest, &profile.GoogleBusiness,
+		&profile.Yelp, &profile.GlassDoor, &profile.Github, &profile.NextDoor)
 
 	if err == sql.ErrNoRows {
 		return nil, nil
@@ -50,8 +56,6 @@ func (d *Database) GetProfileByParent(ctx context.Context, subscriber *model.Sub
 		fmt.Println(err.Error())
 		return nil, fmt.Errorf("error getting profile: %w", err)
 	}
-
-	fmt.Println("Legal_Name", profile.Legal_Name)
 
 	return &profile, nil
 }
