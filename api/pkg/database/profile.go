@@ -10,7 +10,7 @@ import (
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
-// Customers
+/*
 func (d *Database) GetProfile(ctx context.Context, id string) (*model.Profile, error) {
 	fmt.Println("d GetProfile")
 
@@ -30,6 +30,7 @@ func (d *Database) GetProfile(ctx context.Context, id string) (*model.Profile, e
 
 	return &profile, nil
 }
+*/
 
 func (d *Database) GetProfileByParent(ctx context.Context, subscriber *model.Subscriber) (*model.Profile, error) {
 	fmt.Println("d GetProfileByParent")
