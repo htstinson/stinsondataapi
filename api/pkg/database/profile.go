@@ -32,8 +32,8 @@ func (d *Database) GetProfile(ctx context.Context, id string) (*model.Profile, e
 }
 */
 
-func (d *Database) GetProfileByParent(ctx context.Context, subscriber *model.Subscriber) (*model.Profile, error) {
-	fmt.Println("d GetProfileByParent")
+func (d *Database) GetProfile(ctx context.Context, subscriber *model.Subscriber) (*model.Profile, error) {
+	fmt.Println("d GetProfile")
 
 	var profile model.Profile
 

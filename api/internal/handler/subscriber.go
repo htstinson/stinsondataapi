@@ -74,7 +74,7 @@ func (h *Handler) GetSubscriberProfile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	profile, err := h.db.GetProfileByParent(ctx, subcriber)
+	profile, err := h.db.GetProfile(ctx, subcriber)
 	if err != nil {
 		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get profile")

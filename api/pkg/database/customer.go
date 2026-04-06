@@ -59,7 +59,7 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 		return customer, err
 	}
 
-	profile, err := d.GetProfileByParent(ctx, subcriber)
+	profile, err := d.GetProfile(ctx, subcriber)
 	if err != nil {
 		fmt.Println("error getting profile")
 		fmt.Println(customer.Subscriber_ID)
