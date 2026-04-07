@@ -70,10 +70,14 @@ func (d *Database) CreateProfile(ctx context.Context, subscriber model.Subscribe
 	profile.ModifiedAt = time.Now()
 
 	query := fmt.Sprintf(`INSERT INTO %s.profile (id, parent_id, created_at, modified_at, 
+		legal_name, phone, fax, email, website, linkedin, facebook, instagram, x, youtube, pinterest, 
+		google_business, yelp, glassdoor, github, nextdoor, bizapedia
+		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`, subscriber.Schema_Name)
 
-	) VALUES ($1, $2, $3, $4)`, subscriber.Schema_Name)
-
-	_, err := d.DB.ExecContext(ctx, query, profile.Id, profile.ParentId, profile.CreatedAt, profile.ModifiedAt)
+	_, err := d.DB.ExecContext(ctx, query, profile.Id, profile.ParentId, profile.CreatedAt, profile.ModifiedAt,
+		profile.Legal_Name, profile.Phone, profile.Fax, profile.Email, profile.Website, profile.LinkedIn,
+		profile.Facebook, profile.Instagram, profile.X, profile.YouTube, profile.Pinterest,
+		profile.GoogleBusiness, profile.Yelp, profile.GlassDoor, profile.Github, profile.NextDoor, profile.Bizapedia)
 	if err != nil {
 		return nil, fmt.Errorf("error creating profile: %w", err)
 	}
