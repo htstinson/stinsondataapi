@@ -83,7 +83,7 @@ type Repository interface {
 	//Subscriber
 	GetSubscriber(ctx context.Context, id string) (*model.Subscriber, error)
 	GetSubscriberByName(ctx context.Context, name string) (*model.Subscriber, error)
-	CreateSubscriber(ctx context.Context, name string) (*model.Subscriber, error)
+	CreateSubscriber(ctx context.Context, subscriber *model.Subscriber) (*model.Subscriber, error)
 	SelectSubscribers(ctx context.Context, limit, offset int) ([]model.Subscriber, error)
 	UpdateSubscriber(ctx context.Context, subscriber *model.Subscriber) error
 	DeleteSubscriber(ctx context.Context, subscriber *model.Subscriber) error

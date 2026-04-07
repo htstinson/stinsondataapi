@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
 )
 
@@ -56,23 +55,16 @@ func (d *Database) GetSubscriberByName(ctx context.Context, name string) (*model
 	return subscriber, nil
 }
 
-func (d *Database) CreateSubscriber(ctx context.Context, name string) (*model.Subscriber, error) {
+func (d *Database) CreateSubscriber(ctx context.Context, subscriber *model.Subscriber) (*model.Subscriber, error) {
 	fmt.Println("d CreateSubscriber")
 
-	subscriber := &model.Subscriber{
-		Id:        uuid.New().String(),
-		Name:      name,
-		CreatedAt: time.Now(),
-	}
-
-	query := `
-        INSERT INTO subscribers (id, name, created_at) VALUES ($1, $2, $3)
-    `
+	query := `INSERT INTO subscribers (id, name, created_at, schema_name) VALUES ($1, $2, $3, $4)`
 
 	_, err := d.DB.ExecContext(ctx, query,
 		subscriber.Id,
 		subscriber.Name,
-		subscriber.CreatedAt,
+		time.Now(),
+		subscriber.Schema_Name,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("error creating subscriber: %w", err)

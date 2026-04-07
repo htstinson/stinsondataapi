@@ -30,7 +30,7 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 	subscriber.Schema_Name = schema_name
 
 	ctx := r.Context()
-	newsubscriber, err := h.db.CreateSubscriber(ctx, subscriber.Name)
+	newsubscriber, err := h.db.CreateSubscriber(ctx, subscriber)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to create subscriber")
 		return
