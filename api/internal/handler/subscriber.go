@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
@@ -23,6 +24,7 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	subscriber.Id = uuid.New().String()
 	schema_name := fmt.Sprintf("%s_", strings.ToLower(subscriber.Name[:3]))
 	schema_name += strings.ReplaceAll(subscriber.Id, "-", "_")
 	subscriber.Schema_Name = schema_name
