@@ -23,6 +23,10 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	schema_name := fmt.Sprintf("%s_", strings.ToLower(subscriber.Name[:3]))
+	schema_name += strings.ReplaceAll(subscriber.Id, "-", "_")
+	subscriber.Schema_Name = schema_name
+
 	ctx := r.Context()
 	newsubscriber, err := h.db.CreateSubscriber(ctx, subscriber.Name)
 	if err != nil {
@@ -31,10 +35,6 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := h.db.(*database.Database).DB
-
-	schema_name := fmt.Sprintf("%s_", strings.ToLower(newsubscriber.Name[:3]))
-
-	schema_name += strings.ReplaceAll(newsubscriber.Id, "-", "_")
 
 	schema := schema.Schema{
 		DB:             db,
