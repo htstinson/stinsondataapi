@@ -50,6 +50,7 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 	}
 
 	profile := model.Profile{
+		ParentId:   subscriber.Id,
 		Legal_Name: &newsubscriber.Name,
 	}
 
