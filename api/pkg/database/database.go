@@ -89,11 +89,18 @@ type Repository interface {
 	DeleteSubscriber(ctx context.Context, subscriber *model.Subscriber) error
 
 	SelectUserRoles(ctx context.Context, limit, offset int) ([]model.User, error)
+
 	SelectSubscriberAddresses(ctx context.Context, subscriber model.Subscriber, limit int, offset int, sort string, order string) (*[]model.Address, int, error)
 	UpdateSubscriberAddress(ctx context.Context, subscriber *model.Subscriber, address model.Address) error
 	CreateSubscriberAddress(ctx context.Context, subscriber *model.Subscriber, address model.Address) error
 	GetSubscriberAddress(ctx context.Context, subscriber_schema_name string, address_id string) (*model.Address, error)
 	DeleteSubscriberAddress(ctx context.Context, subscriber_schema_name string, address_id string) error
+
+	SelectSubscriberBackgrounds(ctx context.Context, subscriber model.Subscriber, limit int, offset int, sort string, order string) (*[]model.Background, int, error)
+	UpdateSubscriberBackground(ctx context.Context, subscriber *model.Subscriber, background model.Background) error
+	CreateSubscriberBackground(ctx context.Context, subscriber *model.Subscriber, background model.Background) error
+	GetSubscriberBackground(ctx context.Context, subscriber_schema_name string, background_id string) (*model.Background, error)
+	DeleteSubscriberBackground(ctx context.Context, subscriber_schema_name string, background_id string) error
 
 	//Subsriber_Item
 	SelectSubscriberItemView(ctx context.Context, subscriber_id string, limit int, offset int) ([]model.Subscriber_Item_View, error)

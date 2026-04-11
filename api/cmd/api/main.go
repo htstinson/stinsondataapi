@@ -194,6 +194,12 @@ func main() {
 	protected.HandleFunc("/subscriber/address/g", h.GetSubscriberAddress).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscriber/address/d/{subscriber_id}/{address_id}", h.DeleteSubscriberAddress).Methods("DELETE", "OPTIONS")
 
+	protected.HandleFunc("/subscriber/backgrounds", h.SelectSubscriberBackgrounds).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/subscriber/background", h.UpdateSubscriberBackground).Methods("PUT", "OPTIONS")
+	protected.HandleFunc("/subscriber/background", h.CreateSubscriberBackground).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/subscriber/background/g", h.GetSubscriberBackground).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/subscriber/background/d/{subscriber_id}/{background_id}", h.DeleteSubscriberBackground).Methods("DELETE", "OPTIONS")
+
 	// Subscriber - Customer - Contacts
 	protected.HandleFunc("/subscriber/customer/contacts", h.SelectContacts).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscriber/customer/contact", h.CreateContact).Methods("POST", "OPTIONS")
