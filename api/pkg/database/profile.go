@@ -35,7 +35,7 @@ func (d *Database) GetProfile(ctx context.Context, id string) (*model.Profile, e
 func (d *Database) GetProfile(ctx context.Context, subscriber *model.Subscriber) (*model.Profile, error) {
 	fmt.Println("d GetProfile")
 
-	fmt.Println("subscriber.Id", subscriber.Id)
+	fmt.Println("subscriber.Id", &subscriber.Id)
 
 	var profile model.Profile
 
@@ -43,7 +43,7 @@ func (d *Database) GetProfile(ctx context.Context, subscriber *model.Subscriber)
 
 	err := d.DB.QueryRowContext(ctx,
 		query,
-		subscriber.Id,
+		&subscriber.Id,
 	).Scan(&profile.Id, &profile.ParentId, &profile.CreatedAt, &profile.ModifiedAt,
 		&profile.Legal_Name, &profile.Phone, &profile.Fax, &profile.Email, &profile.Website, &profile.LinkedIn, &profile.Facebook,
 		&profile.Instagram, &profile.X, &profile.YouTube, &profile.Pinterest, &profile.GoogleBusiness,
