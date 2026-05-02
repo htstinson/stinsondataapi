@@ -80,15 +80,6 @@ func (d *Database) CreateProfile(ctx context.Context, subscriber model.Subscribe
 		return nil, fmt.Errorf("error creating profile: %w", err)
 	}
 
-	/*
-		query = `UPDATE common.subscribers SET schema_name = $1 WHERE id = $2`
-
-		_, err = d.DB.ExecContext(ctx, query, subscriber.Schema_Name, subscriber.Id)
-		if err != nil {
-			return nil, fmt.Errorf("error updating parent: %w", err)
-		}
-	*/
-
 	return &profile, nil
 
 }

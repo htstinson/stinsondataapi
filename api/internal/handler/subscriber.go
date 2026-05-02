@@ -61,7 +61,7 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 	}
 
 	customer := model.Customer{
-		Profile_Id:    profile.Subscriber_Id,
+		Profile_Id:    profile.Id,
 		Subscriber_Id: newsubscriber.Id,
 		Name:          "Individual Contacts",
 		Schema_Name:   newsubscriber.Schema_Name,
