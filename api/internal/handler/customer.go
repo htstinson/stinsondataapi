@@ -110,11 +110,13 @@ func (h *Handler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 	}
 
+	profile, err := h.db.GetProfile(ctx, subcriber)
+
 	customer.Id = uuid.New().String()
 	customer.Subscriber_Id = subcriber.Id
 	customer.Schema_Name = subcriber.Schema_Name
 
-	customer, err = h.db.CreateCustomer(ctx, customer)
+	customer, err = h.db.CreateCustomer(ctx, customer, profile)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to create customer")
 		return

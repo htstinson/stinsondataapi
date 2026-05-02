@@ -50,7 +50,7 @@ func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscri
 	return customers, total, nil
 }
 
-func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error) {
+func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer, profile *model.Profile) (*model.Customer, error) {
 	fmt.Println("d CreateCustomer")
 
 	subcriber, err := d.GetSubscriber(ctx, customer.Subscriber_Id)
@@ -60,13 +60,6 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 	}
 
 	subcriber.Id = customer.Subscriber_Id
-
-	profile, err := d.GetProfile(ctx, subcriber)
-	if err != nil {
-		fmt.Println("error getting profile")
-		fmt.Println(customer.Subscriber_Id)
-		return customer, err
-	}
 
 	query := fmt.Sprintf(`INSERT INTO %s.customers (id, name, parent_id) VALUES ($1, $2, $3)`, customer.Schema_Name)
 
