@@ -35,6 +35,8 @@ func (d *Database) GetProfile(ctx context.Context, id string) (*model.Profile, e
 func (d *Database) GetProfile(ctx context.Context, subscriber *model.Subscriber) (*model.Profile, error) {
 	fmt.Println("d GetProfile")
 
+	fmt.Println("subscriber.Id", subscriber.Id)
+
 	var profile model.Profile
 
 	query := fmt.Sprintf(`SELECT id, parent_id, created_at, modified_at,
