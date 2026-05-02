@@ -37,7 +37,9 @@ func (d *Database) GetProfile(ctx context.Context, subscriber *model.Subscriber)
 
 	var profile model.Profile
 
-	query := fmt.Sprintf(`SELECT id, parent_id, created_at, modified_at, legal_name, phone, fax, website, email, linkedin, facebook, instagram, x, youtube, pinterest, google_business, yelp, glassdoor, github, nextdoor, bizapedia FROM %s.profile WHERE parent_id = $1`, subscriber.Schema_Name)
+	query := fmt.Sprintf(`SELECT id, parent_id, created_at, modified_at, legal_name, phone, fax, 
+		website, email, linkedin, facebook, instagram, x, youtube, pinterest, google_business, 
+		yelp, glassdoor, github, nextdoor, bizapedia FROM %s.profile WHERE parent_id = $1`, subscriber.Schema_Name)
 
 	err := d.DB.QueryRowContext(ctx,
 		query,
