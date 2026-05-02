@@ -44,6 +44,8 @@ func (d *Database) GetProfile(ctx context.Context, subscriber *model.Subscriber)
 		yelp, glassdoor, github, nextdoor, bizapedia 
 		FROM %s.profile WHERE parent_id = $1`, subscriber.Schema_Name)
 
+	fmt.Println(query)
+
 	err := d.DB.QueryRowContext(ctx,
 		query,
 		subscriber.Id,
