@@ -77,6 +77,8 @@ func (h *Handler) GetSubscriberBackground(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	fmt.Println("schema", subscriber.Schema_Name)
+	fmt.Println("background.Id", background.Id)
 	background, err = h.db.GetSubscriberBackground(ctx, subscriber.Schema_Name, background.Id)
 	if err != nil {
 		fmt.Println(err.Error())
