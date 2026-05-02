@@ -104,14 +104,14 @@ func (h *Handler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	ctx := r.Context()
 
-	subcriber, err := h.db.GetSubscriber(ctx, customer.Subscriber_ID)
+	subcriber, err := h.db.GetSubscriber(ctx, customer.Subscriber_Id)
 	if err != nil {
 		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 	}
 
 	customer.Id = uuid.New().String()
-	customer.Subscriber_ID = subcriber.Id
+	customer.Subscriber_Id = subcriber.Id
 	customer.Schema_Name = subcriber.Schema_Name
 
 	customer, err = h.db.CreateCustomer(ctx, customer)
@@ -139,7 +139,7 @@ func (h *Handler) DeleteCustomer(w http.ResponseWriter, r *http.Request) {
 
 	var customer = model.Customer{
 		Id:            id,
-		Subscriber_ID: subscriber_id,
+		Subscriber_Id: subscriber_id,
 		Schema_Name:   subscriber.Schema_Name,
 	}
 

@@ -43,7 +43,7 @@ func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscri
 		}
 
 		customer.Schema_Name = subscriber.Schema_Name
-		customer.Subscriber_ID = subscriber.Id
+		customer.Subscriber_Id = subscriber.Id
 
 		customers = append(customers, customer)
 	}
@@ -53,18 +53,18 @@ func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscri
 func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer) (*model.Customer, error) {
 	fmt.Println("d CreateCustomer")
 
-	subcriber, err := d.GetSubscriber(ctx, customer.Subscriber_ID)
+	subcriber, err := d.GetSubscriber(ctx, customer.Subscriber_Id)
 	if err != nil {
 		fmt.Println(err.Error())
 		return customer, err
 	}
 
-	subcriber.Id = customer.Subscriber_ID
+	subcriber.Id = customer.Subscriber_Id
 
 	profile, err := d.GetProfile(ctx, subcriber)
 	if err != nil {
 		fmt.Println("error getting profile")
-		fmt.Println(customer.Subscriber_ID)
+		fmt.Println(customer.Subscriber_Id)
 		return customer, err
 	}
 
@@ -92,7 +92,7 @@ func (d *Database) GetCustomer(ctx context.Context, temp_customer model.Customer
 
 	customer := &model.Customer{
 		Id:            temp_customer.Id,
-		Subscriber_ID: temp_customer.Subscriber_ID,
+		Subscriber_Id: temp_customer.Subscriber_Id,
 		Schema_Name:   temp_customer.Schema_Name,
 	}
 
