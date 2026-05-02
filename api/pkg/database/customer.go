@@ -59,10 +59,7 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer)
 		return customer, err
 	}
 
-	fmt.Println("subscriber.Id", subcriber.Id)
-	fmt.Println("subscriber.Name", subcriber.Name)
-	fmt.Println("schema_name", subcriber.Schema_Name)
-	fmt.Println("customer.subscriber.id", customer.Subscriber_ID)
+	subcriber.Id = customer.Subscriber_ID
 
 	profile, err := d.GetProfile(ctx, subcriber)
 	if err != nil {
