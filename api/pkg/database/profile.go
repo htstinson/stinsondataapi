@@ -64,7 +64,7 @@ func (d *Database) CreateProfile(ctx context.Context, subscriber model.Subscribe
 	fmt.Println("d CreateProfile")
 
 	profile.Id = uuid.New().String()
-	profile.ParentId = subscriber.Id
+	//profile.ParentId = subscriber.Id
 	profile.CreatedAt = time.Now()
 	profile.ModifiedAt = time.Now()
 
