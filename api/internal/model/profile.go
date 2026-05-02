@@ -5,7 +5,7 @@ import "time"
 // Customer
 type Profile struct {
 	Id             string    `json:"id"`
-	ParentId       string    `json:"parentid"`
+	Subscriber_Id  string    `json:"parentid"`
 	Legal_Name     *string   `json:"legal_name"`
 	Phone          *string   `json:"phone"`
 	Fax            *string   `json:"fax"`

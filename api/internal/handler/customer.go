@@ -104,17 +104,17 @@ func (h *Handler) CreateCustomer(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	ctx := r.Context()
 
-	subcriber, err := h.db.GetSubscriber(ctx, customer.Subscriber_Id)
+	subscriber, err := h.db.GetSubscriber(ctx, customer.Subscriber_Id)
 	if err != nil {
 		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 	}
 
-	profile, err := h.db.GetProfile(ctx, subcriber)
+	profile, err := h.db.GetProfile(ctx, subscriber)
 
 	customer.Id = uuid.New().String()
-	customer.Subscriber_Id = subcriber.Id
-	customer.Schema_Name = subcriber.Schema_Name
+	customer.Subscriber_Id = subscriber.Id
+	customer.Schema_Name = subscriber.Schema_Name
 
 	customer, err = h.db.CreateCustomer(ctx, customer, profile)
 	if err != nil {

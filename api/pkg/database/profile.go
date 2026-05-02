@@ -44,7 +44,7 @@ func (d *Database) GetProfile(ctx context.Context, subscriber *model.Subscriber)
 	err := d.DB.QueryRowContext(ctx,
 		query,
 		subscriber.Id,
-	).Scan(&profile.Id, &profile.ParentId, &profile.CreatedAt, &profile.ModifiedAt,
+	).Scan(&profile.Id, &profile.Subscriber_Id, &profile.CreatedAt, &profile.ModifiedAt,
 		&profile.Legal_Name, &profile.Phone, &profile.Fax, &profile.Email, &profile.Website, &profile.LinkedIn, &profile.Facebook,
 		&profile.Instagram, &profile.X, &profile.YouTube, &profile.Pinterest, &profile.GoogleBusiness,
 		&profile.Yelp, &profile.GlassDoor, &profile.Github, &profile.NextDoor, &profile.Bizapedia)
@@ -73,7 +73,7 @@ func (d *Database) CreateProfile(ctx context.Context, subscriber model.Subscribe
 		google_business, yelp, glassdoor, github, nextdoor, bizapedia
 		) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21)`, subscriber.Schema_Name)
 
-	_, err := d.DB.ExecContext(ctx, query, profile.Id, profile.ParentId, profile.CreatedAt, profile.ModifiedAt,
+	_, err := d.DB.ExecContext(ctx, query, profile.Id, profile.Subscriber_Id, profile.CreatedAt, profile.ModifiedAt,
 		profile.Legal_Name, profile.Phone, profile.Fax, profile.Email, profile.Website, profile.LinkedIn,
 		profile.Facebook, profile.Instagram, profile.X, profile.YouTube, profile.Pinterest,
 		profile.GoogleBusiness, profile.Yelp, profile.GlassDoor, profile.Github, profile.NextDoor, profile.Bizapedia)
@@ -109,7 +109,7 @@ func (d *Database) SelectProfiles(ctx context.Context, limit, offset int) ([]mod
 	var profiles []model.Profile
 	for rows.Next() {
 		var profile model.Profile
-		if err := rows.Scan(&profile.Id, &profile.ParentId, &profile.CreatedAt, profile.ModifiedAt); err != nil {
+		if err := rows.Scan(&profile.Id, &profile.Subscriber_Id, &profile.CreatedAt, profile.ModifiedAt); err != nil {
 			fmt.Println(err.Error())
 			return nil, fmt.Errorf("error scanning profile: %w", err)
 		}
@@ -124,7 +124,7 @@ func (d *Database) UpdateProfile(ctx context.Context, profile *model.Profile) er
 
 	query := `UPDATE profiles SET parent_id = $1 WHERE id = $2`
 
-	_, err := d.DB.ExecContext(ctx, query, profile.ParentId, profile.Id)
+	_, err := d.DB.ExecContext(ctx, query, profile.Subscriber_Id, profile.Id)
 
 	return err
 }

@@ -51,8 +51,8 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 	}
 
 	profile := model.Profile{
-		ParentId:   subscriber.Id,
-		Legal_Name: &newsubscriber.Name,
+		Subscriber_Id: subscriber.Id,
+		Legal_Name:    &newsubscriber.Name,
 	}
 
 	_, err = h.db.CreateProfile(ctx, *newsubscriber, profile)
@@ -61,7 +61,7 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 	}
 
 	customer := model.Customer{
-		Profile_Id:    profile.ParentId,
+		Profile_Id:    profile.Subscriber_Id,
 		Subscriber_Id: newsubscriber.Id,
 		Name:          "Individual Contacts",
 		Schema_Name:   newsubscriber.Schema_Name,
