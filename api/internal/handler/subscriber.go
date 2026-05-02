@@ -17,6 +17,7 @@ import (
 // Subscriber - Create, Update, Delete, Get, List
 
 func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h CreateSubscriber")
 	var subscriber *model.Subscriber
 	if err := json.NewDecoder(r.Body).Decode(&subscriber); err != nil {
 		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
