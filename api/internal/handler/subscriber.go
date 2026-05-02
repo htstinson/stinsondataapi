@@ -59,6 +59,14 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
+	customer := model.Customer{
+		Subscriber_ID: profile.ParentId,
+		Name:          "Individual Contacts",
+		Schema_Name:   schema.ToSchemaName,
+	}
+
+	h.db.CreateCustomer(ctx, &customer)
+
 	common.RespondJSON(w, http.StatusCreated, newsubscriber)
 }
 
