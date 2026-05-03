@@ -54,6 +54,10 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer,
 	fmt.Println("d CreateCustomer")
 
 	query := fmt.Sprintf(`INSERT INTO %s.customers (id, name, parent_id) VALUES ($1, $2, $3)`, customer.Schema_Name)
+	fmt.Println(query)
+	fmt.Println("customer.Id", customer.Id)
+	fmt.Println("customer.Name", customer.Name)
+	fmt.Println("profile.Id", profile.Id)
 
 	_, err := d.DB.ExecContext(ctx, query,
 		customer.Id,
