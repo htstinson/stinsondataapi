@@ -61,6 +61,7 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 	}
 
 	customer := model.Customer{
+		Id:            uuid.New().String(),
 		Profile_Id:    profile.Id,
 		Subscriber_Id: newsubscriber.Id,
 		Name:          "Individual Contacts",
