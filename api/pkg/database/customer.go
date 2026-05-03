@@ -50,7 +50,7 @@ func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscri
 	return customers, total, nil
 }
 
-func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer, profile *model.Profile) (*model.Customer, error) {
+func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer, profile *model.Profile, subscriber *model.Subscriber) (*model.Customer, error) {
 	fmt.Println("d CreateCustomer")
 
 	subcriber, err := d.GetSubscriber(ctx, customer.Subscriber_Id)
