@@ -75,7 +75,7 @@ type Repository interface {
 
 	// Customer
 	SelectCustomers(ctx context.Context, subscriber model.Subscriber, limit int, offset int, sort string, order string) ([]model.Customer, int, error)
-	CreateCustomer(ctx context.Context, customer model.Customer, profile *model.Profile, subscriber *model.Subscriber) (*model.Customer, error)
+	CreateCustomer(ctx context.Context, customer *model.Customer, profile *model.Profile, subscriber *model.Subscriber) (*model.Customer, error)
 	GetCustomer(ctx context.Context, customer model.Customer) (*model.Customer, error)
 	DeleteCustomer(ctx context.Context, customer *model.Customer) error
 	UpdateCustomer(ctx context.Context, customer *model.Customer) error
