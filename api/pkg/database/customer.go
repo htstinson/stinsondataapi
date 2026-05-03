@@ -53,17 +53,9 @@ func (d *Database) SelectCustomers(ctx context.Context, subscriber model.Subscri
 func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer, profile *model.Profile, subscriber *model.Subscriber) (*model.Customer, error) {
 	fmt.Println("d CreateCustomer")
 
-	subcriber, err := d.GetSubscriber(ctx, customer.Subscriber_Id)
-	if err != nil {
-		fmt.Println(err.Error())
-		return customer, err
-	}
-
-	subcriber.Id = customer.Subscriber_Id
-
 	query := fmt.Sprintf(`INSERT INTO %s.customers (id, name, parent_id) VALUES ($1, $2, $3)`, customer.Schema_Name)
 
-	_, err = d.DB.ExecContext(ctx, query,
+	_, err := d.DB.ExecContext(ctx, query,
 		customer.Id,
 		customer.Name,
 		profile.Id,
