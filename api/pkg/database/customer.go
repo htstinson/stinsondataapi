@@ -70,7 +70,7 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer,
 		return nil, fmt.Errorf("error creating customer: %w", err)
 	}
 
-	return &customer, nil
+	return customer, nil
 
 }
 
