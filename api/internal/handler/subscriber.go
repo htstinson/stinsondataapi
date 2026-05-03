@@ -50,12 +50,12 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	profile := model.Profile{
+	newprofile := model.Profile{
 		Subscriber_Id: subscriber.Id,
 		Legal_Name:    &newsubscriber.Name,
 	}
 
-	_, err = h.db.CreateProfile(ctx, *newsubscriber, profile)
+	profile, err := h.db.CreateProfile(ctx, *newsubscriber, newprofile)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
