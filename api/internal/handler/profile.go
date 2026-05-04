@@ -51,6 +51,8 @@ func (h *Handler) UpdateSubscriberProfile(w http.ResponseWriter, r *http.Request
 	}
 	defer r.Body.Close()
 
+	fmt.Println("54", profile.Id, profile.Legal_Name, profile.LinkedIn)
+
 	var subscriber, err = h.db.GetSubscriber(ctx, profile.Subscriber_Id)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
