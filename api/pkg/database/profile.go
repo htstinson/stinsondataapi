@@ -113,13 +113,17 @@ func (d *Database) SelectProfiles(ctx context.Context, limit, offset int) ([]mod
 
 func (d *Database) UpdateProfile(ctx context.Context, subscriber *model.Subscriber, profile *model.Profile) error {
 	fmt.Println("d UpdateProfile")
+	/*
+		query := fmt.Sprintf(`UPDATE %s.profile SET parent_id=$1, legal_name=$2, phone=$3, fax=$4, email=$5, website=$6, linkedin=$7, facebook=$8, instagram=$9, x=$10,
+			youtube=$11, pinterest=$12, google_business=$13, yelp=$14, glassdoor=$15, github=$16, nextdoor=$17, bizapedia=$18 WHERE id=$19`, subscriber.Schema_Name)
 
-	query := fmt.Sprintf(`UPDATE %s.profile SET parent_id=$1, legal_name=$2, phone=$3, fax=$4, email=$5, website=$6, linkedin=$7, facebook=$8, instagram=$9, x=$10, 
-		youtube=$11, pinterest=$12, google_business=$13, yelp=$14, glassdoor=$15, github=$16, nextdoor=$17, bizapedia=$18 WHERE id=$19`, subscriber.Schema_Name)
+		_, err := d.DB.ExecContext(ctx, query,
+			profile.Subscriber_Id, profile.Legal_Name, profile.Phone, profile.Fax, profile.Email, profile.Website, profile.LinkedIn, profile.Facebook, profile.Instagram, profile.X,
+			profile.YouTube, profile.Pinterest, profile.GoogleBusiness, profile.Yelp, profile.GlassDoor, profile.Github, profile.NextDoor, profile.Bizapedia, profile.Id)
+	*/
+	query := fmt.Sprintf(`UPDATE %s.profile SET parent_id=$2, legal_name=$3 WHERE id=$1`, subscriber.Schema_Name)
 
-	_, err := d.DB.ExecContext(ctx, query,
-		profile.Subscriber_Id, profile.Legal_Name, profile.Phone, profile.Fax, profile.Email, profile.Website, profile.LinkedIn, profile.Facebook, profile.Instagram, profile.X,
-		profile.YouTube, profile.Pinterest, profile.GoogleBusiness, profile.Yelp, profile.GlassDoor, profile.Github, profile.NextDoor, profile.Bizapedia, profile.Id)
+	_, err := d.DB.ExecContext(ctx, query, profile.Id, profile.Subscriber_Id, profile.Legal_Name)
 
 	return err
 }
