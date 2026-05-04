@@ -61,7 +61,6 @@ func (d *Database) CreateCustomer(ctx context.Context, customer *model.Customer,
 	fmt.Println("subscriber.Id", subscriber.Id)
 	fmt.Println("subscriber.Name", subscriber.Name)
 	fmt.Println("subscriber.Schema_Name", subscriber.Schema_Name)
-	fmt.Println("subcriber.Subscriber_Id", subscriber.Subscriber_Id)
 
 	_, err := d.DB.ExecContext(ctx, query,
 		customer.Id,
