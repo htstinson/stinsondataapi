@@ -39,9 +39,7 @@ func (h *Handler) GetSubscriberProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateSubscriberProfile(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h UpdateProfile")
-	//vars := mux.Vars(r)
-	//id := vars["id"]
+	fmt.Println("h UpdateSubscriberProfile")
 
 	ctx := r.Context()
 
@@ -70,6 +68,8 @@ func (h *Handler) UpdateSubscriberProfile(w http.ResponseWriter, r *http.Request
 		common.RespondError(w, http.StatusNotFound, "Error updating subscriber")
 		return
 	}
+
+	fmt.Println(p.Id, p.Legal_Name, p.LinkedIn)
 
 	common.RespondJSON(w, http.StatusOK, subscriber)
 }
