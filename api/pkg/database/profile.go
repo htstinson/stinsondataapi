@@ -127,7 +127,7 @@ func (d *Database) UpdateProfile(ctx context.Context, subscriber *model.Subscrib
 		fmt.Println("subscriber is nil")
 	}
 
-	_, err = fmt.Println(profile.Legal_Name)
+	_, err = fmt.Println(*profile.Legal_Name)
 	if err != nil {
 		fmt.Println("Profile is nil")
 	}

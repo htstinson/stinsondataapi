@@ -42,7 +42,7 @@ func (h *Handler) UpdateSubscriberProfile(w http.ResponseWriter, r *http.Request
 	fmt.Println("h UpdateSubscriberProfile")
 
 	ctx := r.Context()
-	fmt.Println(1)
+
 	var profile model.Profile
 	if err := json.NewDecoder(r.Body).Decode(&profile); err != nil {
 		fmt.Println(1, err.Error())
@@ -50,20 +50,18 @@ func (h *Handler) UpdateSubscriberProfile(w http.ResponseWriter, r *http.Request
 		return
 	}
 	defer r.Body.Close()
-	fmt.Println(2)
+
 	var subscriber, err = h.db.GetSubscriber(ctx, profile.Subscriber_Id)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
 		return
 	}
-	fmt.Println(3)
+
 	p, err := h.db.GetProfile(ctx, subscriber)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get profile")
 		return
 	}
-
-	fmt.Println(4)
 
 	err = h.db.UpdateProfile(ctx, subscriber, p)
 	if err != nil {
@@ -71,6 +69,6 @@ func (h *Handler) UpdateSubscriberProfile(w http.ResponseWriter, r *http.Request
 		common.RespondError(w, http.StatusNotFound, "Error updating subscriber")
 		return
 	}
-	fmt.Println(5)
+
 	common.RespondJSON(w, http.StatusOK, subscriber)
 }
