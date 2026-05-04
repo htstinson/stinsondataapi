@@ -187,6 +187,7 @@ func main() {
 
 	// Subscriber - Profile
 	protected.HandleFunc("/subscriber/profile", h.GetSubscriberProfile).Methods("POST", "OPTIONS")
+	protected.HandleFunc("/subscriber/profile", h.UpdateSubscriberProfile).Methods("PUT", "OPTIONS")
 
 	protected.HandleFunc("/subscriber/addresses", h.SelectSubscriberAddresses).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/subscriber/address", h.UpdateSubscriberAddress).Methods("PUT", "OPTIONS")

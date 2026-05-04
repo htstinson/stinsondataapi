@@ -37,3 +37,39 @@ func (h *Handler) GetSubscriberProfile(w http.ResponseWriter, r *http.Request) {
 
 	common.RespondJSON(w, http.StatusOK, profile)
 }
+
+func (h *Handler) UpdateSubscriberProfile(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h UpdateProfile")
+	//vars := mux.Vars(r)
+	//id := vars["id"]
+
+	ctx := r.Context()
+
+	var profile model.Profile
+	if err := json.NewDecoder(r.Body).Decode(&profile); err != nil {
+		fmt.Println(1, err.Error())
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
+
+	var subscriber, err = h.db.GetSubscriber(ctx, profile.Subscriber_Id)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get subscriber")
+		return
+	}
+
+	p, err := h.db.GetProfile(ctx, subscriber)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get profile")
+		return
+	}
+
+	err = h.db.UpdateProfile(ctx, p)
+	if err != nil {
+		common.RespondError(w, http.StatusNotFound, "Error updating subscriber")
+		return
+	}
+
+	common.RespondJSON(w, http.StatusOK, subscriber)
+}

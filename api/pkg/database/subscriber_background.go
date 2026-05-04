@@ -12,6 +12,8 @@ import (
 func (d *Database) SelectSubscriberBackgrounds(ctx context.Context, subscriber model.Subscriber,
 	limit int, offset int, sort string, order string) (*[]model.Background, int, error) {
 
+	fmt.Println("d SelectSubsriberBackgrounds")
+
 	if order == "" {
 		order = "asc"
 	}
