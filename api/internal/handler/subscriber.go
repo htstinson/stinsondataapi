@@ -60,6 +60,8 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
+	newsubscriber.Profile = profile
+
 	customer := model.Customer{
 		Id:            uuid.New().String(),
 		Profile_Id:    profile.Id,
@@ -68,7 +70,7 @@ func (h *Handler) CreateSubscriber(w http.ResponseWriter, r *http.Request) {
 		Schema_Name:   newsubscriber.Schema_Name,
 	}
 
-	h.db.CreateCustomer(ctx, &customer, profile, newsubscriber)
+	h.db.CreateCustomer(ctx, &customer, newsubscriber)
 
 	common.RespondJSON(w, http.StatusCreated, newsubscriber)
 }

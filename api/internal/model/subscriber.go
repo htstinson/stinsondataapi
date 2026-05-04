@@ -1,6 +1,8 @@
 package model
 
-import "time"
+import (
+	"time"
+)
 
 // Subscriber
 type Subscriber struct {
@@ -8,5 +10,5 @@ type Subscriber struct {
 	Name        string    `json:"name"`
 	CreatedAt   time.Time `json:"created_at"`
 	Schema_Name string    `json:"schema_name"`
-	//Subscriber_Id string    `json:"subscriber_id"`
+	Profile     *Profile  `json:"profile"`
 }
