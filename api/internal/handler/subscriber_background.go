@@ -38,6 +38,8 @@ func (h *Handler) SelectSubscriberBackgrounds(w http.ResponseWriter, r *http.Req
 
 	ctx := r.Context()
 
+	fmt.Println("subscriber.Id", subscriber.Id)
+
 	subscriber, err := h.db.GetSubscriber(ctx, subscriber.Id)
 	if err != nil {
 		fmt.Println(err.Error())
