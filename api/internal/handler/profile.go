@@ -59,6 +59,8 @@ func (h *Handler) UpdateSubscriberProfile(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	fmt.Println("schema_name", subscriber.Schema_Name)
+
 	p, err := h.db.GetProfile(ctx, subscriber)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get profile")
