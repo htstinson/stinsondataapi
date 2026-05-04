@@ -121,6 +121,19 @@ func (d *Database) UpdateProfile(ctx context.Context, subscriber *model.Subscrib
 			profile.Subscriber_Id, profile.Legal_Name, profile.Phone, profile.Fax, profile.Email, profile.Website, profile.LinkedIn, profile.Facebook, profile.Instagram, profile.X,
 			profile.YouTube, profile.Pinterest, profile.GoogleBusiness, profile.Yelp, profile.GlassDoor, profile.Github, profile.NextDoor, profile.Bizapedia, profile.Id)
 	*/
+
+	if subscriber != nil {
+		fmt.Println(subscriber.Schema_Name)
+	} else {
+		fmt.Println("subscriber is nil")
+	}
+
+	if profile != nil {
+		fmt.Println(profile.Legal_Name)
+	} else {
+		fmt.Println("Profile is nil")
+	}
+
 	query := fmt.Sprintf(`UPDATE %s.profile SET parent_id=$2, legal_name=$3 WHERE id=$1`, subscriber.Schema_Name)
 
 	_, err := d.DB.ExecContext(ctx, query, profile.Id, profile.Subscriber_Id, *profile.Legal_Name)
