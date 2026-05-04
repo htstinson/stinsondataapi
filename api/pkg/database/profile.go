@@ -123,7 +123,7 @@ func (d *Database) UpdateProfile(ctx context.Context, subscriber *model.Subscrib
 	*/
 	query := fmt.Sprintf(`UPDATE %s.profile SET parent_id=$2, legal_name=$3 WHERE id=$1`, subscriber.Schema_Name)
 
-	_, err := d.DB.ExecContext(ctx, query, profile.Id, profile.Subscriber_Id, profile.Legal_Name)
+	_, err := d.DB.ExecContext(ctx, query, profile.Id, profile.Subscriber_Id, *profile.Legal_Name)
 
 	return err
 }
