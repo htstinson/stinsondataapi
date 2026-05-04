@@ -63,7 +63,7 @@ func (h *Handler) UpdateSubscriberProfile(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	err = h.db.UpdateProfile(ctx, subscriber, p)
+	err = h.db.UpdateProfile(ctx, subscriber, &profile)
 	if err != nil {
 		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusNotFound, "Error updating subscriber")
