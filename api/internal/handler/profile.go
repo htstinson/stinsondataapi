@@ -67,7 +67,7 @@ func (h *Handler) UpdateSubscriberProfile(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	fmt.Println("p.Id", p.Id, "p.Legal_Name", p.Legal_Name)
+	fmt.Println("p.Id", p.Id, "p.Legal_Name", *p.Legal_Name, "p.LinkedIn", *p.LinkedIn)
 
 	err = h.db.UpdateProfile(ctx, p)
 	if err != nil {
