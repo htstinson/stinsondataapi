@@ -111,12 +111,14 @@ func (d *Database) SelectProfiles(ctx context.Context, limit, offset int) ([]mod
 	return profiles, nil
 }
 
-func (d *Database) UpdateProfile(ctx context.Context, profile *model.Profile) error {
+func (d *Database) UpdateProfile(ctx context.Context, subscriber *model.Subscriber, profile *model.Profile) error {
 	fmt.Println("d UpdateProfile")
 
-	query := `UPDATE profiles SET parent_id = $1 WHERE id = $2`
+	query := fmt.Sprintf(`UPDATE profiles SET (parent_id, legal_name) values ($1, $2) WHERE id = $3`, subscriber.Schema_Name)
 
-	_, err := d.DB.ExecContext(ctx, query, profile.Subscriber_Id, profile.Id)
+	_, err := d.DB.ExecContext(ctx, query,
+		profile.Subscriber_Id, profile.Legal_Name,
+		profile.Id)
 
 	return err
 }

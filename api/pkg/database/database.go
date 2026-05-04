@@ -143,7 +143,7 @@ type Repository interface {
 	GetProfile(ctx context.Context, subscriber *model.Subscriber) (*model.Profile, error)
 	CreateProfile(ctx context.Context, subscriber model.Subscriber, profile model.Profile) (*model.Profile, error)
 	SelectProfiles(ctx context.Context, limit, offset int) ([]model.Profile, error)
-	UpdateProfile(ctx context.Context, profile *model.Profile) error
+	UpdateProfile(ctx context.Context, subscriber *model.Subscriber, profile *model.Profile) error
 	DeleteProfile(ctx context.Context, id string) error
 
 	// Contacts
