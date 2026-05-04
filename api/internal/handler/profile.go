@@ -57,7 +57,7 @@ func (h *Handler) UpdateSubscriberProfile(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	p, err := h.db.GetProfile(ctx, subscriber)
+	_, err = h.db.GetProfile(ctx, subscriber)
 	if err != nil {
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get profile")
 		return
