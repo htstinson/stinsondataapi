@@ -92,7 +92,7 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("Login user", user.IP_address)
+	fmt.Println("Login user.IP", user.IP_address)
 
 	// Check password
 	if err := bcrypt.CompareHashAndPassword(

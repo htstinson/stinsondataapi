@@ -25,7 +25,7 @@ func (d *Database) SelectUsers(ctx context.Context, limit int, offset int, sort 
 		sort = "username"
 	}
 
-	query := fmt.Sprintf(`SELECT id, username, ip_address, COUNT(*) OVER() AS total FROM users ORDER BY %s %s LIMIT $1 OFFSET $2`, sort, order)
+	query := fmt.Sprintf(`SELECT id, username, ip_address, created_at, COUNT(*) OVER() AS total FROM users ORDER BY %s %s LIMIT $1 OFFSET $2`, sort, order)
 
 	rows, err := d.DB.QueryContext(ctx,
 		query,
@@ -42,7 +42,7 @@ func (d *Database) SelectUsers(ctx context.Context, limit int, offset int, sort 
 	var users []model.User
 	for rows.Next() {
 		var user model.User
-		if err := rows.Scan(&user.ID, &user.Username, &user.IP_address, &total); err != nil {
+		if err := rows.Scan(&user.ID, &user.Username, &user.IP_address, &user.CreatedAt, &total); err != nil {
 			fmt.Println(err.Error())
 			return nil, 0, fmt.Errorf("error scanning user: %w", err)
 		}
