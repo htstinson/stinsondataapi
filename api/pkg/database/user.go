@@ -40,12 +40,19 @@ func (d *Database) SelectUsers(ctx context.Context, limit int, offset int, sort 
 
 	var total int
 	var users []model.User
+	var created_at string
 	for rows.Next() {
 		var user model.User
-		if err := rows.Scan(&user.ID, &user.Username, &user.IP_address, &user.CreatedAt, &total); err != nil {
+		if err := rows.Scan(&user.ID, &user.Username, &user.IP_address, created_at, &total); err != nil {
 			fmt.Println(err.Error())
 			return nil, 0, fmt.Errorf("error scanning user: %w", err)
 		}
+
+		t, err := time.Parse("2006-01-02 15:04:05.999999-07", created_at)
+		if err == nil {
+			user.CreatedAt = t
+		}
+
 		user.Roles = strings.Replace(user.Roles, "{", "", -1)
 		user.Roles = strings.Replace(user.Roles, "}", "", -1)
 		users = append(users, user)
