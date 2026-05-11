@@ -15,7 +15,7 @@ import (
 //User
 
 func (d *Database) SelectUsers(ctx context.Context, limit int, offset int, sort string, order string) ([]model.User, int, error) {
-	fmt.Println("d SelectUsers()")
+	fmt.Println("d SelectUsers")
 
 	if order == "" {
 		order = "asc"
