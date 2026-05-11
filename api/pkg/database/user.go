@@ -48,6 +48,8 @@ func (d *Database) SelectUsers(ctx context.Context, limit int, offset int, sort 
 			return nil, 0, fmt.Errorf("error scanning user: %w", err)
 		}
 
+		fmt.Println("created_at", created_at)
+
 		t, err := time.Parse("2006-01-02 15:04:05.999999-07", created_at)
 		if err != nil {
 			fmt.Println(err.Error())
