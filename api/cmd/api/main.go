@@ -277,7 +277,7 @@ func main() {
 
 	// Create server with local certificates
 	srv := &http.Server{
-		Addr:    ":443",
+		Addr:    ":8080",
 		Handler: router,
 		TLSConfig: &tls.Config{
 			MinVersion: tls.VersionTLS13,
