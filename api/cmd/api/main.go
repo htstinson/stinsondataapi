@@ -13,7 +13,6 @@ import (
 	//searcher "github.com/htstinson/business_searcher"
 
 	"context"
-	"crypto/tls"
 	"encoding/json"
 	"log"
 	"mime"
@@ -279,9 +278,6 @@ func main() {
 	srv := &http.Server{
 		Addr:    ":8080",
 		Handler: router,
-		TLSConfig: &tls.Config{
-			MinVersion: tls.VersionTLS13,
-		},
 	}
 
 	// Start server
