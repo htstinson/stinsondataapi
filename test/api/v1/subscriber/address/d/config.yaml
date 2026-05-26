@@ -1,6 +1,0 @@
-name: Delete Addresses
-method: DELETE
-path: /api/v1/subscriber/address/d
-parameter: 
-  - subscriber_id
-  - address_id

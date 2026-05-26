@@ -1,5 +1,0 @@
-name: List User-Subscribers
-method: GET
-path: /api/v1/usersubscriberview/user
-parameter: 
-  - id
