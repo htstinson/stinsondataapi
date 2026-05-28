@@ -89,19 +89,20 @@ func (h *Handler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.db.GetUser(ctx, id)
 	if err != nil {
-		fmt.Println(2, err.Error())
+		fmt.Println(1, err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
 		return
 	}
 
 	if user == nil {
-		fmt.Println(3)
+		fmt.Println(2, err.Error())
 		common.RespondError(w, http.StatusNotFound, "User not found")
 		return
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
+		fmt.Println(3, err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to hash password")
 	}
 
@@ -114,7 +115,7 @@ func (h *Handler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(5)
+	fmt.Println(6)
 
 	common.RespondJSON(w, http.StatusOK, user)
 }

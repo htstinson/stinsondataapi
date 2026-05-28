@@ -178,7 +178,7 @@ func (d *Database) DeleteUser(ctx context.Context, id string) error {
 func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
 	fmt.Println("d UpdateUser")
 
-	query := `UPDATE users SET username = $1, ip_address = $2 WHERE id = $3`
+	query := `UPDATE users SET username = $1, ip_address = $2, password_hash = $3 WHERE id = $4`
 
 	var ipAddress string
 	if user.IP_address == "" {
@@ -187,7 +187,7 @@ func (d *Database) UpdateUser(ctx context.Context, user *model.User) error {
 		ipAddress = user.IP_address
 	}
 
-	_, err := d.DB.ExecContext(ctx, query, user.Username, ipAddress, user.ID)
+	_, err := d.DB.ExecContext(ctx, query, user.Username, ipAddress, user.PasswordHash, user.ID)
 
 	return err
 }
