@@ -10,6 +10,7 @@ import (
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/auth"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // User - Create, Update, Delete, Get, List
@@ -67,6 +68,46 @@ func (h *Handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	currentuser.Username = user.Username
 	currentuser.IP_address = user.IP_address
 	err = h.db.UpdateUser(ctx, currentuser)
+	if err != nil {
+		fmt.Println(4, err.Error())
+		common.RespondError(w, http.StatusNotFound, "Error updating user")
+		return
+	}
+
+	fmt.Println(5)
+
+	common.RespondJSON(w, http.StatusOK, user)
+}
+
+func (h *Handler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("h UpdatePassword")
+	vars := mux.Vars(r)
+	id := vars["id"]
+	password := vars["password"]
+
+	ctx := r.Context()
+
+	user, err := h.db.GetUser(ctx, id)
+	if err != nil {
+		fmt.Println(2, err.Error())
+		common.RespondError(w, http.StatusInternalServerError, "Failed to get user")
+		return
+	}
+
+	if user == nil {
+		fmt.Println(3)
+		common.RespondError(w, http.StatusNotFound, "User not found")
+		return
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		common.RespondError(w, http.StatusInternalServerError, "Failed to hash password")
+	}
+
+	user.PasswordHash = string(hash)
+
+	err = h.db.UpdateUser(ctx, user)
 	if err != nil {
 		fmt.Println(4, err.Error())
 		common.RespondError(w, http.StatusNotFound, "Error updating user")

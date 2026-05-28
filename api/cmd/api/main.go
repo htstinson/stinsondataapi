@@ -159,6 +159,7 @@ func main() {
 	// User
 	protected.HandleFunc("/users", h.CreateUser).Methods("POST", "OPTIONS")
 	protected.HandleFunc("/users/{id}", h.UpdateUser).Methods("PUT", "OPTIONS")
+	protected.HandleFunc("/users/{id}/{password}", h.UpdatePassword).Methods("PUT", "OPTIONS")
 	protected.HandleFunc("/users/{id}", h.DeleteUser).Methods("DELETE")
 	protected.HandleFunc("/users/{id}", h.GetUser).Methods("GET")
 	protected.HandleFunc("/users", h.SelectUsers).Methods("GET", "OPTIONS")
