@@ -83,7 +83,16 @@ func (h *Handler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h UpdatePassword")
 	vars := mux.Vars(r)
 	id := vars["id"]
-	password := vars["password"]
+
+	var password struct {
+		Password string
+	}
+
+	if err := json.NewDecoder(r.Body).Decode(&password); err != nil {
+		common.RespondError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+	defer r.Body.Close()
 
 	ctx := r.Context()
 
@@ -95,12 +104,12 @@ func (h *Handler) UpdatePassword(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if user == nil {
-		fmt.Println(2, err.Error())
+		fmt.Println(2)
 		common.RespondError(w, http.StatusNotFound, "User not found")
 		return
 	}
 
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hash, err := bcrypt.GenerateFromPassword([]byte(password.Password), bcrypt.DefaultCost)
 	if err != nil {
 		fmt.Println(3, err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to hash password")
