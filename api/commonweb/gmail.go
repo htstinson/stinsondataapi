@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
@@ -61,16 +60,6 @@ func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 	return tok
 }
 
-func tokenFromFile(file string) (*oauth2.Token, error) {
-	f, err := os.Open(file)
-	if err != nil {
-		return nil, err
-	}
-	defer f.Close()
-	tok := &oauth2.Token{}
-	return tok, json.NewDecoder(f).Decode(tok)
-}
-
 func tokenFromSecret(secretName string, region string) (*oauth2.Token, error) {
 	data, err := GetSecretString(secretName, region)
 	if err != nil {
@@ -98,15 +87,6 @@ func saveTokenToSecret(secretName string, region string, token *oauth2.Token) {
 	if err != nil {
 		log.Fatal("Could not save token to Secrets Manager:", err)
 	}
-}
-
-func saveToken(path string, token *oauth2.Token) {
-	f, err := os.Create(path)
-	if err != nil {
-		log.Fatal("Unable to save token:", err)
-	}
-	defer f.Close()
-	json.NewEncoder(f).Encode(token)
 }
 
 func sendEmail(service *gmail.Service, to, subject, body string) error {
