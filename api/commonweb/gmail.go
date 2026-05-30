@@ -21,7 +21,7 @@ func getClient(oauthConfig *oauth2.Config, region string) *http.Client {
 	tok, err := tokenFromSecret("gmail-token", region)
 	if err != nil {
 		tok = getTokenFromWeb(oauthConfig)
-		saveTokenToSecret("gmail-token", tok)
+		saveTokenToSecret("gmail-token", region, tok)
 	}
 
 	tokenSource := oauthConfig.TokenSource(context.Background(), tok)
@@ -29,7 +29,7 @@ func getClient(oauthConfig *oauth2.Config, region string) *http.Client {
 	// Save refreshed token back to Secrets Manager
 	newTok, err := tokenSource.Token()
 	if err == nil && newTok.AccessToken != tok.AccessToken {
-		saveTokenToSecret("gmail-token", newTok)
+		saveTokenToSecret("gmail-token", region, newTok)
 	}
 
 	return oauth2.NewClient(context.Background(), tokenSource)
@@ -80,7 +80,7 @@ func tokenFromSecret(secretName string, region string) (*oauth2.Token, error) {
 	return tok, json.Unmarshal(data, tok)
 }
 
-func saveTokenToSecret(secretName string, token *oauth2.Token) {
+func saveTokenToSecret(secretName string, region string, token *oauth2.Token) {
 	data, err := json.Marshal(token)
 	if err != nil {
 		log.Fatal("Could not marshal token:", err)
