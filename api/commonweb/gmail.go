@@ -86,7 +86,8 @@ func saveTokenToSecret(secretName string, token *oauth2.Token) {
 		log.Fatal("Could not marshal token:", err)
 	}
 
-	cfg, _ := config.LoadDefaultConfig(context.TODO())
+	cfg, _ := config.LoadDefaultConfig(context.TODO(),
+		config.WithRegion(region))
 	client := secretsmanager.NewFromConfig(cfg)
 
 	secretStr := string(data)
