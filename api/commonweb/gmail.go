@@ -117,27 +117,32 @@ func sendEmail(service *gmail.Service, to, subject, body string) error {
 }
 
 func SendMail(to string, subject string, body string, region string) {
+	fmt.Println("commonweb SendMail")
 	ctx := context.Background()
 
 	// Download credentials.json from Google Cloud Console
 	b, err := GetSecretString("gmail-credentials", region)
 	if err != nil {
+		fmt.Println("1 ", err.Error())
 		log.Fatal("Cannot read gmail credentials:", err)
 	}
 
 	config, err := google.ConfigFromJSON(b, gmail.GmailSendScope)
 	if err != nil {
+		fmt.Println("2 ", err.Error())
 		log.Fatal("Cannot parse credentials:", err)
 	}
 
 	client := getClient(config, region)
 	srv, err := gmail.NewService(ctx, option.WithHTTPClient(client))
 	if err != nil {
+		fmt.Println("3 ", err.Error())
 		log.Fatal("Cannot create Gmail service:", err)
 	}
 
 	err = sendEmail(srv, to, subject, body)
 	if err != nil {
+		fmt.Println("4 ", err.Error())
 		log.Fatal("Send failed:", err)
 	}
 	fmt.Println("Email sent!")

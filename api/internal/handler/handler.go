@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/htstinson/stinsondataapi/api/commonweb"
 	common "github.com/htstinson/stinsondataapi/api/commonweb"
 	"github.com/htstinson/stinsondataapi/api/internal/auth"
 	"github.com/htstinson/stinsondataapi/api/internal/model"
@@ -132,8 +133,8 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Authorization", fmt.Sprintf("Bearer %s", token))
 
-	//region := "us-west-2"
-	//commonweb.SendMail("htstinson95@gmail.com", "Hello", "Sent via Gmail API in Go.", region)
+	region := "us-west-2"
+	commonweb.SendMail("htstinson95@gmail.com", "Hello", "Sent via Gmail API in Go.", region)
 
 	common.RespondJSON(w, http.StatusOK, model.LoginResponse{
 		Token:     token,
