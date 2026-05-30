@@ -133,14 +133,16 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Authorization", fmt.Sprintf("Bearer %s", token))
 
-	login_time := time.Now().Format("2006-01-02 15:04:05")
+	login_time := time.Now().Format(time.RFC3339)
 
-	body := fmt.Sprintf(`Your account logged into Thousand Hills Digital at %v. \n
-	If this was not you, please contact support@stinsondata.com. \n
-	Thank you!`, login_time)
+	body := fmt.Sprintf(
+		`Your account logged into Thousand Hills Digital at %v.
+If this was not you, please contact support@stinsondata.com.
+
+Thank you!`, login_time)
 
 	region := "us-west-2"
-	commonweb.SendMail("htstinson95@gmail.com", "Thousand Hills Digital - Login",
+	commonweb.SendMail(user.Username, "Thousand Hills Digital - Login",
 		body,
 		region)
 
