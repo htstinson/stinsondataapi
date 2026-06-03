@@ -25,7 +25,7 @@ type key struct {
 }
 
 func (h *Handler) Search(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("h Test")
+	fmt.Println("h Search")
 
 	ctx := r.Context()
 

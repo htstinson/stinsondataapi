@@ -42,7 +42,7 @@ func (d *Database) CreatePermission(ctx context.Context, name string, descriptio
 	}
 
 	query := `
-        INSERT INTO permissions (id, name, description, created_at) VALUES ($1, $2, $3, $4)
+        INSERT INTO common.permissions (id, name, description, created_at) VALUES ($1, $2, $3, $4)
     `
 
 	_, err := d.DB.ExecContext(ctx, query,

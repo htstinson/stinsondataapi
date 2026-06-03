@@ -137,14 +137,24 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 
 	body := fmt.Sprintf(
 		`Your account logged into Thousand Hills Digital at %v.
+
 If this was not you, please contact support@stinsondata.com.
 
 Thank you!`, login_time)
 
 	region := "us-west-2"
-	commonweb.SendMail(user.Username, "Thousand Hills Digital - Login",
-		body,
-		region)
+	/* TODO - Create a profile setting to determine if this is sent.
+	    Need to have a choice of accounts to send from
+		Also need to create the GCP connection to gmail automatically
+		Also need to profile the body and subject of the message
+		Full functionality will need to be able to read a mailbox
+		Need e-mail address verification
+		Need unsubscribe functionality
+		Need to log e-mails that are sent
+	*/
+	if false {
+		commonweb.SendMail(user.Username, "Thousand Hills Digital - Login", body, region)
+	}
 
 	common.RespondJSON(w, http.StatusOK, model.LoginResponse{
 		Token:     token,
