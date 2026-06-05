@@ -22,6 +22,7 @@ func (h *Handler) CreatePermission(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	newpermission, err := h.db.CreatePermission(ctx, permission.Name, permission.Description)
 	if err != nil {
+		fmt.Println(err.Error())
 		common.RespondError(w, http.StatusInternalServerError, "Failed to create permission")
 		return
 	}
