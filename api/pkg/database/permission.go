@@ -31,13 +31,14 @@ func (d *Database) GetPermission(ctx context.Context, id string) (*model.Permiss
 	return &permission, nil
 }
 
-func (d *Database) CreatePermission(ctx context.Context, name string, description string) (*model.Permission, error) {
+func (d *Database) CreatePermission(ctx context.Context, name string, description string, object_id string) (*model.Permission, error) {
 	fmt.Println("d CreatePermission")
 
 	permission := &model.Permission{
 		Id:          uuid.New().String(),
 		Name:        name,
 		Description: description,
+		Object_Id:   object_id,
 		CreatedAt:   time.Now(),
 	}
 
