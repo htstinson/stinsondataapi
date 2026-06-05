@@ -19,6 +19,8 @@ func (h *Handler) CreatePermission(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
+	fmt.Println("h Create Permission ", permission.Id, permission.Name, permission.Description, permission.Object_Id)
+
 	ctx := r.Context()
 	newpermission, err := h.db.CreatePermission(ctx, permission.Name, permission.Description)
 	if err != nil {
