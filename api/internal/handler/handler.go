@@ -167,6 +167,9 @@ func (h *Handler) ValidSort(r *http.Request) string {
 
 	allowed := map[string]bool{"name": true, "created_at": true}
 	sort := r.URL.Query().Get("sort")
+	if sort == "" {
+		sort = "id"
+	}
 
 	fmt.Println("sort = ", sort)
 
@@ -180,6 +183,10 @@ func (h *Handler) ValidOrder(r *http.Request) string {
 	fmt.Println("h ValidOrder")
 
 	order := r.URL.Query().Get("order")
+	if order == "" {
+		order = "asc"
+	}
+
 	fmt.Println("order = ", order)
 
 	if order == "desc" {

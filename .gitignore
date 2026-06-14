@@ -19,3 +19,4 @@ update.sh
 .api_token
 test.go
 *.json
+notes.txt
