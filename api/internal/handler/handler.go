@@ -165,7 +165,7 @@ Thank you!`, login_time)
 func (h *Handler) ValidSort(r *http.Request) string {
 	fmt.Println("h ValidSort")
 
-	allowed := map[string]bool{"name": true, "created_at": true}
+	allowed := map[string]bool{"name": true, "username": true, "ip_address": true, "created_at": true}
 	sort := r.URL.Query().Get("sort")
 	if sort == "" {
 		sort = "id"
@@ -176,7 +176,7 @@ func (h *Handler) ValidSort(r *http.Request) string {
 	if allowed[sort] {
 		return sort
 	}
-	return "id"
+	return sort
 }
 
 func (h *Handler) ValidOrder(r *http.Request) string {
