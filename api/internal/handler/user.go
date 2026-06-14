@@ -221,8 +221,8 @@ func (h *Handler) GetUser(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) SelectUsers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h SelectUsers")
 
-	order := r.URL.Query().Get("order")
-	sort := r.URL.Query().Get("sort")
+	order := h.ValidOrder(r)
+	sort := h.ValidSort(r)
 
 	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
 	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))

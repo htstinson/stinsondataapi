@@ -22,9 +22,8 @@ func (h *Handler) SelectBlocked(w http.ResponseWriter, r *http.Request) {
 
 	ctx := r.Context()
 
-	qp := r.URL.Query()
-	order := qp.Get("order")
-	sort := qp.Get("sort")
+	order := h.ValidOrder(r)
+	sort := h.ValidSort(r)
 
 	if sort == "" {
 		sort = "ip"

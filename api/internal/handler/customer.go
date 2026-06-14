@@ -47,8 +47,8 @@ func (h *Handler) SelectCustomers(w http.ResponseWriter, r *http.Request) {
 func (h *Handler) SelectSubscriberCustomers(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("h SelectSubscriberCustomers")
 
-	order := r.URL.Query().Get("order")
-	sort := r.URL.Query().Get("sort")
+	order := h.ValidOrder(r)
+	sort := h.ValidSort(r)
 
 	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
 	limit, _ := strconv.Atoi(r.URL.Query().Get("limit"))

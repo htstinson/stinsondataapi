@@ -161,3 +161,29 @@ Thank you!`, login_time)
 		ExpiresIn: int64(h.auth.Config.TokenDuration.Seconds()),
 	})
 }
+
+func (h *Handler) ValidSort(r *http.Request) string {
+	fmt.Println("h ValidSort")
+
+	allowed := map[string]bool{"name": true, "created_at": true}
+	sort := r.URL.Query().Get("sort")
+
+	fmt.Println("sort = ", sort)
+
+	if allowed[sort] {
+		return sort
+	}
+	return "name"
+}
+
+func (h *Handler) ValidOrder(r *http.Request) string {
+	fmt.Println("h ValidOrder")
+
+	order := r.URL.Query().Get("order")
+	fmt.Println("order = ", order)
+
+	if order == "desc" {
+		return "DESC"
+	}
+	return "ASC"
+}
