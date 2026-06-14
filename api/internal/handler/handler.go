@@ -176,7 +176,7 @@ func (h *Handler) ValidSort(r *http.Request) string {
 	if allowed[sort] {
 		return sort
 	}
-	return "name"
+	return "id"
 }
 
 func (h *Handler) ValidOrder(r *http.Request) string {
